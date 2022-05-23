@@ -36,7 +36,7 @@ namespace ch04_tt_p109
 			break;
 		default:
 			cout << "Sorry, I'm not familiar with a currency called '" << currency << "'\n";
-			return 0;
 		}
+        return 0;
 	}
 }

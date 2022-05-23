@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "std_lib_facilities.h"
 
 /*
 This drill simply involves getting the sequence of versions of
@@ -90,7 +91,7 @@ namespace ch09_drill_05
         std::cout << "Default date: " << default_d << '\n';
 
         std::cout << "Vector of 10 default dates:" << '\n';
-        std::vector<Date> dates(10);
+        Vector<Date> dates(10);
         for (Date d : dates) std::cout << " - " << default_d << '\n';
 
         // Test validation
@@ -106,5 +107,7 @@ namespace ch09_drill_05
     }
     catch (const std::invalid_argument& ia) {
         std::cerr << "Invalid argument: " << ia.what() << '\n';
+        keep_window_open();
+        return 1;
     }
 }

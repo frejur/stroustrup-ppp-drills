@@ -1,18 +1,8 @@
 #include "ch09_chrono.h"
+#include "std_lib_facilities.h"
 
 namespace ch09_chrono {
 
-    int main()
-    try {
-        Date test;
-        while (std::cin >> test)
-            std::cout << test << '\n';
-
-        return 0;
-    }
-    catch (...) {
-        std::cerr << "Error";
-    }
 
     // Date constructors and member functions ------------------
     Date::Date(int yy, Month mm, int dd)
@@ -101,14 +91,14 @@ namespace ch09_chrono {
 
     // iostream Date operator overloads ------------------------
 
-    std::ostream& operator<<(std::ostream& os, const Date& date)
+    ostream& operator<<(ostream& os, const Date& date)
     {
         return os << '(' << date.year()
                   << ',' << static_cast<int>(date.month())
                   << ',' << date.day() << ')';
     }
 
-    std::istream& operator>>(std::istream& is, Date& date)
+    istream& operator>>(istream& is, Date& date)
     {
         int y, m, d;
         char ch1, ch2, ch3, ch4;
@@ -121,12 +111,29 @@ namespace ch09_chrono {
             ch4 != ')')
         {
             // format error fail
-            is.clear(std::ios_base::failbit);
+            is.clear(ios_base::failbit);
             return is;
         }
 
         date = Date(y, Month(m), d); // update Date object
 
         return is;
+    }
+    int main() {
+        try {
+            Date test_a = Date(1985,Month(4),11);
+            cout << test_a << endl;
+            cout << "Enter some dates to test:" << endl;
+            Date test;
+            while (cin >> test)
+                cout << test << '\n';
+            keep_window_open();
+            return 0;
+        }
+        catch (...) {
+            cerr << "Error";
+            keep_window_open();
+            return 1;
+        }
     }
 }

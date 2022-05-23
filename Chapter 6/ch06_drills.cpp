@@ -77,8 +77,9 @@ Token Token_stream::get()
         return Token('#', val);
     }
     default:
-        error("Bad token");
+        break;
     }
+    error("Bad token");
 }
 
 //-------------------------------------------------------------------

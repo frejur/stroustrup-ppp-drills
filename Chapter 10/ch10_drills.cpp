@@ -65,47 +65,52 @@ namespace ch10_drills
 
 // -------------------------------------------------------------
 
-    int main()
-    try
-    {
-        std::cout << "Please enter a total of "
-                  << points_list_size << " (x, y) pairs\n";
+    int main() {
+        try
+        {
+            std::cout << "Please enter a total of "
+                      << points_list_size << " (x, y) pairs\n";
 
-        // store valid points
-        auto original_points = get_x_number_of_points(
-                                              points_list_size);
+            // store valid points
+            auto original_points = get_x_number_of_points(
+                                                  points_list_size);
 
-        std::cout << "\nSuccessfully added "
-                  << points_list_size << " points:\n";
-        std::cout << "------------------------------\n";
-        for (Point pt : original_points)
-            std::cout << "\t(" << pt.x << ", " << pt.y << ")\n";
+            std::cout << "\nSuccessfully added "
+                      << points_list_size << " points:\n";
+            std::cout << "------------------------------\n";
+            for (Point pt : original_points)
+                std::cout << "\t(" << pt.x << ", " << pt.y << ")\n";
 
-        // Write points to .txt
-        write_points_to_file(original_points, points_file_name);
+            // Write points to .txt
+            write_points_to_file(original_points, points_file_name);
 
-        auto file_points = get_points_from_file(points_file_name);
+            auto file_points = get_points_from_file(points_file_name);
 
-        std::cout << "\nReading from file:\n";
-        std::cout << "------------------------------\n";
-        for (Point pt : file_points)
-            std::cout << "\t(" << pt.x << ", " << pt.y << ")\n";
+            std::cout << "\nReading from file:\n";
+            std::cout << "------------------------------\n";
+            for (Point pt : file_points)
+                std::cout << "\t(" << pt.x << ", " << pt.y << ")\n";
 
-        std::cout << "Standard Compare:\n";
-        compare_points(original_points, file_points);
+            std::cout << "Standard Compare:\n";
+            compare_points(original_points, file_points);
 
-        std::cout << "Compare Data with differing values:\n";
-        original_points[0].x += 2.3; // test change
-        file_points.push_back(Point{ 2.3,5.4 }); // test add
-        compare_points(original_points, file_points);
+            std::cout << "Compare Data with differing values:\n";
+            original_points[0].x += 2.3; // test change
+            file_points.push_back(Point{ 2.3,5.4 }); // test add
+            compare_points(original_points, file_points);
 
-        return 0;
-    }
-    catch (const std::runtime_error& re) {
-        std::cerr << "Runtime Error: " << re.what() << '\n';
-    }
-    catch (const std::invalid_argument& ae) {
-        std::cerr << "Invalid argument: " << ae.what() << '\n';
+            return 0;
+        }
+        catch (const std::runtime_error& re)
+        {
+            std::cerr << "Runtime Error: " << re.what() << '\n';
+            throw;
+        }
+        catch (const std::invalid_argument& ae)
+        {
+            std::cerr << "Invalid argument: " << ae.what() << '\n';
+            throw;
+        }
     }
 
 // -------------------------------------------------------------

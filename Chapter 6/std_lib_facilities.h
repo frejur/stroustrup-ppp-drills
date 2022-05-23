@@ -133,6 +133,7 @@ struct Exit : runtime_error {
 };
 
 // error() simply disguises throws:
+[[noreturn]]
 inline void error(const string& s)
 {
 	throw runtime_error(s);

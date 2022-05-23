@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include "std_lib_facilities.h"
 
 /*
 This drill simply involves getting the sequence of versions of
@@ -29,7 +30,7 @@ namespace ch09_drill_03
         int m; // month
         int d; // day
     public:
-        Date(int y, int m, int d); // validate and intitialize
+        Date(int, int, int); // validate and intitialize
         void add_day(int n);       // increase Date by n days
         int year() const { return y; }
         int month() const { return m; }
@@ -46,7 +47,6 @@ namespace ch09_drill_03
             throw std::invalid_argument("Invalid month value " + std::to_string(m));
         if (d < 1 || d>31)
             throw std::invalid_argument("Invalid day value " + std::to_string(d));
-        y = y; m = m; d = d;
     }
 
     void Date::add_day(int n) {
@@ -85,5 +85,7 @@ namespace ch09_drill_03
     }
     catch (const std::invalid_argument& ia) {
         std::cerr << "Invalid argument: " << ia.what() << '\n';
+        keep_window_open();
+        return 1;
     }
 }

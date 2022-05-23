@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include "std_lib_facilities.h"
 
 /*
 This drill simply involves getting the sequence of versions of
@@ -104,5 +105,7 @@ namespace ch09_drill_04
     }
     catch (const std::invalid_argument& ia) {
         std::cerr << "Invalid argument: " << ia.what() << '\n';
+        keep_window_open();
+        return 1;
     }
 }

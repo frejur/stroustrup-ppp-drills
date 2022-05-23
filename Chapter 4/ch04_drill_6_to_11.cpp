@@ -36,6 +36,7 @@ namespace ch04_drill_6_to_11
 				return false;
 			}
 		}
+        return true;
 	}
 
 	float conv_to_meters(float val, string u) {
@@ -52,15 +53,15 @@ namespace ch04_drill_6_to_11
 
 	int main()
 	{
-		const string exit_symbol{ '|' };	// Character the user can input to terminate the program
+		const string exit_symbol { '|' };	// Character the user can input to terminate the program
 		string inp_string;					// Store the input as a string
 		double num;							// Convert above string to a number
 		double smallest, largest;			// Store the smallest and largest so far
 
-		string txt_smallest   = "That is the smallest value so far.";
-		string txt_also_small = "That is on par with the smallest value recorded.";
-		string txt_largest    = "That is the largest value so far.";
-		string txt_also_large = "That is on par with the largest value recorded.";
+        const string txt_smallest   { "That is the smallest value so far." };
+        const string txt_also_small { "That is on par with the smallest value recorded." };
+        const string txt_largest    { "That is the largest value so far." };
+        const string txt_also_large { "That is on par with the largest value recorded." };
 
 		bool graceful;	// Graceful exit flag, triggered by the exit symbol
 		bool evaluate;	// Only evaluate expression when this flag is true
