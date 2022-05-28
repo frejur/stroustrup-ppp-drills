@@ -31,6 +31,17 @@
 *.out
 *.app
 
+# Visual Studio
+*.suo
+*.user
+*.ncb
+Debug/
+x64/
+x86/
+Release/
+CodeAnalyst/
+.vs/
+
 # Mac OS X
 *.DS_Store
 
