@@ -2,5 +2,6 @@
 
 int main()
 {
-    return ch10_drills::main();
+    // return ch10_drills::main();
+    return ch10_test::main();
 }

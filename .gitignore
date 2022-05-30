@@ -53,3 +53,6 @@ CodeAnalyst/
 *.xcuserstate
 project.xcworkspace/
 xcuserdata/
+
+# Markdown Editor
+*.md.backup
