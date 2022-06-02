@@ -67,3 +67,25 @@ correct?        // Same as above
 _this_is_ok     // Illegal: Names with leading underscores can clash with names
                 //          reserved for implementation and system entitites
 number          // Legal
+```
+
+### Examples of 5 legal but confusing names
+```
+itemO1      // O easily mistaken for 0
+ca11_back   // 1 easily mistaken for l
+data        // usually not specific enough
+price__avg  // hard to catch the number of underscores
+feIon       // Ferrous ion or Felon?
+```
+
+### What are some good rules for choosing names?
+Detailed but not wordy.
+
+### What is type safety and why is it important?
+Instructing the program to handle objects according to the rules associated with their type, not doing so will lead to unpredictable behaviour and error. A common pitfall is to use a variable before it has been initialized.
+
+### Why can converion from double to int be a bad thing.
+Because integers are not as precise as floats the number is narrowed and information can be lost.
+
+### Define a rule to help decide if a type conversion is safe.
+Conversions of numbers are generally safe if going from a type that is smaller than the target.
