@@ -56,14 +56,14 @@ The process of joining strings together. Variables of the type string may be con
 ### Legal names.
 ```
 This_little_pig // Legal: However since a leading capital letter is in use this
-				//        name is frowned upon unless it's a user defined type
-MiniMineMine	// Same as above
+                //        name is frowned upon unless it's a user defined type
+MiniMineMine    // Same as above
 This_1_is fine  // Illegal: Cannot use spaces
 latest thing    // Same as above
 2_for_1_special // Illegal: Cannot start with a number
 the_$12_method  // Illegal: Except for underscores non-alphanumeric characters
-				// 			are not allowed
-correct?		// Same as above
-_this_is_ok		// Illegal: Names with leading underscores can clash with names
-				//  		reserved for implementation and system entitites
-number			// Legal
+                //          are not allowed
+correct?        // Same as above
+_this_is_ok     // Illegal: Names with leading underscores can clash with names
+                //          reserved for implementation and system entitites
+number          // Legal
