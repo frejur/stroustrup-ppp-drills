@@ -17,4 +17,4 @@ It performs a calculation based on operands and operators and computes a value.
 Statements are the instructional units of the program: Run in sequence, sometimes describing an expression, in other cases loops, conditionals, jumps in control flow, etc.
 
 ### What is an lvalue? List the operators that require an lvalue and explain why.
-An lvalue is the operand used on the left-hand side of an assignment or initialization. Operators that deal with assignment __=__ , or compound assignment such as __+=__ , require an lvalue ofr this reason.
+An lvalue is the operand used on the left-hand side of an assignment or initialization. Operators that deal with assignment **=** , or compound assignment such as **+=** , require an lvalue for this reason.
