@@ -40,7 +40,7 @@ A named object whose value cannot be altered after initilization. Adds invariabl
 Non-obvious literals not defined as symblic constants.
 ```c++
 double circle_area_a = 3.1415926535 * 2.5 * 2.5; // magic constant pi,
-						   					     // magic value radius
+                                                 // magic value radius
 
 // refactored
 constexpr double pi { 3.1415926535 };
