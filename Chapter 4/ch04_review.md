@@ -18,6 +18,10 @@ Statements are the instructional units of the program: Run in sequence, sometime
 
 ### What is an lvalue? List the operators that require an lvalue and explain why.
 An lvalue is the operand used on the left-hand side of an assignment or initialization.
-Operators that deal with assignment: **=**
-or compound assignment such as: **+=**
-require an lvalue for this reason.
+```
+// Operators that deal with assignment:
+int lvalue_var = 0;
+// or compound assignment:
+lvalue_var += 1;
+//require an lvalue for this reason.
+```
