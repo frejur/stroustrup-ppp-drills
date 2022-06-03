@@ -4,8 +4,7 @@
 Producing ouput from input.
 
 ### What is mean by inputs and outputs to a computation? List some examples.
-Example inputs: Keyboard, mouse, read from file, other programs or parts of them.
-
+Example inputs: Keyboard, mouse, read from file, other programs or parts of them.\
 Example output: Show on screen, save to file, pass data to other programs or parts of them.
 
 ### List the three requirements a programmer should keep in mind when expressing computations.
@@ -53,7 +52,7 @@ double circle_area_b = pi * radius * radius;
 ```
 
 ### Name some operators typically used for integers and floating-point values.
-Arithmetic operators: + - / *
+Arithmetic operators: + - / *\
 Logical operators: == != > <
 
 ### What operators can be used on integers but not floating point numbers?
@@ -72,17 +71,17 @@ cout << s << endl;
 When you want to test the equality of a variable or expression against a list of many values.
 
 ### What are some common problems with switch-statements?
-Limited use: the conditions must be constant expressions.
+Limited use: the conditions must be constant expressions.\
 Gotcha: Forgetting to add 'break' after each case block.
 
 ### Anatomy and order of operations of a for loop header.
-for (A;B;C)
-A. Expression run once at the beginning, usually intializing an iterator variable.
-B. Expression run at the start of each iteration, if it evaluates to false the loop is ended.
+for (A;B;C)\
+A. Expression run once at the beginning, usually intializing an iterator variable.\
+B. Expression run at the start of each iteration, if it evaluates to false the loop is ended.\
 C. Expression run at the end of each iteration, usually incrementing a an iterator variable.
 
 ### When should a for loop be used instead of a while loop and vice-versa?
-For loops provide a concise way to initialize, check and increment on one header line. This workflow also goes a long way to avoid infinite loops. However, while loops are necessary when you can't determine a finite number of iterations beforehand.
+For loops provide a concise way to initialize, check and increment on one header line. This workflow also goes a long way to avoid infinite loops. However, while loops is the natural choice when you can't determine a finite number of iterations beforehand.
 
 ### How do you print the numeric value of a char?
 ```c++
