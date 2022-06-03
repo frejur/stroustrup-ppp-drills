@@ -5,6 +5,7 @@ Producing ouput from input.
 
 ### What is mean by inputs and outputs to a computation? List some examples.
 Example inputs: Keyboard, mouse, read from file, other programs or parts of them.
+
 Example output: Show on screen, save to file, pass data to other programs or parts of them.
 
 ### List the three requirements a programmer should keep in mind when expressing computations.
@@ -18,7 +19,7 @@ Statements are the instructional units of the program: Run in sequence, sometime
 
 ### What is an lvalue? List the operators that require an lvalue and explain why.
 An lvalue is the operand used on the left-hand side of an assignment or initialization.
-```
+```c++
 // Operators that deal with assignment:
 int lvalue_var = 0;
 // or compound assignment:
