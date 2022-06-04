@@ -71,7 +71,7 @@ cout << s << endl;
 When you want to test the equality of a variable or expression against a list of many values.
 
 ### What are some common problems with switch-statements?
-Limited use: the conditions must be constant expressions.\
+Limited use: the conditions must be constant expressions of an integral type (e.g. no strings).\
 Gotcha: Forgetting to add 'break' after each case block.
 
 ### Anatomy and order of operations of a for loop header.
@@ -85,9 +85,49 @@ For loops provide a concise way to initialize, check and increment on one header
 
 ### How do you print the numeric value of a char?
 ```c++
-cout << 'A' << (int)'A' << endl; // type conversion
+    cout << 'A' << " = " << (int)'A' << endl; // type conversion
 ```
 
 ### Meaning of the function definition char foo(int x)
 A function by the name of __foo__ takes one __integer__ value as an argument and returns a value of the type __char__.
 
+### List reasons for refactoring part(s) of a program into a function
+It can be re-used within the program.\
+The code reads better if you separate the logic from the main chain of commands.
+
+### What can you do to an integer that you cannot to to a string?
+Arithmetic operations.
+
+### What can you do to a string that you cannot to an integer?
+Concatenation.
+
+### What is the index of the third element of a vector?
+2
+
+### How do you print every element of a vector using a for loop?
+```c++
+vector<string> vec { "One", "Two", "Three" };
+for (const auto& val : vec)
+    cout << val << endl;
+
+for (int i = 0; i < vec.size(); ++i)
+    cout << vec[i] << endl;
+```
+
+### What does vector<char> alphabet(26) do?
+It creates a vector of 26 empty chars.
+
+### What does vector's member size() do?
+It returns the total number of items as an integer value.
+
+### Why is vector so popular/useful?
+Compared to an array it's a much more convenient and less error-prone way to deal with a list of items.
+
+### How do you sort the elements of a vector?
+```c++
+vector<int> vec { 5, 3, 1, 2, 4 };
+sort(vec.begin(), vec.end());
+for (const auto& val : vec)
+    cout << val << ", ";
+cout << endl;
+```
