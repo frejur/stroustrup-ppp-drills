@@ -20,7 +20,7 @@ I should produce the desired results for all legal inputs and give reasonable er
 ### Why do we hate debugging?
 Debugging is tedious by nature, it's the process of patching things up rather than creating. It reminds us that we are often incapable of properly instructing the computer, and that the computer is notoriously hard to instruct.
 
-### What is a syntax error, a type error, a logic error? Give some examples.
+### What is a syntax error, a type error, a linker error, a logic error? Give some examples.
 All of them are faulty instructions, but the compiler cannot catch logic errors.
 ```c++
 /* Syntax errors - often typos or forgetting to insert punctuators */
@@ -37,11 +37,29 @@ int b = (1 + 2; // missing end parenthesis
                  are not caught by the compiler and end up being logic errors instead. */
 
 string c() { return 'a'; } // cannot convert char to std::string
-float d =  4.5 % 0.5;   // incompatible operator % for floating point operands
-int e { 3.33 };         // narrowing conversion
-cout << setfill(1);     // wrong character type for setfill
+float d =  4.5 % 0.5;      // incompatible operator % for floating point operands
+int e { 3.33 };            // narrowing conversion
+cout << setfill(1);        // wrong character type for setfill
 
-/* Logic errors - AKA semantic errors. When the code is not doing what we thought it would. */
+/* Linker errors - The linker fails to combine the compiled translation units into an executable.
+   Usually because of missing definitions or multiple definitions for the same entity. */
+
+// "undefined reference to main": all programs require a main() function (not Main())
+int Main() {
+    cout << "Hello world" << endl;
+    return 0;
+}
+
+// "undefined reference to hello_world" - no defintion for hello_world ()
+string hello_world();
+
+int main()
+{
+    cout << hello_world() << endl;
+    return 0;
+}
+
+/* Logic errors - AKA semantic errors. The code is not doing what was expected. */
 float f = 5/9;      // integer division: equals 0 not 0.555556
 char e = "1\t2"[3]; // '\t' counts as one character,
                     // an index of 3 is out of bounds = undefined behaviour
@@ -99,12 +117,24 @@ vector<int> fibonacci_gen(int count)
 ```
 
 ### When would you not test a pre-condition?
+1. When you know for certain how a function will be called, which is almost never the case.
+2. When it slows down the code too much, which is rare, but there are situations when checking a pre-condition would take significantly more work than executing the function.
 
+### When would you not test a post-condition?
+When writing simple functions such as a getter function.
 
-19. When would you not test a post-condition?
+### What are the steps in debugging a program?
+1. Get the program to compile:
+- Assume that the compiler is always right
+- Make sure to terminate statements with ;
+- Make sure to terminate string and char literals
+- Make sure to terminate {}, () and [].
+2. Get the program to link.
+3. Test the program, make sure it's operating correctly
 
-20. What are the steps in debugging a program?
+### Why does commenting help when debugging?
+It's much easier to find bugs if the code is easy to read, but even the most well-structured code does not always express things clearly. Good commenting fills in the blanks, it also forces you to think about the problem at hand and figure out what conditions need to be fulfilled for the program to behave as intended.
 
-21. Why does commenting help when debugging?
-
-22. How does testing differ from debugging?
+### How does testing differ from debugging?
+Testing is a more systematic method of finding errors and there are entire testing frameworks designed for this purpose alone.
+Basically you define test cases, instances of the program run with different sets of inputs, and you compare the results of those test cases with what was expected.
