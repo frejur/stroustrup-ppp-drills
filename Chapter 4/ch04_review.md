@@ -121,7 +121,7 @@ It creates a vector of 26 empty chars.
 It returns the total number of items as an integer value.
 
 ### Why is vector so popular/useful?
-Compared to an array it's a much more convenient and less error-prone way to deal with a list of items.
+Compared to an array it's a much more convenient and less error-prone way to work with a list of items.
 
 ### How do you sort the elements of a vector?
 ```c++
