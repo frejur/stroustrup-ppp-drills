@@ -59,7 +59,7 @@ int main()
     return 0;
 }
 
-/* Logic errors - AKA semantic errors. The code is not doing what was expected. */
+/* Logic errors - AKA semantic errors. The code is not doing what is expected. */
 float f = 5/9;      // integer division: equals 0 not 0.555556
 char e = "1\t2"[3]; // '\t' counts as one character,
                     // an index of 3 is out of bounds = undefined behaviour
