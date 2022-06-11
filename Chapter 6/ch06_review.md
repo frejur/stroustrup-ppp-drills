@@ -35,17 +35,17 @@ A valid Expression will ultimately consist of Numbers combined using arithmetic 
 ### Take the expression (17+4)/(5–1) and break it down into Terms, Expressions, Primarys, and Numbers
 Both expressions contained within the parentheses are parsed as Primaries, Terms and Expressions. When joined by the '/' operator they are parsed as a Term according to the Term / Primary rule, which is consequently an Expression.
 ```
-(17+4)  is:		("("Expression")")	->			a Primary	a Term		an Expression
-17      is:		a float-literal		a Number	a Primary	a Term		an Expression
-4       is:		a float-literal		a Number	a Primary	a Term		an Expression
-17+4    is:		Expression + Term	->			->			->			an Expression
+(17+4)  is:     ("("Expression")")  ->          a Primary   a Term      an Expression
+17      is:     a float-literal     a Number    a Primary   a Term      an Expression
+4       is:     a float-literal     a Number    a Primary   a Term      an Expression
+17+4    is:     Expression + Term   ->          ->          ->          an Expression
 
-(5-1)   is:		("("Expression")")	->			a Primary	a Term		an Expression
-5       is:		a float-literal		a Number	a Primary	a Term		an Expression
-1       is:		a float-literal		a Number	a Primary	a Term		an Expression
-5-1     is:		Expression + Term	->			->			->			an Expression
+(5-1)   is:     ("("Expression")")  ->          a Primary   a Term      an Expression
+5       is:     a float-literal     a Number    a Primary   a Term      an Expression
+1       is:     a float-literal     a Number    a Primary   a Term      an Expression
+5-1     is:     Expression + Term   ->          ->          ->          an Expression
 
-(17+4)/(5-1) is:	Term / Primary	->			->			a Term 		an Expression
+(17+4)/(5-1) is:    Term / Primary  ->          ->          a Term      an Expression
 ```
 ### Why does the program not have a function called number()?
 When the primary() function has determined that the current token is a number, the parser has reached the end of the logic chain. At that point the program will always attempt to read in a floating-point-literal.
