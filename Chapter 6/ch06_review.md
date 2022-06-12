@@ -48,7 +48,7 @@ Both expressions contained within the parentheses are parsed as Primaries, Terms
 (17+4)/(5-1) is:    Term / Primary  ->          ->          a Term      an Expression
 ```
 ### Why does the program not have a function called number()?
-When the primary() function has determined that the current token is a number, the parser has reached the end of the logic chain. At that point the program will always attempt to read in a floating-point-literal.
+When the primary() function has determined that the current token is a number, the parser has reached the end of the current logic chain. It has been determined that the token is a floating-point-literal and the only remaining action is to return its value.
 
 ### What is a token?
 
