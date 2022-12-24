@@ -6,11 +6,11 @@
 #include <algorithm>
 
 /*
-1. Start a program to work with points, discussed in §10.4.
+1. Start a program to work with points, discussed in ï¿½10.4.
    Begin by defining the data type Point that has two coordinate
    members x and y.
 
-2. Using the code and discussion in §10.4, prompt the user to
+2. Using the code and discussion in ï¿½10.4, prompt the user to
    input seven (x,y) pairs. As the data is entered, store it in
    a vector of Points called original_points.
 
@@ -246,7 +246,7 @@ namespace ch10_drills
                 comment = "DIFFERENT";
 
             std::cout << idx << " | "
-                      << a << "\t\| " << b << "\t| "
+                      << a << "\t| " << b << "\t| "
                       << comment << '\n';
         }
     }
