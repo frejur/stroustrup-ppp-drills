@@ -56,3 +56,6 @@ xcuserdata/
 
 # Markdown Editor
 *.md.backup
+
+# vscode
+.vscode/
