@@ -4,41 +4,67 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <random>
+#include <memory>
 
 /*
-1. Start a program to work with points, discussed in �10.4.
-   Begin by defining the data type Point that has two coordinate
-   members x and y.
-
-2. Using the code and discussion in �10.4, prompt the user to
-   input seven (x,y) pairs. As the data is entered, store it in
-   a vector of Points called original_points.
-
-3. Print the data in original_points to see what it looks like.
-
-4. Open an ofstream and output each point to a file named
-   mydata.txt. On Windows, we suggest the .txt suffix to make it
-   easier to look at the data with an ordinary text editor
-   (such as WordPad).
-
-5. Close the ofstream and then open an ifstream for mydata.txt.
-   Read the data from mydata.txt and store it in a new vector
-   called processed_points.
-
-6. Print the data elements from both vectors.
-
-7. Compare the two vectors and print Something's wrong! if the
-   number of elements or the values of elements differ.
+    Rewrite Drill Excercise with I/O operator overloading
 */
 
-namespace ch10_drills
+namespace ch10_operator_overload
 {
     constexpr int points_list_size{ 2 };
-    const std::string points_file_name{ "points.txt" };
+    const std::string points_file_name{ "points_2.txt" };
 
-    struct Point {
-        float x, y; // coordinates
+    class Point
+    {
+    private:
+        float _x{ 0.0 }, _y{ 0.0 };
+        bool _is_undefined{ true }; 
+        const std::string _UNDEF_STR{ "NOT DEFINED" };
+
+        std::string _get_as_string(int axis) const {
+            if (_is_undefined) {
+                return _UNDEF_STR;
+            }
+            return (axis == 0
+                ? std::to_string(_x)
+                : std::to_string(_y));
+        }
+    public:
+        float getX() { return _x; }
+        float getY() { return _y; }
+        void setX(float x) { _x = x; }
+        void setY(float y) { _y = y; }
+        void set(float x, float y) { _x = x; _y = y; }
+
+        Point() { }
+        Point(float x, float y) {
+            set(x, y);
+            _is_undefined = false;
+        }
+
+        friend std::ostream& operator<< (std::ostream& out, const Point& point);
+        friend bool operator== (const Point& a, const Point& b);
+        friend bool operator!= (const Point& a, const Point& b);
     };
+
+    std::ostream& operator<< (std::ostream& out, const Point& point)
+    {
+        out << point._get_as_string(0) << ", " << point._get_as_string(1);
+
+        return out;
+    }
+
+    bool operator== (const Point& a, const Point& b) {
+        return (a._x == b._x && a._y == b._y);
+    }
+
+    bool operator!= (const Point& a, const Point& b) {
+        return (a._x != b._x || a._y != b._y);
+    }
+
+    const Point MISSING{}; 
 
     Point get_point(std::istream& in);
 
@@ -79,7 +105,7 @@ namespace ch10_drills
                       << points_list_size << " points:\n";
             std::cout << "------------------------------\n";
             for (Point pt : original_points)
-                std::cout << "\t(" << pt.x << ", " << pt.y << ")\n";
+                std::cout << "\t(" << pt << ")\n";
 
             // Write points to .txt
             write_points_to_file(original_points, points_file_name);
@@ -89,16 +115,19 @@ namespace ch10_drills
             std::cout << "\nReading from file:\n";
             std::cout << "------------------------------\n";
             for (Point pt : file_points)
-                std::cout << "\t(" << pt.x << ", " << pt.y << ")\n";
+                std::cout << "\t(" << pt << ")\n";
 
-            std::cout << "Standard Compare:\n";
+            std::cout << "Compare:\n";
             compare_points(original_points, file_points);
 
-            std::cout << "Compare Data with differing values:\n";
-            // original_points[0].x += 2.3; // test change
-            // file_points.push_back(Point{ 2.3,5.4 }); // test add
+            std::cout << "\n... Repeat with Mock Data ...\n";
+            std::mt19937 mt;
+            std::uniform_real_distribution<float> dis(0.0, 999.999);
+            float random_x = dis(mt);
+            original_points[0].setX(random_x); // test change
+            file_points.push_back(Point{ 2.3, 5.4 }); // test add
             compare_points(original_points, file_points);
-
+            
             return 0;
         }
         catch (const std::runtime_error& re)
@@ -147,7 +176,7 @@ namespace ch10_drills
                 "Invalid syntax, expected "
                 "end parentheses.");
 
-        return Point{ x,y };
+        return Point{ x, y };
     }
 
     std::vector<Point> get_x_number_of_points(int size)
@@ -177,7 +206,7 @@ namespace ch10_drills
 
         // assumes all entries are valid
         for (Point pt : points)
-            ost << '(' << pt.x << ',' << pt.y << ')' << '\n';
+            ost << '(' << pt << ')' << '\n';
 
         std::cout << "Succesfully wrote " << points.size()
             << " point entries into '"
@@ -219,34 +248,20 @@ namespace ch10_drills
         for (int i = 0; i < n; ++i) {
             std::string comment = "";
             std::string idx = std::to_string(i);
-            std::string a="", b="";
+            bool    has_a = vector_a.size() > i,
+                    has_b = vector_b.size() > i;
             pad_string(idx, 3, '0');
 
-            if (vector_a.size() > i)
-            {
-                a = std::to_string(vector_a[i].x) + ", " +
-                    std::to_string(vector_a[i].y);
-            }
-            else
-                a = missing;
-            if (vector_b.size() > i)
-            {
-                b = std::to_string(vector_b[i].x) + ", " +
-                    std::to_string(vector_b[i].y);
-            }
-            else
-                b = missing;
-
-            if (a == missing || b == missing)
+            if (!has_a || !has_b) {
                 comment = "MISSING";
-            else if (vector_a[i].x == vector_b[i].x &&
-                     vector_a[i].y == vector_b[i].y)
+            } else if (vector_a[i] == vector_b[i])
                 comment = "SAME";
             else
                 comment = "DIFFERENT";
 
             std::cout << idx << " | "
-                      << a << "\t| " << b << "\t| "
+                      << (has_a ? vector_a[i] : MISSING) << "\t| "
+                      << (has_b ? vector_b[i] : MISSING) << "\t| "
                       << comment << '\n';
         }
     }
