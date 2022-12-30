@@ -1,0 +1,27 @@
+The system is: MINGW64_NT-10.0-19044 - 3.4.3-dirty.x86_64 - unknown
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /ucrt64/bin/clang.exe 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.exe"
+
+The C compiler identification is Clang, found in "/home/Fredrik/stroustrup-ppp-drills/gui_examples/build/CMakeFiles/3.25.1/CompilerIdC/a.exe"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: /ucrt64/bin/clang++.exe 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.exe"
+
+The CXX compiler identification is Clang, found in "/home/Fredrik/stroustrup-ppp-drills/gui_examples/build/CMakeFiles/3.25.1/CompilerIdCXX/a.exe"
+
