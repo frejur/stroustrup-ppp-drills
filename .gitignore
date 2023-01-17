@@ -59,3 +59,10 @@ xcuserdata/
 
 # vscode
 .vscode/
+
+# builds
+build*/
+
+# QT Creator
+*.autosave
+*.kdev4
