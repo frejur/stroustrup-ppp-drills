@@ -1,6 +1,6 @@
 #include "Simple_window.h"
 #include "Graph.h"
-#include <system_errdor>
+#include <system_error>
 
 int main()
 {
