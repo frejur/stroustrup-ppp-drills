@@ -2,152 +2,83 @@
 #include "../lib/Graph.h"
 #include <system_error>
 #include <iostream>
+#include <algorithm>
+
+bool is_diagonal(int row, int col) {
+    return (col == row);
+}
 
 int main()
 {
     try
     {
+        const int WIN_W{ 800 };
+        const int WIN_H{ 1000 };
+        const int CELL_SZ{ 100 };
+        const int GRID_NUM_COLS{ 8 };
+        constexpr int GRID_NUM_ROWS{ GRID_NUM_COLS };
+        constexpr int GRID_SZ { CELL_SZ * GRID_NUM_COLS };
+        const string IMG_PELIKAN = "img/pelikan.jpg";
+        const string IMG_PIGEON = "img/pigeon.jpg";
+
         Graph_lib::Point tl{ 100, 100 };
 
-        Simple_window win{ tl, 600, 400, "My Window" };
+        Simple_window win{ tl, 800, 1000, "Chapter 13" };
 
-        // Axes
-        Graph_lib::Axis xa{
-            Graph_lib::Axis::x,
-            Graph_lib::Point{ 20, 300 },
-            280,
-            10,
-            "x axis"
-        };
-        win.attach(xa);
+        Graph_lib::Lines grid;
+        Graph_lib::Vector_ref<Graph_lib::Rectangle> rectangles;
 
-        Graph_lib::Axis ya{
-            Graph_lib::Axis::y,
-            Graph_lib::Point{ 20, 300 },
-            280,
-            10,
-            "y axis"
-        };
-        ya.set_color(Graph_lib::Color::cyan);
-        ya.label.set_color(Graph_lib::Color::dark_red);
-        win.attach(ya);
+        int offs_x{ 0 };
+        int offs_y{ 0 };
+        for (int row = 0; row <= GRID_NUM_ROWS; ++row) {
+            offs_y = row * CELL_SZ;
+            for (int col = 0; col <= GRID_NUM_COLS; ++col) {
+                offs_x = col * CELL_SZ;
+                if (row == 0) {
+                    grid.add(Point{ offs_x, 0 }, Point{ offs_x, GRID_SZ });
+                }
+                if (col == 0) {
+                    grid.add(Point{ 0, offs_y }, Point{ GRID_SZ, offs_y });
+                }
+                if (is_diagonal(row, col)) {
+                    rectangles.push_back(
+                        new Graph_lib::Rectangle{
+                            Point{ offs_x, offs_y },
+                            Point{ offs_x + CELL_SZ, offs_y + CELL_SZ }
+                        }
+                    );
+                    rectangles[rectangles.size() - 1].set_fill_color(Graph_lib::Color::dark_red);
+                    win.attach(rectangles[rectangles.size() - 1]);
+                }
+            }
+        }
 
-        win.set_label("Axes");
-        win.wait_for_button();
+        win.attach(grid);
 
-        // Graphed function
-        Function sine {
-            sin,
-            0,
-            100,
-            Graph_lib::Point{ 20, 150},
-            1000,
-            50,50
-        };
+        Graph_lib::Image pelikan_01(Point{ 0, 300 }, IMG_PELIKAN);
+        Graph_lib::Image pelikan_02(Point{ 300, 500 }, IMG_PELIKAN);
+        Graph_lib::Image pelikan_03(Point{ 400, 0 }, IMG_PELIKAN);
+        pelikan_01.set_mask(Point{ 25, 25 }, 200, 200);
+        pelikan_02.set_mask(Point{ 25, 25 }, 200, 200);
+        pelikan_03.set_mask(Point{ 25, 25 }, 200, 200);
 
-        win.attach(sine);
-        sine.set_color(Color::green);
+        win.attach(pelikan_01);
+        win.attach(pelikan_02);
+        win.attach(pelikan_03);
 
-        win.set_label("Graphed function");
-        win.wait_for_button();
+        Graph_lib::Image pigeon(Point{ 0, 0}, IMG_PIGEON);
+        pigeon.set_mask(Point{ 20, 20 }, 100, 100);
 
-        // Polygon
-        Graph_lib::Polygon poly;
-        poly.add(Graph_lib::Point{ 300, 200 });
-        poly.add(Graph_lib::Point{ 350, 100 });
-        poly.add(Graph_lib::Point{ 400, 200 });
-
-        poly.set_color(Color::red);
-        poly.set_style(Line_style::dash);
-        win.attach(poly);
-
-        win.set_label("Polygon");
-        win.wait_for_button();
-
-        // Rectangle
-        Graph_lib::Rectangle rect { Point {200, 200 }, 100, 50 };
-        win.attach(rect);
-
-        win.set_label("Rectangle");
-        win.wait_for_button();
-
-        // Polylines
-        Graph_lib::Closed_polyline poly_rect;
-        poly_rect.add(Graph_lib::Point{ 100, 50 });
-        poly_rect.add(Graph_lib::Point{ 200, 50 });
-        poly_rect.add(Graph_lib::Point{ 200, 100 });
-        poly_rect.add(Graph_lib::Point{ 100, 100 });
-        poly_rect.add(Graph_lib::Point{ 50, 75 });
-        win.attach(poly_rect);
-
-        win.set_label("Polyline (Faux rectangle)");
-        win.wait_for_button();
-
-        // Fill colors / borders
-        rect.set_fill_color(Graph_lib::Color::yellow);
-        poly.set_style(Line_style(Line_style::dashdot, 4));
-        poly_rect.set_style(Line_style(Line_style::dash, 2));
-        poly_rect.set_fill_color(Graph_lib::Color::green);
-
-        win.set_label("Fill colors / borders");
-        win.wait_for_button();
-
-        // Text
-        Graph_lib::Text t{ Graph_lib::Point{ 150, 150 }, "Hello, world" };
-        win.attach(t);
-
-        win.set_label("Text");
-        win.wait_for_button();
-
-        // Text formatting
-        t.set_font(Graph_lib::Font::times_bold);
-        t.set_font_size(20);
-
-        win.set_label("Text formatting");
-        win.wait_for_button();
-
-        // Image
-        Graph_lib::Image img{ Graph_lib::Point{ 100, 50 }, "img/pelikan.jpg"};
-        win.attach(img);
-
-        win.set_label("Image");
-        win.wait_for_button();
-
-        // Move Image
-        img.move(100, 200);
-
-        win.set_label("Move Image");
-        win.wait_for_button();
-
-        // And much more
-        Graph_lib::Circle c{
-            Graph_lib::Point{ 100, 200 },
-            50
-        };
-        Graph_lib::Ellipse e{
-            Graph_lib::Point{ 100, 200 },
-            75,
-            25
-        };
-        Graph_lib::Mark m{ Point{ 100, 200 }, 'x' };
-
-        e.set_color(Graph_lib::Color::dark_red);
-
-        ostringstream oss;
-        oss << "screen size: " << x_max() << 'x' << y_max()
-            << "; windows size: "
-                << win.x_max() << 'x' << win.y_max();
-        Graph_lib::Text sizes{ Point{ 100, 20 }, oss.str() };
-
-        Graph_lib::Image pigeon{ Point{ 225, 225 }, "img/pigeon.jpg" };
-        pigeon.set_mask(Point{ 40, 40 }, 200, 250);
-
-        win.attach(c);
-        win.attach(e);
-        win.attach(m);
-        win.attach(sizes);
         win.attach(pigeon);
-        win.set_label("And much more");
+
+        for (int i = 0; i < GRID_NUM_COLS * GRID_NUM_ROWS; ++i) {
+            int mod = i % GRID_NUM_COLS;
+            if (mod > 0)
+                pigeon.move(CELL_SZ, 0);
+            else if (i > 0)
+                pigeon.move(- (GRID_NUM_COLS-1) * CELL_SZ, CELL_SZ);
+            win.wait_for_button();
+        }
 
         win.wait_for_button();
 

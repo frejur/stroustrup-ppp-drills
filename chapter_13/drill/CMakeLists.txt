@@ -16,6 +16,8 @@ add_executable(${T_THIS}
     drill.h
     drill.cpp
 )
+configure_file(img/pelikan.jpg img/pelikan.jpg COPYONLY)
+configure_file(img/pigeon.jpg img/pigeon.jpg COPYONLY)
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
 target_include_directories(${T_THIS} PUBLIC ${FLTK_INCLUDE_DIRS})
