@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(chapter_12
+project(chapter_14
     VERSION 0.0.0
     LANGUAGES CXX
 )
@@ -15,20 +15,14 @@ message(STATUS "FLTK_INCLUDE_DIRS = '${FLTK_INCLUDE_DIRS}'")
 # Targets
 set(T_TEST "Test")
 set(T_DRILL "Drill")
-set(T_E01 "Exercise 1")
 
 set(SELECTED_TARGET ${T_DRILL} CACHE STRING "Selected target")
 set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
     ${T_TEST}
     ${T_DRILL}
-    ${T_E01}
 )
 message("Building target: ${SELECTED_TARGET}")
 
 IF(${SELECTED_TARGET} MATCHES ${T_DRILL})
     add_subdirectory(${CMAKE_SOURCE_DIR}/drill)
-ENDIF()
-
-IF(${SELECTED_TARGET} MATCHES ${T_E01})
-    add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e01)
 ENDIF()
