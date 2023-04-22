@@ -19,6 +19,7 @@ set(T_E01 "Exercise 1")
 set(T_E02 "Exercise 2")
 set(T_E03 "Exercise 3")
 set(T_E04 "Exercise 4")
+set(T_E05 "Exercise 5")
 
 set(SELECTED_TARGET ${T_DRILL} CACHE STRING "Selected target")
 set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
@@ -28,25 +29,26 @@ set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
     ${T_E02}
     ${T_E03}
     ${T_E04}
+    ${T_E05}
 )
 message("Building target: ${SELECTED_TARGET}")
 
-IF(${SELECTED_TARGET} MATCHES ${T_DRILL})
-    add_subdirectory(${CMAKE_SOURCE_DIR}/drill)
-ENDIF()
-
-IF(${SELECTED_TARGET} MATCHES ${T_E01})
-    add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e01)
-ENDIF()
-
-IF(${SELECTED_TARGET} MATCHES ${T_E02})
-    add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e02)
-ENDIF()
-
-IF(${SELECTED_TARGET} MATCHES ${T_E03})
-    add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e03)
-ENDIF()
-
-IF(${SELECTED_TARGET} MATCHES ${T_E04})
-    add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e04)
-ENDIF()
+if(
+    ${SELECTED_TARGET} MATCHES ${T_DRILL})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/drill)
+elseif(
+    ${SELECTED_TARGET} MATCHES ${T_E01})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e01)
+elseif(
+    ${SELECTED_TARGET} MATCHES ${T_E02})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e02)
+elseif(
+    ${SELECTED_TARGET} MATCHES ${T_E03})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e03)
+elseif(
+    ${SELECTED_TARGET} MATCHES ${T_E04})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e04)
+elseif(
+    ${SELECTED_TARGET} MATCHES ${T_E05})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e05)
+endif()
