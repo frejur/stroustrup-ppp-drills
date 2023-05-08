@@ -8,11 +8,11 @@ add_executable(${T_THIS}
     ../../lib/GUI.h
     ../../lib/GUI.cpp
     ../../lib/Point.h
-    ../../lib/Simple_window.cpp
-    ../../lib/Simple_window.h
     ../../lib/std_lib_facilities.h
     ../../lib/Window.h
     ../../lib/Window.cpp
+    Simple_window.cpp
+    Simple_window.h
     e06.cpp
 )
 
