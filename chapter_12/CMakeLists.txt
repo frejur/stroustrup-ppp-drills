@@ -24,6 +24,7 @@ set(T_E06 "Exercise 6")
 set(T_E07 "Exercise 7")
 set(T_E08 "Exercise 8")
 set(T_E09 "Exercise 9")
+set(T_E10 "Exercise 10")
 
 set(SELECTED_TARGET ${T_DRILL} CACHE STRING "Selected target")
 set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
@@ -38,37 +39,41 @@ set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
     ${T_E07}
     ${T_E08}
     ${T_E09}
+    ${T_E10}
 )
 message("Building target: ${SELECTED_TARGET}")
 
 if(
-    ${SELECTED_TARGET} MATCHES ${T_DRILL})
+    ${SELECTED_TARGET} STREQUAL ${T_DRILL})
         add_subdirectory(${CMAKE_SOURCE_DIR}/drill)
 elseif(
-    ${SELECTED_TARGET} MATCHES ${T_E01})
+    ${SELECTED_TARGET} STREQUAL ${T_E01})
         add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e01)
 elseif(
-    ${SELECTED_TARGET} MATCHES ${T_E02})
+    ${SELECTED_TARGET} STREQUAL ${T_E02})
         add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e02)
 elseif(
-    ${SELECTED_TARGET} MATCHES ${T_E03})
+    ${SELECTED_TARGET} STREQUAL ${T_E03})
         add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e03)
 elseif(
-    ${SELECTED_TARGET} MATCHES ${T_E04})
+    ${SELECTED_TARGET} STREQUAL ${T_E04})
         add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e04)
 elseif(
-    ${SELECTED_TARGET} MATCHES ${T_E05})
+    ${SELECTED_TARGET} STREQUAL ${T_E05})
         add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e05)
 elseif(
-    ${SELECTED_TARGET} MATCHES ${T_E06})
+    ${SELECTED_TARGET} STREQUAL ${T_E06})
         add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e06)
 elseif(
-    ${SELECTED_TARGET} MATCHES ${T_E07})
+    ${SELECTED_TARGET} STREQUAL ${T_E07})
         add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e07)
 elseif(
-    ${SELECTED_TARGET} MATCHES ${T_E08})
+    ${SELECTED_TARGET} STREQUAL ${T_E08})
         add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e08)
 elseif(
-    ${SELECTED_TARGET} MATCHES ${T_E09})
+    ${SELECTED_TARGET} STREQUAL ${T_E09})
         add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e09)
+elseif(
+    ${SELECTED_TARGET} STREQUAL ${T_E10})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e10)
 endif()

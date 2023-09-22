@@ -22,7 +22,7 @@ int main()
     constexpr int brd_dim_desired { 360 };
     constexpr int border { 4 };
     const int chk_sz { get_checker_size(brd_dim_desired, chk_num, border) };
-    const int brd_dim { chk_sz * chk_num + (chk_num - 1) * border };
+    const int brd_dim { chk_sz * chk_num + (chk_num - 1) * border + 2 * border };
     const int margin_l { static_cast<int>((ww - brd_dim) * 0.5) };
     const int margin_t { static_cast<int>((wh - brd_dim) * 0.5) };
     const Graph_lib::Color clr_odd { Color::white };
@@ -34,6 +34,8 @@ int main()
     };
 
     brd.set_fill_color(Graph_lib::Color::black);
+    brd.set_style(Graph_lib::Line_style(Graph_lib::Line_style::Line_style_type::solid, 0));
+    brd.set_color(Graph_lib::Color::invisible);
 
     std::vector<std::unique_ptr<Graph_lib::Rectangle>> chk_v;
     int x, y;
@@ -45,10 +47,10 @@ int main()
         std::unique_ptr<Graph_lib::Rectangle> r (
             new Graph_lib::Rectangle(
                 Graph_lib::Point {
-                    margin_l +
+                    margin_l + border +
                         x * border +
                         x * chk_sz,
-                    margin_t +
+                    margin_t + border +
                         y * border +
                         y * chk_sz
                 },
