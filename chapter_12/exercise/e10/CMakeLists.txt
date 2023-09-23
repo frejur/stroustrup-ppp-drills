@@ -13,7 +13,9 @@ add_executable(${T_THIS}
     ../../lib/Window.cpp
     ../../lib/Simple_window.cpp
     ../../lib/Simple_window.h
-    e08.cpp
+    e10.cpp
+    arrow.cpp
+    arrow.h
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
