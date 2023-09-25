@@ -16,7 +16,13 @@ add_executable(${T_THIS}
     e10.cpp
     arrow.cpp
     arrow.h
+    graph_box.cpp
+    graph_box.h
+    new_win.cpp
+    new_win.h
 )
+
+file(COPY html DESTINATION .)
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
 target_include_directories(${T_THIS} PUBLIC ${FLTK_INCLUDE_DIRS})
