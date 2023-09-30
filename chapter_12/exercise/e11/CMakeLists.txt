@@ -13,8 +13,12 @@ add_executable(${T_THIS}
     ../../lib/std_lib_facilities.h
     ../../lib/Window.h
     ../../lib/Window.cpp
-    inscr_poly.h
-    inscr_poly.cpp
+    RegularPoly.h
+    RegularPoly.cpp
+    SquareFromTriangle.h
+    PentagonFromSquare.h
+    HexagonFromPentagon.h
+    TrigHelpers.h
     e11.cpp
 )
 

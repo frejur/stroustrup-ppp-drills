@@ -1,9 +1,12 @@
 #define _USE_MATH_DEFINES
-#include "inscr_poly.h"
+#include "RegularPoly.h"
 #include <cmath>
 
-RegularPolygon::RegularPolygon(Graph_lib::Point o, int r, int n, float a)
-    : origin ( o ), radius ( r ), num_sides ( n ), angle { a }
+RegularPolygon::RegularPolygon(
+    Graph_lib::Point o, int r, int n, float a
+) :
+    origin ( o ), radius ( r ), num_sides ( n ),
+    angle { a }
 {
     // guard against incompatible numbers
     radius = min(1280, max(10, radius));
@@ -19,8 +22,18 @@ void RegularPolygon::draw_poly()
         offset_x{ 0 }, offset_y{ 0 };
 
     for (unsigned int i = 0; i < num_sides ; ++i) {
-        this_x = origin.x + (int)round(sin(M_PI - angle + ang_incr * i) * radius);
-        this_y = origin.y + (int)round(cos(M_PI - angle + ang_incr * i) * radius);
+        this_x = {
+            (int)round(
+                origin.x +
+                sin(M_PI - angle + ang_incr * i) * radius
+            )
+        };
+        this_y = {
+            (int)round(
+                origin.y +
+                cos(M_PI - angle + ang_incr * i) * radius
+            )
+        };
         if (i == 0) {
             add(origin);
             offset_x = this_x - origin.x;
