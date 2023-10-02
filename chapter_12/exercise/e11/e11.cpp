@@ -6,6 +6,7 @@
 #include "TrigHelpers.h"
 #include "SquareFromTriangle.h"
 #include "PentagonFromSquare.h"
+#include "HexagonFromPentagon.h"
 
 /* Exercise 11. Draw an equilateral triangle, inscribe it
  * 				inside a square, then keep inscribing the
@@ -38,7 +39,9 @@ int main()
         static_cast<int>(round(std::sqrt(3.0) * tri_rad))
     };
     RegularPolygon tri {
-        {520, 440}, tri_rad, 3,
+        { (int)round(ww * 0.5 + tri_rad * 0.75),
+          (int)round(wh * 0.5 + tri_rad * 0.5) },
+        tri_rad, 3,
         (float)TRI::deg_to_rad(90 + 15)
     };
     tri.set_color(Color::black);
@@ -70,6 +73,18 @@ int main()
         Line_style(Line_style::Line_style_type::solid, 1));
     win.attach(pen);
 
+    // Hexagon
+    HexagonFromPentagon hex_pen { pen_sqr.getSide() };
+    RegularPolygon hex {
+        { pen.point(3).x + hex_pen.getOffset_x(),
+          pen.point(3).y + hex_pen.getOffset_y()},
+        hex_pen.getSide(), 6,
+        (float)TRI::deg_to_rad(30 * 3)
+    };
+    hex.set_color(Color::black);
+    hex.set_style(
+        Line_style(Line_style::Line_style_type::solid, 1));
+    win.attach(hex);
 
     win.wait_for_button();
 

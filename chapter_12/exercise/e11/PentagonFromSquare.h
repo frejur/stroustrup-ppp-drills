@@ -38,6 +38,28 @@
  * inscribed in the pentagon.
  *
  * Source: https://www.graphicalcommunication.com/pdfs/drawinglargestsquareinsideapolygon.pdf
+ *
+ * There are mutliple ways to proceed from this point on but
+ * the code in this example uses the triangles formed on
+ * either side of the smaller square to calculate the
+ * position and radius of the pentagon.
+ *
+ * Angles:         ,
+ * ~~~~~~~       ....
+ * a = 54      ..    ..
+ * b = 18    ..        ..
+ * c = 108 ..            ..
+ *       ..┌──────────────┐..
+ *     .. a│      s       │  ..
+ *  A ,c   │              │    . B
+ *    \    │              │    /
+ *     \   │s            s│   /
+ *      \  │              │  /
+ *       \b│              │ /
+ *        \│      s       │/
+ *         └──────────────┘
+ *          \            /
+ *           '──────────'
  */
 
 class PentagonFromSquare
