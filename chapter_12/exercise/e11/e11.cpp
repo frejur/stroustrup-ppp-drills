@@ -31,7 +31,7 @@ int main()
     const int ww { 840 };
     const int wh { 680 };
     Simple_window win{
-        {0,0}, ww, wh, "Inscribe Polyons" };
+        {0,0}, ww, wh, "Inscribe Polygons" };
 
     // Triangle
     const int tri_rad { 200 };
