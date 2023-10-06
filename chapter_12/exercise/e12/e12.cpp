@@ -19,7 +19,7 @@ double sgn(double num)
 vector<int> getSuperXY (
     double a, double b,
     double m, double n,
-    double step, double radius)
+    double step)
 {
     double t;
     vector<int> xy {0, 0};
@@ -32,11 +32,11 @@ vector<int> getSuperXY (
     xy[0] = {
         (int)static_cast<int>(
             pow(abs(cos(t)), 2/m) *
-            a * sgn(cos(t)) * radius) };
+            a * sgn(cos(t))) };
     xy[1] = {
         (int)static_cast<int>(
             pow(abs(sin(t)), 2/n) *
-            b * sgn(sin(t)) * radius) };
+            b * sgn(sin(t))) };
     return xy;
 }
 
@@ -50,7 +50,7 @@ double randNum() {
 unique_ptr<Closed_polyline> plotSuper(
     int x,	int y,
     double a, double b, double m, double n,
-    int N, int radius)
+    int N)
 {
     unique_ptr<Closed_polyline> e( new Closed_polyline );
     e->set_color(Color::black);
@@ -59,7 +59,7 @@ unique_ptr<Closed_polyline> plotSuper(
 
     for (int i = 0; i < N; ++i) {
         vector<int> xy {
-            getSuperXY(a, b, m, n, 1.0/N * i, radius)
+            getSuperXY(a, b, m, n, 1.0/N * i)
         };
         xy[0] += x; xy[1] += y;
         e->add({ xy[0], xy[1] });
@@ -102,15 +102,15 @@ int main()
         if (i>0) {
             rand_m = round((randNum()) * 200) / 100;
             rand_n = round((randNum()) * 200) / 100;
-            m = min(rand_m, m);
-            n = min(rand_n, n);
+            m = max(0.1, min(rand_m, m));
+            n = max(0.1, min(rand_n, n));
         }
         eli_v.push_back(
             plotSuper(
                 mid_x, mid_y,
-                1, 1,
+                radius_i, radius_i,
                 m, n,
-                N, radius)
+                N)
         );
         win.attach(*eli_v.back());
     }
