@@ -1,5 +1,6 @@
 #include "../../lib/Simple_window.h"
 #include "../../lib/Graph.h"
+#include "box.h"
 #include <iostream>
 #include <cmath>
 
@@ -17,6 +18,18 @@ int main() {
 
     Simple_window win{
         {10, 10}, w, h, "Box with rounded corners"};
+
+        E02::Box b1{
+            {10, 10}, {200, 200}, 0.5
+        };
+        b1.set_color(Color::black);
+        win.attach(b1);
+
+        E02::Box b2{
+            {mid_x, mid_y}, 100, 100, 0.5
+        };
+        b2.set_color(Color::blue);
+        win.attach(b2);
 
         win.wait_for_button();
     }
