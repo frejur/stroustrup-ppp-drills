@@ -1,6 +1,6 @@
-message("Processing /exercise/e01...")
+message("Processing /exercise/e02...")
 
-set(T_THIS "Chapter_13_exercise_01")
+set(T_THIS "Chapter_13_exercise_02")
 
 add_executable(${T_THIS}
     ../../lib/Graph.h
@@ -13,8 +13,7 @@ add_executable(${T_THIS}
     ../../lib/std_lib_facilities.h
     ../../lib/Window.h
     ../../lib/Window.cpp
-    e01.cpp
-    arc.h arc.cpp
+    e02.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
