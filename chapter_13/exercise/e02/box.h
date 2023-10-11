@@ -60,6 +60,10 @@ private:
         const Graph_lib::Point& o, const Graph_lib::Point& e
     );
 
+    int getIterDistToNW_Corner(
+        const Graph_lib::Point& o, const Graph_lib::Point& e
+    ) const;
+
     // Given a rectangle: get the name of corner point p1,
     // with p2 being the opposite corner point.
     inline Corner getCorner(

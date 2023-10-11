@@ -10,10 +10,8 @@ Box::Box(
     errorIfZeroArea(o, e);
     crv_method = CrvMethod::Ratio;
 
-    add(o);
-    add(e);
-
     setSize(o, e);
+    updateCornerPoints(o, e);
 
     int radius_max{ getMaxRadius() };
     setRadius(
@@ -26,10 +24,9 @@ Box::Box(Graph_lib::Point o, int w, int h, double ratio)
     errorIfZeroArea(w, h);
     crv_method = CrvMethod::Ratio;
 
-    add(o);
-    add({ o.x + w, o.y + h });
-
     setSize(w, h);
+
+    updateCornerPoints(o, { o.x + w, o.y + h });
 
     int radius_max{ getMaxRadius() };
     setRadius(
@@ -77,10 +74,32 @@ void Box::setRadius(int r, int max)
 
 void Box::draw_lines() const
 {
+    if (number_of_points() < 4) return;
     if (color().visibility()) {
+        int i_dist {
+            getIterDistToNW_Corner(
+                point(0),
+                point(2)
+            )
+        };
+        std::string s {
+            "Iter. dist. " + std::to_string(i_dist) + ", " +
+            "number of points: " +
+            std::to_string(number_of_points()) + ", "};
+
+        for (int i=0; i < 4; ++i) {
+            int j { i + i_dist };
             fl_line(
-            0,0,0,0
+                point(j%4).x,
+                point(j%4).y,
+                point((j+1)%4).x,
+                point((j+1)%4).y
             );
+            s += ", Point " + std::to_string(j%4) +
+                 " {" + std::to_string(point(j%4).x) +
+                 ", " + std::to_string(point(j%4).y) + "}";
+        }
+        fl_draw(s.c_str(), point(3).x, point(3).y);
     }
 }
 
@@ -98,6 +117,21 @@ Corner Box::getCorner(
     return Corner::SE;
 }
 
+int Box::getIterDistToNW_Corner(
+    const Graph_lib::Point& o, const Graph_lib::Point& e
+) const {
+    return(
+        (std::max)(
+            0,
+            (4 -
+            (int)std::distance(
+                dir_to_next_pt.begin(),
+                dir_to_next_pt.find(getCorner(o, e))
+            )) % 4
+        )
+    );
+}
+
 void Box::updateCornerPoints(
     const Graph_lib::Point& o, const Graph_lib::Point& e)
 {
@@ -113,25 +147,19 @@ void Box::updateCornerPoints(
         throw std::runtime_error(
             "No direction linked to given corner");
     }
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 3; ++i) {
         if (it == dir_to_next_pt.end()) {
             it = dir_to_next_pt.begin();
         }
         std::pair<int, int> dir { it->second };
         p.x += w * dir.first;
         p.y += h * dir.second;
-        if ((i+1) > number_of_points()) {
-            add(p);
+        if ((i+1) >= number_of_points()) {
+            add({ p });
         } else {
-            set_point(i+1, p);
+            set_point(number_of_points(), { p });
         }
-        it++;
-    }
-
-    if (number_of_points() < 4) {
-        add(e);
-    } else {
-        set_point(3, o);
+        ++it;
     }
 }
 
