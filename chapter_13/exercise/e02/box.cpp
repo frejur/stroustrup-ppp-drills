@@ -4,33 +4,50 @@
 using namespace E02;
 
 Box::Box(
-    Graph_lib::Point o, Graph_lib::Point e, double ratio
-    ) : crv_ratio{ ratio }, crv_radius { 0 }, w{ 0 }, h{ 0 }
+    Graph_lib::Point o, Graph_lib::Point e, double ratio,
+    CrvMethod m
+    ) : crv_method{ m }, crv_ratio{ ratio },
+        crv_radius { 0 }, w{ 0 }, h{ 0 }
 {
     errorIfZeroArea(o, e);
-    crv_method = CrvMethod::Ratio;
 
     setSize(o, e);
     updateCornerPoints(o, e);
 
     int radius_max{ getMaxRadius() };
-    setRadius(
-        getRadiusFromRatio(ratio, radius_max), radius_max);
+    initRadius(m, crv_ratio, radius_max);
 }
 
-Box::Box(Graph_lib::Point o, int w, int h, double ratio)
-    : crv_ratio{ ratio }, crv_radius { 0 }
+Box::Box(
+    Graph_lib::Point o, int w, int h, double ratio,
+    CrvMethod m
+    ) : crv_method{ m }, crv_ratio{ ratio },
+        crv_radius { 0 }, w{ 0 }, h { 0 }
 {
     errorIfZeroArea(w, h);
-    crv_method = CrvMethod::Ratio;
 
     setSize(w, h);
 
     updateCornerPoints(o, { o.x + w, o.y + h });
 
     int radius_max{ getMaxRadius() };
-    setRadius(
-        getRadiusFromRatio(ratio, radius_max), radius_max);
+    initRadius(m, crv_ratio, radius_max);
+}
+
+void Box::initRadius(
+    CrvMethod m, double ratio_or_radius, double radius_max)
+{
+    if (m == CrvMethod::Ratio) {
+        crv_ratio = (std::max)(
+            (std::min)(1.0, ratio_or_radius), 0.0
+        );
+        setRadius(
+            getRadiusFromRatio(crv_ratio, radius_max),
+            radius_max
+        );
+    } else {
+        setRadius(ratio_or_radius, radius_max);
+    }
 }
 
 void Box::setSize(
@@ -76,30 +93,42 @@ void Box::draw_lines() const
 {
     if (number_of_points() < 4) return;
     if (color().visibility()) {
+        // Offset iterator to start drawing at NW corner
         int i_dist {
             getIterDistToNW_Corner(
                 point(0),
                 point(2)
             )
         };
-        std::string s {
-            "Iter. dist. " + std::to_string(i_dist) + ", " +
-            "number of points: " +
-            std::to_string(number_of_points()) + ", "};
 
-        for (int i=0; i < 4; ++i) {
+        int i{ 0 };
+        double start_a{ 90 };
+        for (const auto& d : dir_to_next_pt) {
             int j { i + i_dist };
+            int dir_x{ d.second.first};
+            int dir_y{ d.second.second};
+
             fl_line(
-                point(j%4).x,
-                point(j%4).y,
-                point((j+1)%4).x,
-                point((j+1)%4).y
+                point(j%4).x + dir_x * crv_radius,
+                point(j%4).y + dir_y * crv_radius,
+                point((j+1)%4).x - dir_x * crv_radius,
+                point((j+1)%4).y - dir_y * crv_radius
             );
-            s += ", Point " + std::to_string(j%4) +
-                 " {" + std::to_string(point(j%4).x) +
-                 ", " + std::to_string(point(j%4).y) + "}";
+
+            if (crv_radius > 0) {
+                fl_arc(
+                    point(j%4).x - crv_radius +
+                        crv_radius * dir_x -
+                        crv_radius * dir_y,
+                    point(j%4).y - crv_radius +
+                        crv_radius * dir_y +
+                        crv_radius * dir_x,
+                    crv_radius * 2, crv_radius * 2,
+                    start_a - i * 90, start_a - (i-1) * 90
+                );
+            }
+            ++i;
         }
-        fl_draw(s.c_str(), point(3).x, point(3).y);
     }
 }
 
@@ -109,11 +138,9 @@ Corner Box::getCorner(
 ) const
 {
     if (p1.x < p2.x) {
-        if (p1.y < p2.y)	{ 	return Corner::NW; }
-        if (p1.y > p2.y)	{ 	return Corner::SW; }
-    } else
-        if (p1.y < p2.y)	{ 	return Corner::NE;
-    }
+        if (p1.y < p2.y) { return Corner::NW; }
+        if (p1.y > p2.y) { return Corner::SW; }
+    } else if (p1.y < p2.y) { return Corner::NE; }
     return Corner::SE;
 }
 

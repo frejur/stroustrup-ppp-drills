@@ -22,20 +22,22 @@ public:
     // Define by corner points
     Box(
         Graph_lib::Point o, Graph_lib::Point e,
-        double crv_ratio
+        double crv_ratio, CrvMethod m = CrvMethod::Ratio
     );
     Box(
-        Graph_lib::Point o, int w, int h, double crv_ratio
-    );
+        Graph_lib::Point o, Graph_lib::Point e,
+        int crv_radius, CrvMethod m
+    ) : Box(o, e, static_cast<double>(crv_radius), m) {};
 
     // Define by top left corner point and size
     Box(
-        Graph_lib::Point o, Graph_lib::Point e,
-        int crv_radius
+        Graph_lib::Point o, int w, int h, double crv_ratio,
+        CrvMethod m = CrvMethod::Ratio
     );
     Box(
-        Graph_lib::Point o, int w, int h, int crv_radius
-    );
+        Graph_lib::Point o, int w, int h, int crv_radius,
+        CrvMethod m
+    ) : Box(o, w, h, static_cast<double>(crv_radius), m) {};
 private:
     CrvMethod crv_method;
     double crv_ratio{ 0 };  // Used to set crv_radius
@@ -43,13 +45,17 @@ private:
     int w{ 0 }, h{ 0 };		// Size
 
     const std::map<Corner, std::pair<int, int>>
-        dir_to_next_pt // Clockwise
+        dir_to_next_pt // Clockwise, order must remain
     {
         { Corner::NW, {1, 0} },
         { Corner::NE, {0, 1} },
         { Corner::SE, {-1, 0} },
         { Corner::SW, {0, -1} }
     };
+
+    void initRadius(
+        CrvMethod m, double ratio_or_radius,
+        double radius_max);
 
     void setSize(
         const Graph_lib::Point& o, const Graph_lib::Point& e
