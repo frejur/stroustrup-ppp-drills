@@ -48,7 +48,7 @@ void e03()
 int main() {
 	try {
 		e03();
-		return 1;
+		return 0;
 	}
 	catch (std::exception &e) {
 		std::cerr<<e.what()<<'\n';
