@@ -32,39 +32,34 @@ Graph_lib::Point HLP::get(const Graph_lib::Ellipse& e, HLP::PtID id)
 		return e.center();
 	}
 	double angle{ dir_angle.find(id)->second };
-	double len{ 0 };
+	double len_x{ static_cast<double>(e.major()) };
+	double len_y{ static_cast<double>(e.minor()) };
 
-	if (e.major()==e.minor())
-	{
-		len = e.major();
-		angle *= M_PI / 180;
-	}
-	else if (static_cast<int>(angle)%90 == 0)
-	{
-		len = (static_cast<int>(angle)%180 == 0) ? e.major() : e.minor();
-		angle *= M_PI / 180;
-	}
-	else
+	if (e.major()!=e.minor() && static_cast<int>(angle)%90 != 0)
 	{
 		double angle_add{ std::atan((e.minor()*0.5) / (e.major()*0.5)) };
-		angle -= 45;
-		if (static_cast<int>(angle)%180 == 0) {
-			angle = angle * M_PI / 180 + angle_add;
+		double angle_eq{ angle - 45 };
+		if (static_cast<int>(angle_eq)%180 == 0) {
+			angle_eq = angle_eq * M_PI / 180 + angle_add;
 		} else {
-			angle = angle * M_PI / 180 + (M_PI / 2 - angle_add);
+			angle_eq = angle_eq * M_PI / 180 + (M_PI / 2 - angle_add);
 		}
-		len = (
+		angle = 0.5 * ((angle * M_PI / 180) + angle_eq);
+		len_x = (
 			(e.major() * e.minor()) /
 			sqrt(
 				e.major()*e.major() * std::sin(angle)*std::sin(angle) +
 				e.minor()*e.minor() * std::cos(angle)*std::cos(angle)
 			)
 		);
+		len_y = len_x;
+	} else {
+		angle *= M_PI / 180;
 	}
 	return(
 		GL::Point{
-			static_cast<int>(round(e.center().x + len * std::cos(angle))),
-			static_cast<int>(round(e.center().y + len * std::sin(angle)))
+			static_cast<int>(round(e.center().x + len_x * std::cos(angle))),
+			static_cast<int>(round(e.center().y + len_y * std::sin(angle)))
 		}
 	);
 }

@@ -23,7 +23,7 @@ void e04()
 	Simple_window win{ {10, 10}, win_w, win_h, "Ellipse connection points"};
 
 	// Ellipse -----------------------------------------------------------------
-	GL::Ellipse e{ c, c.x - 25, c.y - 50};
+	GL::Ellipse e{ c, c.x -25, c.y - 150};
 	e.set_color(GL::Color::black);
 	win.attach(e);
 
