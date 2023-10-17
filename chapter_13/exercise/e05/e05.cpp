@@ -1,9 +1,12 @@
 #include "../../lib/Graph.h"
+#include "../../lib/GUI.h"
 #include "../../lib/Simple_window.h"
 #include <exception>
 #include <iostream>
 #include <vector>
+#include <memory>
 #include "e05_helpers.h"
+#include <FL/Fl_Text_Display.H>
 
 /* Exercise 5.
  * Define helper functions that return connection Points for a given
@@ -17,10 +20,23 @@ namespace GL = Graph_lib;
 
 void e04()
 {
+	constexpr bool ENABLE_DEBUG = true;
+	constexpr int debug_win_mult{ ENABLE_DEBUG ? 2 : 1};
+
 	constexpr int win_w{ 640 };
 	constexpr int win_h{ 480 };
 	GL::Point c{ static_cast<int>(win_w*0.5), static_cast<int>(win_h*0.5) };
-	Simple_window win{ {10, 10}, win_w, win_h, "Ellipse connection points"};
+	Simple_window win{ {10, 10}, win_w * debug_win_mult, win_h, "Ellipse connection points"};
+
+	std::unique_ptr<GL::Out_box> debug_box;
+	if (ENABLE_DEBUG) {
+		GL::Point debug_o{ win_w, 0 };
+		debug_box = std::make_unique<GL::Out_box>(debug_o, win_w, win_h, "");
+		win.attach(*debug_box);
+		debug_box->put("Debug");
+		debug_box->put(debug_box->label + " 2");
+		Fl_Text_Display debug_txt{ win_w, 0, win_w, win_h, "Howdy world"} ;
+	}
 
 	// Ellipse -----------------------------------------------------------------
 	GL::Ellipse e{ c, c.x -25, c.y - 150};
@@ -109,6 +125,7 @@ void e04()
 	GL::Mark mark_se2{ E05::se(ci), 'e' };
 	mark_se2.set_color(GL::Color::green);
 	win.attach(mark_se2);
+
 
 	win.wait_for_button();
 }

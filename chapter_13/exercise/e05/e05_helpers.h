@@ -16,6 +16,8 @@ struct ConnectionPointHelper
 	static GL::Point get(const GL::Ellipse& r, PtID id);
 private:
 	ConnectionPointHelper();
+	const static GL::Point getPermiterPoint(
+		const GL::Ellipse&,	double radius_x, double radius_y, double angle);
 
 	// Direction in relation to center of Circle/Ellipse
 	const static std::map<PtID, double> dir_angle;
