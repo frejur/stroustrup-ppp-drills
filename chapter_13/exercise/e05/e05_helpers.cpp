@@ -4,6 +4,7 @@
 #include <cmath>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <iostream>
 
 using HLP = E05::ConnectionPointHelper;
 namespace GL = Graph_lib;
@@ -57,6 +58,7 @@ GL::Point HLP::get(const GL::Ellipse& e, HLP::PtID id)
 			parametric_angle += M_PI;
 		}
 		double average_angle{ (angle_radians + parametric_angle) * 0.5 };
+		std::cout << "Test" << average_angle << std::endl;
 		return getPerimeterPoint(e, len_x, len_y, parametric_angle);
 	}
 	return getPerimeterPoint(e, len_x, len_y, angle_radians);

@@ -30,13 +30,16 @@ void e04()
 	Debug_window win{ {10, 10}, win_w, win_h, "Ellipse connection points",
 		ENABLE_DEBUG};
 
+	FLTK_buffer buf(win);
+	std::streambuf *sb = std::cout.rdbuf(&buf);
+
 	// Ellipse -----------------------------------------------------------------
 	GL::Ellipse e{ c, c.x -25, c.y - 150};
 	e.set_color(GL::Color::black);
 	win.attach(e);
 
-	win.log("Hello");
-	win.log("World");
+	std::cout << "Hello," << '\n';
+	std::cout << "world!" << std::endl;
 
 	// Top row
 	GL::Mark mark_nw{ E05::nw(e), 'w' };
@@ -121,8 +124,9 @@ void e04()
 	mark_se2.set_color(GL::Color::green);
 	win.attach(mark_se2);
 
-
 	win.wait_for_button();
+
+	std::cout.rdbuf(sb);
 }
 
 int main() {
