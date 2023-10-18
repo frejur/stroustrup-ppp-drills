@@ -7,6 +7,7 @@
 #include <memory>
 #include "e05_helpers.h"
 #include <FL/Fl_Text_Display.H>
+#include "../../lib/Debug_window.h"
 
 /* Exercise 5.
  * Define helper functions that return connection Points for a given
@@ -26,22 +27,16 @@ void e04()
 	constexpr int win_w{ 640 };
 	constexpr int win_h{ 480 };
 	GL::Point c{ static_cast<int>(win_w*0.5), static_cast<int>(win_h*0.5) };
-	Simple_window win{ {10, 10}, win_w * debug_win_mult, win_h, "Ellipse connection points"};
-
-	std::unique_ptr<GL::Out_box> debug_box;
-	if (ENABLE_DEBUG) {
-		GL::Point debug_o{ win_w, 0 };
-		debug_box = std::make_unique<GL::Out_box>(debug_o, win_w, win_h, "");
-		win.attach(*debug_box);
-		debug_box->put("Debug");
-		debug_box->put(debug_box->label + " 2");
-		Fl_Text_Display debug_txt{ win_w, 0, win_w, win_h, "Howdy world"} ;
-	}
+	Debug_window win{ {10, 10}, win_w, win_h, "Ellipse connection points",
+		ENABLE_DEBUG};
 
 	// Ellipse -----------------------------------------------------------------
 	GL::Ellipse e{ c, c.x -25, c.y - 150};
 	e.set_color(GL::Color::black);
 	win.attach(e);
+
+	win.log("Hello");
+	win.log("World");
 
 	// Top row
 	GL::Mark mark_nw{ E05::nw(e), 'w' };

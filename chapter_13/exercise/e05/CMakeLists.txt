@@ -13,6 +13,7 @@ add_executable(${T_THIS}
     ../../lib/Window.cpp
     ../../lib/Simple_window.cpp
     ../../lib/Simple_window.h
+    ../../lib/Debug_window.h
     e05.cpp
     e05_helpers.h
     e05_helpers.cpp
