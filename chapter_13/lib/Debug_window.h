@@ -60,16 +60,13 @@ public:
 	Debug_window(GL::Point xy, int w, int h, const string& title,
 		bool enable_debug=false)
 	:	Simple_window(xy, static_cast<int>(w + w*enable_debug), h, title),
-		m_debug_is_enabled( enable_debug )
+		m_debug_is_enabled( enable_debug ), m_fltk_buf(FLTK_buffer(*this))
 	{
 		if (!enable_debug) {
 			return;
 		}
 		m_console = std::make_unique<Debug_console>(
 			Debug_console({w, 0}, w, h)
-		);
-		m_fltk_buf = std::make_unique<FLTK_buffer>(
-			FLTK_buffer(*this)
 		);
 		attach(*m_console);
 	}
@@ -83,14 +80,14 @@ public:
 private:
 	const bool m_debug_is_enabled;
 	std::unique_ptr<Debug_console> m_console;
-	std::unique_ptr<FLTK_buffer> m_fltk_buf;
+	FLTK_buffer m_fltk_buf;
 };
 
 
 FLTK_buffer::FLTK_buffer(Debug_window& win)
-: m_win(win) {
+: m_win(win), m_sb(std::cout.rdbuf()) {
 	setp(0, 0);
-	m_sb = std::cout.rdbuf(this);
+	std::cout.rdbuf(this);
 }
 
 FLTK_buffer::~FLTK_buffer() {

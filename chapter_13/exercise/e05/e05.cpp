@@ -21,8 +21,7 @@ namespace GL = Graph_lib;
 
 void e04()
 {
-	constexpr bool ENABLE_DEBUG = true;
-	constexpr int debug_win_mult{ ENABLE_DEBUG ? 2 : 1};
+	constexpr bool ENABLE_DEBUG{ true };
 
 	constexpr int win_w{ 640 };
 	constexpr int win_h{ 480 };
@@ -30,16 +29,10 @@ void e04()
 	Debug_window win{ {10, 10}, win_w, win_h, "Ellipse connection points",
 		ENABLE_DEBUG};
 
-	FLTK_buffer buf(win);
-	std::streambuf *sb = std::cout.rdbuf(&buf);
-
 	// Ellipse -----------------------------------------------------------------
 	GL::Ellipse e{ c, c.x -25, c.y - 150};
 	e.set_color(GL::Color::black);
 	win.attach(e);
-
-	std::cout << "Hello," << '\n';
-	std::cout << "world!" << std::endl;
 
 	// Top row
 	GL::Mark mark_nw{ E05::nw(e), 'w' };
@@ -125,8 +118,6 @@ void e04()
 	win.attach(mark_se2);
 
 	win.wait_for_button();
-
-	std::cout.rdbuf(sb);
 }
 
 int main() {

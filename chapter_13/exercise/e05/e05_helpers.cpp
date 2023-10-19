@@ -16,9 +16,9 @@ enum class HLP::PtID {
 };
 
 const std::map<HLP::PtID, double> HLP::dir_angle {
-	{HLP::PtID::NW, -135.0},
-	{HLP::PtID::N,  -90.0},
-	{HLP::PtID::NE, -45.0},
+	{HLP::PtID::NW, 225.0},
+	{HLP::PtID::N,  270.0},
+	{HLP::PtID::NE, 315.0},
 	{HLP::PtID::E, 0.0},
 	{HLP::PtID::SE, 45.0},
 	{HLP::PtID::S, 90.0},
@@ -54,12 +54,21 @@ GL::Point HLP::get(const GL::Ellipse& e, HLP::PtID id)
 		double parametric_angle{
 			std::atan(len_x / len_y * std::tan(angle_radians))
 		};
-		if (angle_i%135) {
+		if (90 < angle_i && angle_i < 270) {
 			parametric_angle += M_PI;
 		}
+		if (parametric_angle < 0) {
+			parametric_angle += 2*M_PI;
+		}
 		double average_angle{ (angle_radians + parametric_angle) * 0.5 };
-		std::cout << "Test" << average_angle << std::endl;
-		return getPerimeterPoint(e, len_x, len_y, parametric_angle);
+
+		std::cout << "Base angle:\t\t\t" << angle_i << std::endl;
+		std::cout << "Base angle from radians:\t" << angle_radians*180/M_PI << std::endl;
+		std::cout << "Parametric angle:\t\t" << parametric_angle*180/M_PI << std::endl;
+		std::cout << "Average angle:\t\t\t" << average_angle*180/M_PI << std::endl;
+		std::cout << "------------------------------------------" << std::endl;
+
+		return getPerimeterPoint(e, len_x, len_y, average_angle);
 	}
 	return getPerimeterPoint(e, len_x, len_y, angle_radians);
 }
