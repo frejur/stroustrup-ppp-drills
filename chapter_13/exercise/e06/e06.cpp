@@ -1,6 +1,6 @@
 #include "../../lib/Graph.h"
-#include "../../lib/GUI.h"
 #include "../../lib/Debug_window.h"
+#include "text_box.h"
 #include <exception>
 #include <iostream>
 #include <vector>
@@ -46,7 +46,7 @@ void e06()
 	// TODO: Define a Text_box class
 
 	// Top row -----------------------------------------------------------------
-	GL::Text txt_win{ { pad_w + win_w_qrt, pad_h}, "Window"};
+	TBX::Text_box txt_win{ { pad_w + win_w_qrt, pad_h}, "Window"};
 	txt_win.set_color(FL_BLACK);
 	win.attach(txt_win);
 
