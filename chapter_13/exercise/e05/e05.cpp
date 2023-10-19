@@ -19,9 +19,9 @@
 
 namespace GL = Graph_lib;
 
-void e04()
+void e05()
 {
-	constexpr bool ENABLE_DEBUG{ true };
+	constexpr bool ENABLE_DEBUG{ false };
 
 	constexpr int win_w{ 640 };
 	constexpr int win_h{ 480 };
@@ -122,8 +122,8 @@ void e04()
 
 int main() {
 	try {
-		e04();
-		return 0;
+          e05();
+          return 0;
 	}
 	catch (std::exception &e) {
 		std::cerr<<e.what()<<'\n';
