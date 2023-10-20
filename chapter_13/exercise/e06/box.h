@@ -38,6 +38,7 @@ public:
         Graph_lib::Point o, int w, int h, int crv_radius,
         CrvMethod m
     ) : Box(o, w, h, static_cast<double>(crv_radius), m) {};
+    void draw_lines() const; // override Shape::draw_lines()
 private:
     CrvMethod crv_method;
     double crv_ratio{ 0 };  // Used to set crv_radius
@@ -86,7 +87,6 @@ private:
         Graph_lib::Point o, Graph_lib::Point e
     ) const;
     bool areaIsZero() const;
-    void draw_lines() const; // override Shape::draw_lines()
 };
 
 } // namespace BOX -----------------------------------------

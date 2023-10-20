@@ -1,16 +1,15 @@
 #include "text_box.h"
 #include <iostream>
 #include "box.h"
+#include <typeinfo>
 
 using namespace TBX;
 
 Text_box::Text_box(GL::Point xy, const string& text, BG_shape bg)
 : Text(xy, text), c_mark(std::make_unique<GL::Lines>())
 {
-	c_mark->add({xy.x, xy.y - 5}, {xy.x, xy.y + 5});
-	c_mark->add({xy.x - 5, xy.y}, {xy.x + 5, xy.y});
-
 	set_font_size(default_font_size);
+	set_font(default_font_face);
 
 	std::pair<int, int> text_sz{ get_bbox_size() };
 
@@ -20,26 +19,38 @@ Text_box::Text_box(GL::Point xy, const string& text, BG_shape bg)
 	);
 	bg_shape = init_bg_shape(bg, text_sz.first, text_sz.second);
 
+	c_mark->add({xy.x, xy.y - 5}, {xy.x, xy.y + 5});
+	c_mark->add({xy.x - 5, xy.y}, {xy.x + 5, xy.y});
+
 	std::cout << "Size: " << text_sz.first << ", "
 		<< text_sz.second << std::endl;
 }
 
 std::pair<int, int> Text_box::get_bbox_size() const {
 	int mv_x = 0, mv_y = 0, sz_x = 0, sz_y = 0;
+	Fl_Font old_font{ fl_font() };
 	Fl_Fontsize old_sz{ fl_size() };
-	fl_font(fl_font(), font_size());
+	fl_font(font().as_int(), font_size());
 	fl_text_extents(label().c_str(), mv_x, mv_y, sz_x, sz_y);
-	fl_font(fl_font(), old_sz);
+	fl_font(old_font, old_sz);
 	return std::pair<int, int>(sz_x, sz_y);
 }
 
-std::unique_ptr<GL::Shape> Text_box::init_bg_shape(BG_shape bg, int w, int h)
+std::unique_ptr<GL::Shape> Text_box::init_bg_shape(BG_shape bg, int ww, int hh)
 {
 	switch(bg) {
-	case BG_shape::Box:
-		return std::make_unique<BOX::Box>(point(0), w, h, 0.5);
-	case BG_shape::Ellipse:
-		return std::make_unique<GL::Ellipse>(point(0), w, h);
+	case BG_BOX:
+	{
+		GL::Point o{ point(0).x, point(0).y - hh };
+		return std::make_unique<BOX::Box>(o, ww, hh, 0.5);
+	}
+	case BG_ELLIPSE:
+	{
+		int w_half{ static_cast<int>(ww * 0.5) };
+		int h_half{ static_cast<int>(hh * 0.5) };
+		GL::Point o{ point(0).x + w_half, point(0).y - h_half };
+		return std::make_unique<GL::Ellipse>(o, w_half + 10, h_half + 10);
+	}
 	default:
 		return std::unique_ptr<GL::Shape>();
 	}
@@ -48,4 +59,11 @@ std::unique_ptr<GL::Shape> Text_box::init_bg_shape(BG_shape bg, int w, int h)
 void Text_box::draw_lines() const{
 	Text::draw_lines();
 	c_mark->draw_lines();
+	if (bg_shape) {
+		if (typeid(*bg_shape.get()) == typeid(BOX::Box)) {
+			dynamic_cast<BOX::Box*>(bg_shape.get())->draw_lines();
+		}else if (typeid(*bg_shape.get()) == typeid(GL::Ellipse)) {
+			dynamic_cast<GL::Ellipse*>(bg_shape.get())->draw_lines();
+		}
+	}
 }

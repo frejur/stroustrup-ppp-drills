@@ -46,11 +46,11 @@ void e06()
 	// TODO: Define a Text_box class
 
 	// Top row -----------------------------------------------------------------
-	TBX::Text_box txt_win{ { pad_w + win_w_qrt, pad_h}, "Window"};
+	TBX::Text_box txt_win{ { pad_w + win_w_qrt, pad_h}, "Window", TBX::Text_box::BG_ELLIPSE };
 	txt_win.set_color(FL_BLACK);
 	win.attach(txt_win);
 
-	GL::Text txt_line_style{ {pad_w + win_w_qrt * 2 - win_w_16th, pad_h}, "Line_style" };
+	TBX::Text_box txt_line_style{ {pad_w + win_w_qrt * 2 - win_w_16th, pad_h}, "Line_style", TBX::Text_box::BG_BOX };
 	txt_line_style.set_color(FL_BLACK);
 	win.attach(txt_line_style);
 
