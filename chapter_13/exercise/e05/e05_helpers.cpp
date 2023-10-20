@@ -27,7 +27,7 @@ const std::map<HLP::PtID, double> HLP::dir_angle {
 	{HLP::PtID::C,  0.0}
 };
 
-const GL::Point getPerimeterPoint(const GL::Ellipse& e, double rad_x,
+const GL::Point HLP::getPerimeterPoint(const GL::Ellipse& e, double rad_x,
 	double rad_y, double ang
 ) {
 	return(
