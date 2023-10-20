@@ -1,9 +1,10 @@
 #include "text_box.h"
 #include <iostream>
+#include "box.h"
 
 using namespace TBX;
 
-Text_box::Text_box(GL::Point xy, const string& text)
+Text_box::Text_box(GL::Point xy, const string& text, BG_shape bg)
 : Text(xy, text), c_mark(std::make_unique<GL::Lines>())
 {
 	c_mark->add({xy.x, xy.y - 5}, {xy.x, xy.y + 5});
@@ -17,6 +18,7 @@ Text_box::Text_box(GL::Point xy, const string& text)
 		-1 * static_cast<int>(text_sz.first * 0.5),
 		static_cast<int>(text_sz.second * 0.5)
 	);
+	bg_shape = init_bg_shape(bg, text_sz.first, text_sz.second);
 
 	std::cout << "Size: " << text_sz.first << ", "
 		<< text_sz.second << std::endl;
@@ -31,9 +33,16 @@ std::pair<int, int> Text_box::get_bbox_size() const {
 	return std::pair<int, int>(sz_x, sz_y);
 }
 
-Graph_lib::Shape Text_box::init_bg_shape(BG_shape)
+std::unique_ptr<GL::Shape> Text_box::init_bg_shape(BG_shape bg, int w, int h)
 {
-
+	switch(bg) {
+	case BG_shape::Box:
+		return std::make_unique<BOX::Box>(point(0), w, h, 0.5);
+	case BG_shape::Ellipse:
+		return std::make_unique<GL::Ellipse>(point(0), w, h);
+	default:
+		return std::unique_ptr<GL::Shape>();
+	}
 }
 
 void Text_box::draw_lines() const{
