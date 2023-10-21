@@ -41,34 +41,28 @@ void e06()
 	const int win_h_10th{
 		static_cast<int>(std::round((win_h - pad_h * 2) * 0.1))
 	};
+	const GL::Color color_fill{ FL_YELLOW };
+
 	Debug_window win{ {10, 10}, win_w, win_h, "Classy diagramme",
 		ENABLE_DEBUG};
-
-//	fl_color(FL_BLACK);
 
 	// Top row -----------------------------------------------------------------
 	TBX::Text_box txt_win{
 		{ pad_w + win_w_qrt, pad_h}, "Window", BG_ELLIPSE
 	};
+	txt_win.set_fill_color(color_fill);
 	win.attach(txt_win);
 
 	TBX::Text_box txt_line_style{
 		{pad_w + win_w_qrt * 2 - win_w_16th, pad_h}, "Line_style", BG_BOX
 	};
-	txt_line_style.set_fill_color(FL_YELLOW);
-	std::cout << "Fill color: " << txt_line_style.fill_color().as_int() << std::endl;
-	std::cout << "Fill color visibility: " << std::to_string(txt_line_style.fill_color().visibility()) << std::endl;
+	txt_line_style.set_fill_color(color_fill);
 	win.attach(txt_line_style);
-
-	GL::Rectangle test{ {0}, 10, 10};
-	test.set_fill_color(FL_YELLOW);
-	std::cout << "Fill color: " << test.fill_color().as_int() << std::endl;
-	std::cout << "Fill color visibility: " << std::to_string(test.fill_color().visibility()) << std::endl;
-	win.attach(test);
 
 	TBX::Text_box txt_color{
 		{pad_w + win_w_qrt * 2 + win_w_8th, pad_h}, "Color", BG_ELLIPSE
 	};
+	txt_color.set_fill_color(color_fill);
 	win.attach(txt_color);
 
 	// Middle row --------------------------------------------------------------
