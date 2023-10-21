@@ -42,6 +42,7 @@ void e06()
 		static_cast<int>(std::round((win_h - pad_h * 2) * 0.1))
 	};
 	const GL::Color color_fill{ FL_YELLOW };
+	const GL::Line_style style{ GL::Line_style::solid, 2 };
 
 	Debug_window win{ {10, 10}, win_w, win_h, "Classy diagramme",
 		ENABLE_DEBUG};
@@ -51,18 +52,21 @@ void e06()
 		{ pad_w + win_w_qrt, pad_h}, "Window", BG_ELLIPSE
 	};
 	txt_win.set_fill_color(color_fill);
+	txt_win.set_style(style);
 	win.attach(txt_win);
 
 	TBX::Text_box txt_line_style{
 		{pad_w + win_w_qrt * 2 - win_w_16th, pad_h}, "Line_style", BG_BOX
 	};
 	txt_line_style.set_fill_color(color_fill);
+	txt_line_style.set_style(style);
 	win.attach(txt_line_style);
 
 	TBX::Text_box txt_color{
 		{pad_w + win_w_qrt * 2 + win_w_8th, pad_h}, "Color", BG_ELLIPSE
 	};
 	txt_color.set_fill_color(color_fill);
+	txt_color.set_style(style);
 	win.attach(txt_color);
 
 	// Middle row --------------------------------------------------------------

@@ -41,8 +41,6 @@ public:
     void draw_lines() const; // override Shape::draw_lines()
     enum Drawing_mode{ DRAW_STROKE, DRAW_FILL };
 private:
-	void draw_box_stroke() const;
-	void draw_box_fill() const;
 	void draw_box(Drawing_mode mode = DRAW_STROKE) const;
     CrvMethod crv_method;
     double crv_ratio{ 0 };  // Used to set crv_radius

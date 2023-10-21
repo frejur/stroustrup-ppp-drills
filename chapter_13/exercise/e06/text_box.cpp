@@ -54,7 +54,7 @@ std::unique_ptr<GL::Shape> Text_box::init_bg_shape(BG_shape bg, int ww, int hh)
 		int pad{ static_cast<int>(font_size() * 0.25) };
 		int h_nudge{ static_cast<int>(hh * 0.15 ) };
 		GL::Point o{ point(0).x - pad, point(0).y - hh - pad + h_nudge };
-		return std::make_unique<BOX::Box>(o, ww + pad * 2, hh + pad * 2, 0.8);
+		return std::make_unique<BOX::Box>(o, ww + pad * 2, hh + pad * 2, 0.0);
 	}
 	case BG_ELLIPSE:
 	{
