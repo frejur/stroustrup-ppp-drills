@@ -12,6 +12,8 @@
  */
 
 namespace GL = Graph_lib;
+constexpr TBX::Text_box::BG_shape BG_BOX { TBX::Text_box::BG_BOX };
+constexpr TBX::Text_box::BG_shape BG_ELLIPSE { TBX::Text_box::BG_ELLIPSE };
 
 void e06()
 {
@@ -39,65 +41,86 @@ void e06()
 	const int win_h_10th{
 		static_cast<int>(std::round((win_h - pad_h * 2) * 0.1))
 	};
-	const GL::Point c{ static_cast<int>(win_w*0.5), static_cast<int>(win_h*0.5) };
 	Debug_window win{ {10, 10}, win_w, win_h, "Classy diagramme",
 		ENABLE_DEBUG};
 
-	// TODO: Define a Text_box class
+//	fl_color(FL_BLACK);
 
 	// Top row -----------------------------------------------------------------
-	TBX::Text_box txt_win{ { pad_w + win_w_qrt, pad_h}, "Window", TBX::Text_box::BG_ELLIPSE };
-	txt_win.set_color(FL_BLACK);
+	TBX::Text_box txt_win{
+		{ pad_w + win_w_qrt, pad_h}, "Window", BG_ELLIPSE
+	};
 	win.attach(txt_win);
 
-	TBX::Text_box txt_line_style{ {pad_w + win_w_qrt * 2 - win_w_16th, pad_h}, "Line_style", TBX::Text_box::BG_BOX };
-	txt_line_style.set_color(FL_BLACK);
+	TBX::Text_box txt_line_style{
+		{pad_w + win_w_qrt * 2 - win_w_16th, pad_h}, "Line_style", BG_BOX
+	};
+	txt_line_style.set_fill_color(FL_YELLOW);
+	std::cout << "Fill color: " << txt_line_style.fill_color().as_int() << std::endl;
+	std::cout << "Fill color visibility: " << std::to_string(txt_line_style.fill_color().visibility()) << std::endl;
 	win.attach(txt_line_style);
 
-	GL::Text txt_color{ {pad_w + win_w_qrt * 2 + win_w_8th, pad_h}, "Color" };
-	txt_color.set_color(FL_BLACK);
+	GL::Rectangle test{ {0}, 10, 10};
+	test.set_fill_color(FL_YELLOW);
+	std::cout << "Fill color: " << test.fill_color().as_int() << std::endl;
+	std::cout << "Fill color visibility: " << std::to_string(test.fill_color().visibility()) << std::endl;
+	win.attach(test);
+
+	TBX::Text_box txt_color{
+		{pad_w + win_w_qrt * 2 + win_w_8th, pad_h}, "Color", BG_ELLIPSE
+	};
 	win.attach(txt_color);
 
 	// Middle row --------------------------------------------------------------
-	GL::Text txt_simple_win{ { pad_w + win_w_qrt, pad_h + win_h_half}, "Simple_window"};
-	txt_simple_win.set_color(FL_BLACK);
+	TBX::Text_box txt_simple_win{
+		{ pad_w + win_w_qrt, pad_h + win_h_half}, "Simple_window", BG_BOX };
 	win.attach(txt_simple_win);
 
-	GL::Text txt_shape{ {pad_w + win_w_qrt * 2, pad_h + win_h_half - win_h_10th}, "Shape" };
-	txt_shape.set_color(FL_BLACK);
+	TBX::Text_box txt_shape{
+		{pad_w + win_w_qrt * 2, pad_h + win_h_half - win_h_10th},
+		"Shape", BG_ELLIPSE
+	};
 	win.attach(txt_shape);
 
-	GL::Text txt_point{ {pad_w + win_w_qrt * 2 + win_w_8th + win_w_16th, pad_h + win_h_half}, "Point" };
-	txt_point.set_color(FL_BLACK);
+	TBX::Text_box txt_point{
+		{pad_w + win_w_qrt * 2 + win_w_8th + win_w_16th, pad_h + win_h_half},
+		"Point", BG_BOX };
 	win.attach(txt_point);
 
 	// Bottom row --------------------------------------------------------------
-	GL::Text txt_line{ {pad_w + win_w_14th, win_h - pad_h }, "Line" };
-	txt_line.set_color(FL_BLACK);
+	TBX::Text_box txt_line{
+		{pad_w + win_w_14th, win_h - pad_h }, "Line", BG_BOX
+	};
 	win.attach(txt_line);
 
-	GL::Text txt_lines{ {pad_w + win_w_14th * 2, win_h - pad_h }, "Lines" };
-	txt_lines.set_color(FL_BLACK);
+	TBX::Text_box txt_lines{
+		{pad_w + win_w_14th * 2, win_h - pad_h }, "Lines", BG_BOX
+	};
 	win.attach(txt_lines);
 
-	GL::Text txt_poly{ {pad_w + win_w_14th * 5, win_h - pad_h }, "Polygon" };
-	txt_poly.set_color(FL_BLACK);
+	TBX::Text_box txt_poly{
+		{pad_w + win_w_14th * 5, win_h - pad_h }, "Polygon", BG_BOX
+	};
 	win.attach(txt_poly);
 
-	GL::Text txt_axis{ {pad_w + win_w_14th * 7, win_h - pad_h }, "Axis" };
-	txt_axis.set_color(FL_BLACK);
+	TBX::Text_box txt_axis{
+		{pad_w + win_w_14th * 7, win_h - pad_h }, "Axis", BG_BOX
+	};
 	win.attach(txt_axis);
 
-	GL::Text txt_rect{ {pad_w + win_w_14th * 9, win_h - pad_h }, "Rectangle" };
-	txt_rect.set_color(FL_BLACK);
+	TBX::Text_box txt_rect{
+		{pad_w + win_w_14th * 9, win_h - pad_h }, "Rectangle", BG_BOX
+	};
 	win.attach(txt_rect);
 
-	GL::Text txt_text{ {pad_w + win_w_14th * 11, win_h - pad_h }, "Text" };
-	txt_text.set_color(FL_BLACK);
+	TBX::Text_box txt_text{
+		{pad_w + win_w_14th * 11, win_h - pad_h }, "Text" , BG_BOX
+	};
 	win.attach(txt_text);
 
-	GL::Text txt_image{ {pad_w + win_w_14th * 12, win_h - pad_h }, "Image" };
-	txt_image.set_color(FL_BLACK);
+	TBX::Text_box txt_image{
+		{pad_w + win_w_14th * 12, win_h - pad_h }, "Image", BG_BOX
+	};
 	win.attach(txt_image);
 
 	win.wait_for_button();
@@ -109,11 +132,11 @@ int main() {
 		return 0;
 	}
 	catch (std::exception &e) {
-		std::cerr<<e.what()<<'\n';
+		std::cerr << e.what() << '\n';
 		return 1;
 	}
 	catch (...) {
-		std::cerr<<"Unknown error\n";
+		std::cerr << "Unknown error\n";
 		return 2;
 	}
 }

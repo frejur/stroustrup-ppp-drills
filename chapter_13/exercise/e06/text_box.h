@@ -16,12 +16,15 @@ public:
 	enum BG_shape { BG_NONE, BG_BOX, BG_ELLIPSE };
 	Text_box(GL::Point xy, const string& text, BG_shape bg = BG_NONE);
     void draw_lines() const;
+    void set_bg_shape_color(GL::Color);
+    void set_fill_color(GL::Color);
 private:
-	static constexpr int default_font_size{ 18 };
-	static constexpr int default_font_face{ FL_SCREEN };
+	static constexpr int default_font_size{ 16 };
+	static constexpr int default_font_face{ FL_HELVETICA };
+	static constexpr int default_font_color{ FL_BLACK };
 	std::unique_ptr<GL::Lines> c_mark;
 	std::unique_ptr<GL::Shape> bg_shape;
-	std::pair<int, int> get_bbox_size() const;
+	std::pair<int, int> get_bbox_size(const string& s="") const;
 	std::unique_ptr<GL::Shape> init_bg_shape(BG_shape bg, int w, int h);
 };
 

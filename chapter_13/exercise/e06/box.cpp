@@ -1,5 +1,7 @@
 #include "box.h"
 #include <algorithm>
+#include <stdexcept>
+#include <iostream>
 
 using namespace BOX;
 
@@ -89,46 +91,112 @@ void Box::setRadius(int r, int max)
             (std::max)(0, r), max));
 }
 
+void Box::draw_box_stroke() const
+{
+	// Offset iterator to start drawing at NW corner
+	int i_dist {
+		getIterDistToNW_Corner(
+			point(0),
+			point(2)
+		)
+	};
+
+	int i{ 0 };
+	double start_a{ 90 };
+	for (const auto& d : dir_to_next_pt) {
+		int j { i + i_dist };
+		int dir_x{ d.second.first};
+		int dir_y{ d.second.second};
+
+		fl_line(
+			point(j%4).x + dir_x * crv_radius,
+			point(j%4).y + dir_y * crv_radius,
+			point((j+1)%4).x - dir_x * crv_radius,
+			point((j+1)%4).y - dir_y * crv_radius
+		);
+
+		if (crv_radius > 0) {
+			fl_arc(
+				point(j%4).x - crv_radius +
+					crv_radius * dir_x -
+					crv_radius * dir_y,
+				point(j%4).y - crv_radius +
+					crv_radius * dir_y +
+					crv_radius * dir_x,
+				crv_radius * 2, crv_radius * 2,
+				start_a - i * 90, start_a - (i-1) * 90
+			);
+		}
+		++i;
+	}
+}
+void Box::draw_box(Box::Drawing_mode mode) const
+{
+	// Offset iterator to start drawing at NW corner
+	int i_dist {
+		getIterDistToNW_Corner(
+			point(0),
+			point(2)
+		)
+	};
+	if (mode==DRAW_FILL) {
+		fl_begin_complex_polygon();
+	} else {
+		fl_begin_loop();
+	}
+
+	int i{ 0 };
+	double start_a{ 90 };
+	for (const auto& d : dir_to_next_pt) {
+		int j { i + i_dist };
+		int dir_x{ d.second.first};
+		int dir_y{ d.second.second};
+
+		fl_vertex(
+			0.5 * (point((j+3)%4).x + point((j+0)%4).x),
+			0.5 * (point((j+3)%4).y + point((j+0)%4).y));
+
+		if (crv_radius > 0) {
+			fl_arc(
+				float(point(j%4).x +
+					crv_radius * dir_x -
+					crv_radius * dir_y),
+				float(point(j%4).y +
+					crv_radius * dir_y +
+					crv_radius * dir_x),
+				crv_radius,
+				start_a - (i-1) * 90,start_a - i * 90
+			);
+		}
+		++i;
+	}
+	if (mode==DRAW_FILL) {
+		fl_end_complex_polygon();
+	} else {
+		fl_end_loop();
+	}
+}
+
+void Box::draw_box_fill() const
+{
+	fl_color(fill_color().as_int());
+	draw_box_stroke();
+	fl_color(color().as_int());    // reset color
+}
+
+
 void Box::draw_lines() const
 {
     if (number_of_points() < 4) return;
+
+    if (fill_color().visibility()) {
+        fl_color(fill_color().as_int());
+    	draw_box(Box::DRAW_FILL);
+    	fl_color(color().as_int());    // reset color
+    }
+
     if (color().visibility()) {
-        // Offset iterator to start drawing at NW corner
-        int i_dist {
-            getIterDistToNW_Corner(
-                point(0),
-                point(2)
-            )
-        };
-
-        int i{ 0 };
-        double start_a{ 90 };
-        for (const auto& d : dir_to_next_pt) {
-            int j { i + i_dist };
-            int dir_x{ d.second.first};
-            int dir_y{ d.second.second};
-
-            fl_line(
-                point(j%4).x + dir_x * crv_radius,
-                point(j%4).y + dir_y * crv_radius,
-                point((j+1)%4).x - dir_x * crv_radius,
-                point((j+1)%4).y - dir_y * crv_radius
-            );
-
-            if (crv_radius > 0) {
-                fl_arc(
-                    point(j%4).x - crv_radius +
-                        crv_radius * dir_x -
-                        crv_radius * dir_y,
-                    point(j%4).y - crv_radius +
-                        crv_radius * dir_y +
-                        crv_radius * dir_x,
-                    crv_radius * 2, crv_radius * 2,
-                    start_a - i * 90, start_a - (i-1) * 90
-                );
-            }
-            ++i;
-        }
+    	draw_box();
     }
 }
 
