@@ -25,7 +25,7 @@ void Arrow::draw_line(GL::Point origin, GL::Point end)
 void Arrow::draw_arrow_head(GL::Point end, float angle)
 {
 	constexpr float hd_ang{ 0.4 }; // Arrow head angle (Roughly 30 deg)
-	constexpr float hd_size{ 12 };
+	constexpr float hd_size{ 8 };
 	add(end);
 	add
 	(

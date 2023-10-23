@@ -25,7 +25,7 @@ Text_box::Text_box(GL::Point xy, const string& text, BG_shape bg)
 		-1 * static_cast<int>(text_sz.first * 0.5),
 		static_cast<int>(text_sz.second * 0.25) // Note offset
 	);
-	h_nudge =	(bg_type == BG_ELLIPSE)
+	h_nudge =	(bg_type == BG_ELLIPSE || bg_type == BG_BOX)
 				? static_cast<int>(text_h * 0.15 )
 				: 0;
 	bg_shape = init_bg_shape(bg, text_w, text_h);
@@ -52,8 +52,8 @@ std::unique_ptr<GL::Shape> Text_box::init_bg_shape(BG_shape bg, int ww, int hh)
 	case BG_BOX:
 	{
 		int pad{ static_cast<int>(font_size() * 0.25) };
-		GL::Point o{ point(0).x - pad, point(0).y - hh - pad + h_nudge };
-		return std::make_unique<BOX::Box>(o, ww + pad * 2, hh + pad * 2, 0.8);
+		GL::Point o{ point(0).x - pad * 2, point(0).y - hh - pad + h_nudge };
+		return std::make_unique<BOX::Box>(o, ww + pad * 4, hh + pad * 2, 0.8);
 	}
 	case BG_ELLIPSE:
 	{
@@ -61,7 +61,7 @@ std::unique_ptr<GL::Shape> Text_box::init_bg_shape(BG_shape bg, int ww, int hh)
 		int h_half{ static_cast<int>(hh * 0.5) };
 		int pad{ static_cast<int>(font_size() * 0.5) };
 		GL::Point o{ point(0).x + w_half, point(0).y - h_half + h_nudge};
-		return std::make_unique<GL::Ellipse>(o, w_half + pad, h_half + pad);
+		return std::make_unique<GL::Ellipse>(o, w_half + pad * 2, h_half + pad);
 	}
 	default:
 		return std::unique_ptr<GL::Shape>();

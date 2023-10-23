@@ -21,7 +21,7 @@ public:
     void set_color(GL::Color);
     void set_style(GL::Line_style);
     BG_shape shape_type() const { return bg_type; };
-    GL::Point center() const { return { c.x, c.y - h_nudge }; };
+    GL::Point center() const { return { c.x, c.y - h_nudge}; };
     GL::Point bbox_origin() const;
     int width() const;
     int height() const;
@@ -33,7 +33,7 @@ private:
 	int h_nudge;
 	GL::Point c;
 	BG_shape bg_type;
-	static constexpr int default_font_size{ 18 };
+	static constexpr int default_font_size{ 16 };
 	static constexpr int default_font_face{ FL_HELVETICA_BOLD };
 	static constexpr int default_font_color{ FL_BLACK };
 	std::unique_ptr<GL::Lines> c_mark;
