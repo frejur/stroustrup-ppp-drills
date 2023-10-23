@@ -14,10 +14,15 @@ struct ConnectionPointHelper
 	enum class PtID;
 	static GL::Point get(const GL::Circle& r, PtID id);
 	static GL::Point get(const GL::Ellipse& r, PtID id);
+	static GL::Point get_verbose(
+		const GL::Point& c, const int w, const int h, const PtID id
+	);
 private:
 	ConnectionPointHelper();
+//	const static GL::Point getPerimeterPoint(
+//		const GL::Ellipse&,	double radius_x, double radius_y, double angle);
 	const static GL::Point getPerimeterPoint(
-		const GL::Ellipse&,	double radius_x, double radius_y, double angle);
+		const GL::Point& c,	double radius_x, double radius_y, double angle);
 
 	// Direction in relation to center of Circle/Ellipse
 	const static std::map<PtID, double> dir_angle;

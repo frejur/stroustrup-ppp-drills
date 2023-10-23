@@ -90,6 +90,10 @@ void Box::setRadius(int r, int max)
         (std::min)(
             (std::max)(0, r), max));
 }
+Graph_lib::Point Box::bbox_origin() const
+{
+	return point(getIterDistToNW_Corner(point(0), point(2)));
+}
 
 void Box::draw_box(Box::Drawing_mode mode) const
 {

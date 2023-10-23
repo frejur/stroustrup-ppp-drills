@@ -25,6 +25,8 @@ add_executable(${T_THIS}
     ellipse_helpers.cpp
     text_box.h
     text_box.cpp
+    text_box_helpers.h
+    text_box_helpers.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)

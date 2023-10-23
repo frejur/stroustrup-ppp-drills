@@ -27,28 +27,53 @@ const std::map<HLP::PtID, double> HLP::dir_angle {
 	{HLP::PtID::C,  0.0}
 };
 
-const GL::Point HLP::getPerimeterPoint(const GL::Ellipse& e, double rad_x,
+//const GL::Point HLP::getPerimeterPoint(const GL::Ellipse& e, double rad_x,
+//	double rad_y, double ang
+//) {
+//	return(
+//		GL::Point{
+//			static_cast<int>(round(e.center().x + rad_x * std::cos(ang))),
+//			static_cast<int>(round(e.center().y + rad_y * std::sin(ang)))
+//		}
+//	);
+//}
+
+const GL::Point HLP::getPerimeterPoint(const GL::Point& c, double rad_x,
 	double rad_y, double ang
 ) {
 	return(
 		GL::Point{
-			static_cast<int>(round(e.center().x + rad_x * std::cos(ang))),
-			static_cast<int>(round(e.center().y + rad_y * std::sin(ang)))
+			static_cast<int>(round(c.x + rad_x * std::cos(ang))),
+			static_cast<int>(round(c.y + rad_y * std::sin(ang)))
 		}
 	);
 }
 
-GL::Point HLP::get(const GL::Ellipse& e, HLP::PtID id)
-{
+GL::Point HLP::get_verbose(
+	const GL::Point& c, const int w, const int h, const PtID id
+) {
 	if (id == HLP::PtID::C)
 	{
-		return e.center();
+		return c;
 	}
+	if (w == h) {
+		double angle_radians = dir_angle.find(id)->second * (M_PI / 180);
+		int rad{ static_cast<int>(w * 0.5)};
+		return(
+			GL::Point{
+				static_cast<int>(
+					round(c.x + rad * std::cos(angle_radians))),
+				static_cast<int>(
+					round(c.y + rad * std::sin(angle_radians)))
+			}
+		);
+	}
+
 	double angle{ dir_angle.find(id)->second };
 	int angle_i { static_cast<int>(angle) };
 	double angle_radians{ angle * (M_PI / 180) };
-	double len_x{ static_cast<double>(e.major()) };
-	double len_y{ static_cast<double>(e.minor()) };
+	double len_x{ static_cast<double>(w * 0.5) };
+	double len_y{ static_cast<double>(h * 0.5) };
 
 	if (len_x != len_y && (angle_i%90) != 0.0) {
 		double parametric_angle{
@@ -62,32 +87,19 @@ GL::Point HLP::get(const GL::Ellipse& e, HLP::PtID id)
 		}
 		double average_angle{ (angle_radians + parametric_angle) * 0.5 };
 
-		std::cout << "Base angle:\t\t\t" << angle_i << std::endl;
-		std::cout << "Base angle from radians:\t" << angle_radians*180/M_PI << std::endl;
-		std::cout << "Parametric angle:\t\t" << parametric_angle*180/M_PI << std::endl;
-		std::cout << "Average angle:\t\t\t" << average_angle*180/M_PI << std::endl;
-		std::cout << "------------------------------------------" << std::endl;
-
-		return getPerimeterPoint(e, len_x, len_y, average_angle);
+		return getPerimeterPoint(c, len_x, len_y, average_angle);
 	}
-	return getPerimeterPoint(e, len_x, len_y, angle_radians);
+	return getPerimeterPoint(c, len_x, len_y, angle_radians);
+}
+
+GL::Point HLP::get(const GL::Ellipse& e, HLP::PtID id)
+{
+	return get_verbose(e.center(), e.major(), e.minor(), id);
 }
 
 GL::Point HLP::get(const GL::Circle& c, HLP::PtID id)
 {
-	if (id == HLP::PtID::C)
-	{
-		return c.center();
-	}
-	double angle_radians = dir_angle.find(id)->second * (M_PI / 180);
-	return(
-		GL::Point{
-			static_cast<int>(
-				round(c.center().x + c.radius() * std::cos(angle_radians))),
-			static_cast<int>(
-				round(c.center().y + c.radius() * std::sin(angle_radians)))
-		}
-	);
+	return get_verbose(c.center(), c.radius(), c.radius(), id);
 }
 
 HLP::ConnectionPointHelper() {}; // No initialization

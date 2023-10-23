@@ -40,6 +40,10 @@ public:
     ) : Box(o, w, h, static_cast<double>(crv_radius), m) {};
     void draw_lines() const; // override Shape::draw_lines()
     enum Drawing_mode{ DRAW_STROKE, DRAW_FILL };
+    int width() const { return w; };
+    int height() const { return h; };
+    int corner_radius() const { return crv_radius; };
+    Graph_lib::Point bbox_origin() const;
 private:
 	void draw_box(Drawing_mode mode = DRAW_STROKE) const;
     CrvMethod crv_method;

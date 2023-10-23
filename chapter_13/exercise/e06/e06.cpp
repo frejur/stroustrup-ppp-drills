@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include "arrow.h"
+#include "text_box_helpers.h"
 
 /* Exercise 6.
  * Draw the class diagram from 12.6 using rounded boxes and arrows.
@@ -62,7 +64,7 @@ void e06()
 	add_text_box(win, txt_win);
 
 	TBX::Text_box txt_line_style{
-		{pad_w + win_w_qrt * 2 - win_w_16th, pad_h}, "Line_style", BG_BOX
+		{pad_w + win_w_qrt * 2 - win_w_16th, pad_h}, "Line_style", BG_ELLIPSE
 	};
 	add_text_box(win, txt_line_style);
 
