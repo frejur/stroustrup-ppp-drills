@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include "../../lib/Debug_window.h"
+#include "swatchgrid.h"
 
 /* Exercise 5.
  * Define helper functions that return connection Points for a given
@@ -22,6 +23,10 @@ void e07()
 	constexpr int win_w{ 640 };
 	constexpr int win_h{ 480 };
 	Debug_window win{ {10, 10}, win_w, win_h, "RGB swatches", ENABLE_DEBUG };
+
+	SWGR::SwatchGrid sg{ {50,50}, 550, 370, 26, 18 };
+	win.attach(sg);
+
 	win.wait_for_button();
 }
 
