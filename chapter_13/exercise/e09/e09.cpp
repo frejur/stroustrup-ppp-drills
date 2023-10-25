@@ -26,8 +26,6 @@ void e09()
 	RegularHexagon r{ c, 40};
 	win.attach(r);
 
-	r.close_side(2);
-
 	std::cout << "Radius: " << r.radius() << std::endl;
 	for (int i=0; i<15; ++i) {
 		std::cout << "Side " << i << " is " << r.side_is_open(i) << std::endl;
