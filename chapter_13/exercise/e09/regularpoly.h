@@ -11,8 +11,10 @@ public:
         float angle = 0
     );
 	int radius() const { return r; };
+	Graph_lib::Point center() const { return c; };
 private:
     Graph_lib::Point origin;
+    Graph_lib::Point c;
     int r, num_sides;
     float angle;
     void draw_poly();

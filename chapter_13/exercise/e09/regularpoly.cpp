@@ -38,6 +38,7 @@ void RegularPolygon::draw_poly()
             add(origin);
             offset_x = this_x - origin.x;
             offset_y = this_y - origin.y;
+            c = { origin.x - offset_x, origin.y - offset_y };
             continue;
         }
         add({ this_x - offset_x, this_y - offset_y });

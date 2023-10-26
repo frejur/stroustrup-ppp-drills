@@ -5,6 +5,7 @@
 #include <memory>
 #include "../../lib/Debug_window.h"
 #include "regularhexagon.h"
+#include "hexagontiler.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -23,13 +24,11 @@ void e09()
 	Debug_window win{ {10, 10}, win_w, win_h, "Catan",
 		ENABLE_DEBUG};
 
-	RegularHexagon r{ c, 40};
-	win.attach(r);
+	HXT::HexagonTiler hex{ c, 25, 30 };
+	win.attach(hex);
 
-	std::cout << "Radius: " << r.radius() << std::endl;
-	for (int i=0; i<15; ++i) {
-		std::cout << "Side " << i << " is " << r.side_is_open(i) << std::endl;
-	}
+	std::cout << "Tile count: " << hex.num_tiles() << std::endl;
+	std::cout << "Inner radius: " << hex.inradius() << std::endl;
 
 	win.wait_for_button();
 }

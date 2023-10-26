@@ -11,7 +11,7 @@ RegularHexagon::RegularHexagon(Graph_lib::Point xy, int radius)
 
 void RegularHexagon::close_side(int n)
 {
-	side_states[n%4] = !side_states[n%4];
+	side_states[n%num_sides] = false;
 }
 
 bool RegularHexagon::side_is_open(int n) const
