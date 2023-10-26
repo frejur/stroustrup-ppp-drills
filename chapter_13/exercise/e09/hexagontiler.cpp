@@ -19,8 +19,12 @@ HXT::TileOffset::TileOffset(int radius, int inradius)
 
 HXT::HexagonTiler::HexagonTiler(
 	Graph_lib::Point center, int num_tiles, int radius)
-	: c(center), r(radius), in_r(0), t_count(0)
+	: t_count(1), r(radius), c(center)
 {
+	tiles.push_back(std::make_unique<RegularHexagon>(c, r));
+	in_r = calculate_inradius();
+
+	add_tiles(*tiles.back(), 0);
 }
 
 int HXT::HexagonTiler::calculate_inradius() const
@@ -28,8 +32,13 @@ int HXT::HexagonTiler::calculate_inradius() const
 	return tiles.front()->center().y - tiles.front()->point(1).y;
 }
 
-void HXT::HexagonTiler::add_tile(const RegularHexagon& hex, const int con)
+void HXT::HexagonTiler::add_tiles(RegularHexagon& hex, const int connecting_side)
 {
+	int i {connecting_side};
+	while (hex.side_is_open(i)) {
+		hex.close_side(i);
+		++i;
+	};
 }
 
 void HXT::HexagonTiler::draw_lines() const

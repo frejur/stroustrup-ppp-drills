@@ -17,7 +17,7 @@ private:
     Graph_lib::Point c;
     int r, num_sides;
     float angle;
-    void draw_poly();
+    void add_poly_points();
 };
 
 #endif // REGULAR_POLY_H

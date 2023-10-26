@@ -28,14 +28,15 @@ public:
 	int radius() const { return r; };
 	int inradius() const { return in_r; };
 private:
-	Graph_lib::Point c;
-	int r, in_r; // radius and inradius
 	int t_count; // tile count
 	int act_s;   // index of active side
 	int act_t;   // index of active tile
-	int calculate_inradius() const;
-	void add_tile(const RegularHexagon& hex, const int connecting_side);
+	int r;       // radius
+	Graph_lib::Point c;
 	std::vector<std::unique_ptr<RegularHexagon>> tiles;
+	int calculate_inradius() const;
+	int in_r; // inradius
+	void add_tiles(RegularHexagon& hex, const int connecting_side);
 	void draw_lines() const;
 };
 

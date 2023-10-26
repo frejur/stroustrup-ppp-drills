@@ -12,10 +12,10 @@ RegularPolygon::RegularPolygon(
     r = min(1280, max(10, r));
     num_sides = min(16, max(3, num_sides));
 
-    draw_poly();
+    add_poly_points();
 }
 
-void RegularPolygon::draw_poly()
+void RegularPolygon::add_poly_points()
 {
     double ang_incr { M_PI * 2.0 / num_sides };
     int this_x { 0 }, this_y { 0 },
