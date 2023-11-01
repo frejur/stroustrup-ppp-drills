@@ -6,12 +6,8 @@
 #include "../../lib/Debug_window.h"
 #include "swatchgrid.h"
 
-/* Exercise 5.
- * Define helper functions that return connection Points for a given
- * Circle or Ellipse:
- *		+ n(), s(), e(), w() - Returns points north, south, etc.
- *		+ center()
- *		+ nw(), ne(), se(), sw() - North-east, north-west, etc.
+/* Exercise 7.
+ * Make an RGB color chart.
  */
 
 namespace GL = Graph_lib;
