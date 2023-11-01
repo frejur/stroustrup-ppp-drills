@@ -16,9 +16,9 @@ void e13()
 
 	constexpr int win_w{ 640 };
 	constexpr int win_h{ 480 };
-	Debug_window win{ {10, 10}, win_w, win_h, "Matrix", ENABLE_DEBUG };
+	Debug_window win{ {32, 32}, win_w, win_h, "Matrix", ENABLE_DEBUG };
 
-	SWGR::SwatchGrid sg{ {50,50}, 550, 370, 26, 18 };
+	SWGR::SwatchGrid sg{ {64,32}, 416, 416, 16, 16, 0 };
 	win.attach(sg);
 
 	win.wait_for_button();

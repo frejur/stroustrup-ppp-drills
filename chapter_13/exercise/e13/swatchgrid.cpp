@@ -25,20 +25,9 @@ SwatchGrid::SwatchGrid(
 			swatches.push_back(
 				std::make_unique<Graph_lib::Rectangle>(p, sw_sz_x, sw_sz_y)
 			);
-			double row_val_factor{ 1.0 - pow((double)row / sw_num_y, 2) };
-			HSV sw_color_hsv{ 360.0 * col / sw_num_x, 1.0, row_val_factor };
-			RGB rgb{ RGB_from_HSV(sw_color_hsv) };
-			double row_luma_factor{
-				.9 * pow(1.0 - (std::min)(1.0, (row / (sw_num_y * 0.35))), 2) };
-			rgb.r += (1 - rgb.r) * row_luma_factor;
-			rgb.g += (1 - rgb.g) * row_luma_factor;
-			rgb.b += (1 - rgb.b) * row_luma_factor;
-			Fl_Color col_color {fl_rgb_color(
-				static_cast<uchar>(rgb.r * 255),
-				static_cast<uchar>(rgb.g * 255),
-				static_cast<uchar>(rgb.b * 255)
-			)};
-			swatches.back()->set_fill_color(col_color);
+			swatches.back()->set_color(
+				Graph_lib::Color::Transparency::invisible);
+			swatches.back()->set_fill_color(Graph_lib::Color{ col * 16 + row });
 		}
 	}
 }
