@@ -8,6 +8,7 @@ class RegularHexagon : public RegularPolygon
 public:
 	RegularHexagon(Graph_lib::Point xy, int radius);
 	void close_side(int n);
+	void close_sides_before(int n);
 	bool side_is_open(int n) const;
 	void draw_lines() const;
 	std::pair<int, int> get_bbox_size(const string &s) const;

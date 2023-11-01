@@ -27,7 +27,11 @@ public:
 	int num_tiles() const { return t_count; };
 	int radius() const { return r; };
 	int inradius() const { return in_r; };
+	int tile_ring_number(int t) const;
+	float tile_ring_position(int t) const;
+	int adjacent_tile(int t, int side);
 private:
+	int t_num;   // desired no. of tiles
 	int t_count; // tile count
 	int act_s;   // index of active side
 	int act_t;   // index of active tile
@@ -35,9 +39,18 @@ private:
 	Graph_lib::Point c;
 	std::vector<std::unique_ptr<RegularHexagon>> tiles;
 	int calculate_inradius() const;
-	int in_r; // inradius
-	void add_tiles(RegularHexagon& hex, const int connecting_side);
+	int in_r;    // inradius
+	void add_tiles(RegularHexagon& hex);
 	void draw_lines() const;
+	std::unique_ptr<TileOffset> offset;
+	int get_adj_0(int t, float ring_pos, int ring) const;
+	int get_adj_1(int t, float ring_pos, int ring) const;
+	int get_adj_2(int t, float ring_pos, int ring) const;
+	int get_adj_3(int t, float ring_pos, int ring) const;
+	int get_adj_4(int t, float ring_pos, int ring) const;
+	int get_adj_5(int t, float ring_pos, int ring) const;
+	float tile_ring_position(int t, int ring) const;
+	void close_adjacent(int t, int side);
 };
 
 } // namespace HXT -------------------------------------------------------------

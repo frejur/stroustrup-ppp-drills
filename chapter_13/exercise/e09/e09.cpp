@@ -8,6 +8,7 @@
 #include "hexagontiler.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <cmath>
 
 /* Exercise 9.
  * Create a pattern of at least 8 hexagons, tiled. */
@@ -16,7 +17,7 @@ namespace GL = Graph_lib;
 
 void e09()
 {
-	constexpr bool ENABLE_DEBUG{ true };
+	constexpr bool ENABLE_DEBUG{ false };
 
 	constexpr int win_w{ 640 };
 	constexpr int win_h{ 480 };
@@ -24,11 +25,8 @@ void e09()
 	Debug_window win{ {10, 10}, win_w, win_h, "Catan",
 		ENABLE_DEBUG};
 
-	HXT::HexagonTiler hex{ c, 25, 30 };
+	HXT::HexagonTiler hex{ c, 169, 16 };
 	win.attach(hex);
-
-	std::cout << "Tile count: " << hex.num_tiles() << std::endl;
-	std::cout << "Inner radius: " << hex.inradius() << std::endl;
 
 	win.wait_for_button();
 }
