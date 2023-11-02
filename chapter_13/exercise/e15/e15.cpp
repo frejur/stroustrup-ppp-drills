@@ -5,6 +5,7 @@
 #include <memory>
 #include "../../lib/Debug_window.h"
 #include "righttriangle.h"
+#include "triangletiler.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <cmath>
@@ -23,6 +24,10 @@ void e15()
 	GL::Point c{ static_cast<int>(win_w*0.5), static_cast<int>(win_h*0.5) };
 	Debug_window win{ {10, 10}, win_w, win_h, "Tri Harder",
 		ENABLE_DEBUG};
+
+	fl_color(0);
+	TRITI::TriangleTiler tiles{ {64, 64}, 540, 400, 20, 0 };
+	win.attach(tiles);
 
 	win.wait_for_button();
 }

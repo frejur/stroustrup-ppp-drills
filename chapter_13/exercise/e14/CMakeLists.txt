@@ -15,8 +15,9 @@ add_executable(${T_THIS}
     ../../lib/Simple_window.h
     ../../lib/Debug_window.h
     e14.cpp
+    triangle.h
+    triangle.cpp
     righttriangle.h
-    righttriangle.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
