@@ -1,5 +1,5 @@
 #define _USE_MATH_DEFINES
-#include "triangle.h"
+#include "isoscelestriangle.h"
 #include <cmath>
 
 namespace GL = Graph_lib;

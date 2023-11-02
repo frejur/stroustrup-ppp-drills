@@ -2,7 +2,7 @@
 #define RIGHTTRIANGLE_H
 #include <cmath>
 #include "../../lib/Graph.h"
-#include "triangle.h"
+#include "isoscelestriangle.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 

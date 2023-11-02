@@ -1,5 +1,5 @@
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#ifndef ISOSCELESTRIANGLE_H
+#define ISOSCELESTRIANGLE_H
 #include <cmath>
 #include "../../lib/Graph.h"
 namespace ITRI { //-------------------------------------------------------------
@@ -15,4 +15,4 @@ public:
 
 
 
-#endif // TRIANGLE_H
+#endif // ISOSCELESTRIANGLE_H

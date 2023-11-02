@@ -5,7 +5,6 @@
 #include <memory>
 #include "../../lib/Debug_window.h"
 #include "righttriangle.h"
-#include "triangle.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <cmath>
