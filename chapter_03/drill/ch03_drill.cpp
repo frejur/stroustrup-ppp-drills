@@ -22,7 +22,6 @@ int main()
 	cin >> friend_01;
 	cout << "How old is your friend?\n";
 	cin >> friend_01_age;
-	if (friend_01_age <= 0 || friend_01_age > 110) simple_error("You're kidding!");
 	if (friend_01_age < 12) friend_01_age_comment = "Next year you will be " + to_string(friend_01_age+1) + '.';
 	if (friend_01_age == 17) friend_01_age_comment = "Next year you will be able to vote.";
 	if (friend_01_age > 70) friend_01_age_comment = "I hope you are enjoying retirement.";
@@ -44,7 +43,7 @@ int main()
 		<< friend_02_gender_str_01 << " does not take matters seriously, " << friend_02_gender_str_01 << " may permanently tarnish the family name. "
 		<< "It was, after all, " << friend_02_gender_str_03 << " great grand" << friend_02_gender_str_04
 		<< ", also named " << friend_02 << ", who once established this proud institution.\n"
-		<< "I hear you just had your birthday and you are now " << friend_01_age << " years old. "
+		<< "I hear you just had a birthday and you are now " << friend_01_age << " years old. "
 		<< friend_01_age_comment << "\nYours sincerely,\n\n\n" << sender
 		<< std::endl;
 	keep_window_open();
