@@ -1,4 +1,5 @@
 #include "../../lib/std_lib_facilities.h"
+#include <limits>
 
 //	Exercise 6. Prompt for 3 integer values, output sorted ascending.
 
@@ -12,8 +13,8 @@ int main()
 	int val02{ 0 };
 	int val03{ 0 };
 
-	while (std::cin >> val01 >> val02 >> val03) {
-
+	while (!std::cin.fail()) {
+		std::cin >> val01 >> val02 >> val03;
 		int low{ val01 }; // Assume sorted
 		int mid{ val02 };
 		int high{ val03 };
