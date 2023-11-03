@@ -1,11 +1,9 @@
-#include "std_lib_facilities.h"
+#include "../../lib/std_lib_facilities.h"
 
-namespace ch03_tt_p75
+int main()
 {
-	int main()
-	{
-		string s = "Goodbye, cruel world! ";
-		cout << s << '\n';
-		return 0;
-	}
+	std::string s = "Goodbye, cruel world! ";
+	std::cout << s << '\n';
+	keep_window_open();
+	return 0;
 }

@@ -14,14 +14,17 @@ set(T_TT_P68 "Try this, p. 68")
 set(T_TT_P75 "Try this, p. 75")
 set(T_TT_P81 "Try this, p. 81")
 set(T_DRILL "Drill")
-set(T_E01 "Exercise 1")
+set(T_E02 "Exercise 2")
 
 
 set(SELECTED_TARGET ${T_DRILL} CACHE STRING "Selected target")
 set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
-    ${T_TT}
+    ${T_TT_P65}
+    ${T_TT_P68}
+    ${T_TT_P75}
+    ${T_TT_P81}
     ${T_DRILL}
-    ${T_E01}
+    ${T_E02}
 )
 message("Building target: ${SELECTED_TARGET}")
 
@@ -41,6 +44,6 @@ elseif(
     ${SELECTED_TARGET} STREQUAL ${T_DRILL})
         add_subdirectory(${CMAKE_SOURCE_DIR}/drill)
 elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_E01})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e01)
+    ${SELECTED_TARGET} STREQUAL ${T_E02})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e02)
 endif()
