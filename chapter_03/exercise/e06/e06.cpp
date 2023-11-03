@@ -13,8 +13,11 @@ int main()
 	int val02{ 0 };
 	int val03{ 0 };
 
-	while (!std::cin.fail()) {
+	while (true) {
 		std::cin >> val01 >> val02 >> val03;
+		if (std::cin.fail()) {
+			break;
+		}
 		int low{ val01 }; // Assume sorted
 		int mid{ val02 };
 		int high{ val03 };
@@ -36,6 +39,7 @@ int main()
 		std::cout << "Sorted: " << low << ", " << mid << ", " << high << '\n';
 		std::cout << "Keep entering numbers to sort them..." << '\n';
 	}
+
 	std::cin.clear();
 	std::cin.ignore();
 
