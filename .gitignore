@@ -65,4 +65,5 @@ build*/
 
 # QT Creator
 *.autosave
+CMakeLists.txt.user
 *.kdev4
