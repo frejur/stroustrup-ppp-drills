@@ -1,7 +1,7 @@
 #include "../../lib/std_lib_facilities.h"
 #include <string>
 
-//	Exercise 6. Prompt for 3 string values, output sorted ascending.
+//	Exercise 7. Prompt for 3 string values, output sorted ascending.
 
 int main()
 {
