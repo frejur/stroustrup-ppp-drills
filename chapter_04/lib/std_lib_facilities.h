@@ -26,6 +26,9 @@ Revised August 3, 2020: a cleanup removing support for ancient compilers
 #ifndef H112
 #define H112 080315L
 
+#if defined(_WIN32) || defined(WIN32)
+#define OS_Windows
+#endif
 
 #include<iostream>
 #include<iomanip>
@@ -162,25 +165,14 @@ template<class T> char* as_bytes(T& i)	// needed for binary I/O
 
 inline void keep_window_open()
 {
-	std::cin.clear();
-	std::cout << "Please enter a character to exit\n";
-	char ch;
-	std::cin >> ch;
-	return;
+	#ifdef OS_Windows
+	system("pause");
+	#endif
 }
 
 inline void keep_window_open(std::string s)
 {
-	if (s == "") return;
-	std::cin.clear();
-	std::cin.ignore(120, '\n');
-	for (;;) {
-		std::cout << "Please enter " << s << " to exit\n";
-		std::string ss;
-		while (std::cin >> ss && ss != s)
-			std::cout << "Please enter " << s << " to exit\n";
-		return;
-	}
+	keep_window_open();
 }
 
 
@@ -202,7 +194,7 @@ inline void simple_error(std::string s)	// write ``error: s and exit program
 template<class R, class A> R narrow_cast(const A& a)
 {
 	R r = R(a);
-	if (A(r) != a) error(string("info loss"));
+	if (A(r) != a) error(std::string("info loss"));
 	return r;
 }
 
