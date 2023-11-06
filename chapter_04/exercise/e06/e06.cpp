@@ -7,13 +7,14 @@
 
 int main()
 {
-	std::cout << "Enter numbers to convert them from numerical to spelled-out "
+	std::cout
+		<< "Enter numbers to convert them from numerical to spelled-out "
 		<< "versions and vice versa. Only numbers within the range of "
 		<< "0 to 10 are supported." << '\n';
 
 	vector<std::string> spelled_out {
-		"zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
-		"nine", "ten"
+		"zero", "one", "two", "three", "four", "five",
+		"six", "seven", "eight", "nine", "ten"
 	};
 
 	std::string input_str{};
@@ -24,10 +25,10 @@ int main()
 			}
 			int input_num{ 0 };
 			std::cin >> input_num;
-			if (input_num < 0 || input_num > 10) {
-				continue;
+			if (0 <= input_num && input_num <= 10) {
+				std::cout
+					<< input_num << " = " << spelled_out[input_num] << '\n';
 			}
-			std::cout << input_num << " = " << spelled_out[input_num] << '\n';
 			continue;
 		}
 		for (int i = 0; i < spelled_out.size(); ++i) {
