@@ -8,9 +8,9 @@
 
 int main()
 {
-	std::cout <<
-		"Please enter an operator (+, -, *, /) and the two numbers you want to"
-		<< " apply the operation to."
+	std::cout << "Simple Calculator" << '\n'
+		<< "Please enter the two numbers you want to use as operands "
+		<< "followed by an operator (+, -, *, /)."
 		<< '\n';
 
 	char op { ' ' };
