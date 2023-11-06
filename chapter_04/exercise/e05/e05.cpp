@@ -46,7 +46,7 @@ int main()
 			}
 			break;
 		default:
-			std::cout << "Invalid operand: '" << op << "', please try again"
+			std::cout << "Invalid operator: '" << op << "', please try again"
 				<< '\n';
 			continue;
 			break;
