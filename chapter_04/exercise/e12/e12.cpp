@@ -2,8 +2,8 @@
 // Note that because of the implementation of vector in the above header file
 // you can't use the [] operator with vector<bool>, you have to use at() instead
 
-// Exercise 11, Prime numbers
-// Find all the prime numbers between 1 and 100:
+// Exercise 12, Prime numbers revisited
+// Find all the prime numbers between 1 and any given number:
 // 	A whole number.
 // 	> 0
 // 	Cannot be exactly divided by any other whole number other than itself and 1.
