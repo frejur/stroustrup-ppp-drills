@@ -51,7 +51,7 @@ vector<bool> assume_all_primes(int length) {
 	// Returns a vector of given length, with all 'true' values.
 	// Signifies: index == number == is a prime num
 	// 0-based, so the number at index 0 is actually 1
-	return vector<bool>(100, true);
+	return vector<bool>(length, true);
 }
 
 bool divisible_only_by_itself_and_1(int num) {
