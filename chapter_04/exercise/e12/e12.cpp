@@ -76,6 +76,9 @@ vector<bool> assume_all_primes(int length) {
 }
 
 bool divisible_only_by_itself_and_1(int num) {
+	if (num == 1) {
+		return false;
+	}
 	if (num <=3) {
 		return true;
 	}
