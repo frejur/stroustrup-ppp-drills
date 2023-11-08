@@ -21,14 +21,14 @@ int main()
 	for (int i = 0; i < PRIME_MAX; ++i) {
 		if (is_prime_v.at(i)) {
 			// assumed true, check
-			int num = i + 1;
+			int num = i;
 			if (!divisible_only_by_itself_and_1(num)) {
 				is_prime_v.at(i) = false;
 				continue;
 			}
 			// rule out future multiples
 			for (int m : get_multiples_of_prime(num, PRIME_MAX)) {
-				is_prime_v.at(m - 1) = false;
+				is_prime_v.at(m) = false;
 			}
 		}
 	}
@@ -37,8 +37,7 @@ int main()
 		if (!is_prime_v.at(j)) {
 			continue;
 		}
-		int num{ j + 1};
-		std::cout << num << " is a prime number." << '\n';
+		std::cout << j << " is a prime number." << '\n';
 	}
 
 	keep_window_open();
@@ -50,15 +49,13 @@ int main()
 vector<bool> assume_all_primes(int length) {
 	// Returns a vector of given length, with all 'true' values.
 	// Signifies: index == number == is a prime num
-	// 0-based, so the number at index 0 is actually 1
-	return vector<bool>(length, true);
+	return vector<bool>(length + 1, true);
 }
 
 bool divisible_only_by_itself_and_1(int num) {
-	if (num == 1) {
+	if (num < 2) {
 		return false;
-	}
-	if (num <=3) {
+	} else if (num <=3) {
 		return true;
 	}
 	int divisor_max{ static_cast<int>(std::floor(num * 0.5)) };
@@ -73,7 +70,7 @@ bool divisible_only_by_itself_and_1(int num) {
 }
 
 vector<int> get_multiples_of_prime(int prime, int max) {
-	if (prime == 1) {
+	if (prime < 2) {
 		return {};
 	}
 

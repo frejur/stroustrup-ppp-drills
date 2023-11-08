@@ -48,17 +48,18 @@ int main()
 	}
 
 	vector<bool> is_prime_v{ assume_all_primes(prime_max) };
-	is_prime_v.at(0) = false; // 1 is not a prime number
+	is_prime_v.at(0) = false;
+	is_prime_v.at(1) = false;
 
 	int old_p { 0 };
 	int p{ 2 };
 	while (p > old_p) {
 		for (int m : get_multiples_of_prime(p, prime_max)) {
-			is_prime_v.at(m - 1) = false;
+			is_prime_v.at(m) = false;
 		}
 		old_p = p;
 		for (int i = p + 1; i < is_prime_v.size(); ++i) {
-			if (is_prime_v.at(i - 1)) {
+			if (is_prime_v.at(i)) {
 				p = i;
 				break;
 			}
@@ -69,8 +70,7 @@ int main()
 		if (!is_prime_v.at(j)) {
 			continue;
 		}
-		int num{ j + 1};
-		std::cout << num << " is a prime number." << '\n';
+		std::cout << j << " is a prime number." << '\n';
 	}
 
 	keep_window_open();
@@ -82,12 +82,11 @@ int main()
 vector<bool> assume_all_primes(int length) {
 	// Returns a vector of given length, with all 'true' values.
 	// Signifies: index == number == is a prime num
-	// 0-based, so the number at index 0 is actually 1
-	return vector<bool>(length, true);
+	return vector<bool>(length + 1, true);
 }
 
 vector<int> get_multiples_of_prime(int prime, int max) {
-	if (prime == 1) {
+	if (prime < 2) {
 		return {};
 	}
 
