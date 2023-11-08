@@ -30,12 +30,6 @@ vector<string> mode_from_sorted(vector<string> sorted_v) {
 	}
 
 	int unique_count{ static_cast<int>(unique_v.size()) };
-	if (unique_count != freq_v.size()) {
-		std::ostringstream e;
-		e << "Mode operation could not find the same no. of unique values "
-			<< "as the no. of frequencies";
-		throw std::runtime_error(e.str());
-	}
 
 	if (min_freq == max_freq) {
 		return {};
