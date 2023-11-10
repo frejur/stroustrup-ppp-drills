@@ -1,6 +1,6 @@
 #include "../../lib/std_lib_facilities.h"
 
-// Exercise 3. Celsius to Kelvin, callee throws error below absolute zero.
+// Exercise 4. Celsius < - > Kelvin, callee throws error below absolute zero.
 
 static constexpr char DEG{ '\370' };
 static constexpr double ABS_ZERO{ -273.15 };
