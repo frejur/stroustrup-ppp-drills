@@ -19,13 +19,13 @@ int get_sum_count() {
 }
 
 int sum_i(vector<int> v, int n) {
-	if (n > (v.size() - 1)) {
+	if (n > v.size()) {
 		error(
 			"Not enough numbers recorded to calculate a sum of "
 			+ std::to_string(n) + " values");
 	}
 	int sum{ 0 };
-	for (int i = 0; i < (n - 1); ++i) {
+	for (int i = 0; i < n; ++i) {
 		sum += v.at(i);
 
 	}
