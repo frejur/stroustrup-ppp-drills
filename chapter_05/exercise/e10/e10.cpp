@@ -106,7 +106,7 @@ try {
 	keep_window_open();
 	return 0;
 }
-catch (std::exception e) {
+catch (std::exception& e) {
 	std::cerr << "Error: " << e.what() << '\n';
 	keep_window_open();
 	return 1;

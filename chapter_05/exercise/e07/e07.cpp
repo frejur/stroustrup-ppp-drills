@@ -103,7 +103,7 @@ try {
 
 	return 0;
 }
-catch (std::exception &e) {
+catch (std::exception& e) {
 	std::cerr << "Error: " << e.what() << '\n';
 	return 1;
 }
