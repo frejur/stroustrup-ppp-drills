@@ -93,19 +93,20 @@ std::string get_guess() {
 vector<int> gen_matches(std::string guess, std::string secret) {
 	// return a vector of {bulls, cows}
 	// assumes: size of guess == size of secret
+	// assumes: guess and secret contain no duplicate chars
 	if (guess == secret) {
 		return {4, 0};
 	}
 	int bulls{ 0 }, cows{ 0 };
 	for (int i = 0; i < guess.size(); ++i) {
-		if (guess.at(i) == secret.at(i)) {
-			++bulls;
-		} else {
-			for (int j = 0; j < (guess.size() - 1); ++j) {
-				if (guess.at(i) == secret.at((i + j + 1) % guess.size())) {
+		for (int j = 0; j < (guess.size()); ++j) {
+			if (guess.at(i) == secret.at(j)) {
+				if (i == j) {
+					++bulls;
+				} else {
 					++cows;
-					break;
 				}
+				break;
 			}
 		}
 	}
@@ -124,7 +125,7 @@ try {
 		<< "in terms of \"bulls\" and \"cows\":" << '\n'
 		<< "- A \"bull\" means a correct digit in the correct position." << '\n'
 		<< "- A \"cow\" means the guessed number contains a matching" << '\n'
-		<< "   digit but not at the position indicated by the player."
+		<< "  digit but not at the position indicated by the player."
 		<< '\n' << '\n';
 
 	while (std::cin) {
