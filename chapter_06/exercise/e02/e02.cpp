@@ -138,6 +138,7 @@ double primary() {
     if (output_trace) std::cout << "PRI: get token" << '\n';
     Token t = ts.get();
     switch (t.kind) {
+    // Exercise 2 --------------------------------------------------------------
     case '{':   // expression
     {
         if (output_trace) std::cout << "PRI: found '{', get expression" << '\n';
@@ -147,6 +148,7 @@ double primary() {
         if (t.kind != '}') error("expected '}'");
         return exp;
     }
+    // -------------------------------------------------------------- Exercise 2
     case '(':   // expression
     {
         if (output_trace) std::cout << "PRI: found '(', get expression" << '\n';
