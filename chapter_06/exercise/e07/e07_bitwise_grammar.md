@@ -4,28 +4,30 @@
 Integers represented as bit patterns (of equal length).
 
 ## Operators (In order of precedence):
+```
 ! (not)     ~ (complement)
 & (and)
 ^ (exclusive or)
 | (or)
+```
 
 ## Grammar
 __Operor:__
-    Operex
-    "!" Operex
-    "~" Operex"
+    * Operex
+    * "!" Operex
+    * "~" Operex"
 __Operex:__
-    Operand
-    Operex "^" Operand 
+    * Operand
+    * Operex "^" Operand 
 __Operand:__
-    Complenaught
-    Operand "&" Complenaught
+    * Complenaught
+    * Operand "&" Complenaught
 __Complenaught:__
-    Bit-Pattern
-    "~" Bit Pattern
-    "!" Bit Pattern
+    * Bit-Pattern
+    * "~" Bit Pattern
+    * "!" Bit Pattern
 __Bit-Pattern:__
-    Integer
-    "(" Operor ")"
+    * Integer
+    * "(" Operor ")"
 __Integer:__
-    integer-literal
+    * integer-literal
