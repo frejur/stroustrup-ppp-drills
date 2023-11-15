@@ -94,7 +94,7 @@ std::string Digit::to_string() {
 }
 
 int main()
-{
+try {
 	std::cout
 		<< "Read digits and compose them into integers" << '\n'
 		<< "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << '\n'
@@ -114,4 +114,14 @@ int main()
 	keep_window_open();
 
 	return 0;
+}
+catch (std::exception& e) {
+	std::cerr << "Error: " << e.what() << '\n';
+	keep_window_open();
+	return 1;
+}
+catch (...) {
+	std::cerr << "Unknown error" << '\n';
+	keep_window_open();
+	return 2;
 }
