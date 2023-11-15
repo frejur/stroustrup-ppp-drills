@@ -109,10 +109,6 @@ int main()
 		}
 		Digit d{ input_i };
 		std::cout << d.to_string() << '\n';
-
-	}
-	if (!std::cin) {
-		error("Bad input");
 	}
 
 	keep_window_open();
