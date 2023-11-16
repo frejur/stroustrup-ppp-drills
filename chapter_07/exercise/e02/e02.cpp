@@ -1,7 +1,11 @@
 #include "../../lib/std_lib_facilities.h"
 
 // Chapter 7, Exercise 2. Allow (re)assignment using "=".
-// Scroll down to comment marked: CH07E02
+// Scroll down to comments marked: CH07E02
+
+// First of all, it doesn't seem very practical to introduce '=' as an operator
+// that can be in used in any expression. This code adds the ability to define
+// a variable using '=' in a statement only (Much like a declaration).
 
 //	Pros and cons of this addition
 //	Pros:	Definitely nice to have, avoids having to restart the program to
@@ -15,7 +19,7 @@
 
 using std::string;
 
-constexpr bool output_trace{ true }; // debug
+constexpr bool output_trace{ false }; // debug
 
 // various tokens with descriptive names
 constexpr char prompt{ '>' };
@@ -27,7 +31,6 @@ constexpr char name  { 'a' };   // variable name token
 constexpr char let   { 'L' };   // declaration token
 const string declkey { "#" };   // declaration keyword
 constexpr char assign{ '=' };   // assignment token
-constexpr char reassign{ ':' };
 
 // quitting
 constexpr char quit_token{ 'q' };
@@ -63,7 +66,7 @@ public:
 class Token_stream {
 public:
 	Token_stream();				// read tokens from std::cin
-	Token get(bool peek=false);	// get next token in stream
+	Token get(bool peek=false);	// get next token in stream. CH07E02, peek bool
 	Token peek();				// CH07E02 get next token without consuming it
 	void putback(Token t);		// put back token, put into buffer
 	void ignore(char c);		// discard all up to and including c
@@ -108,6 +111,7 @@ void Token_stream::ignore(char c)
 
 //-------------------------------------------------------------------
 
+// CH07E02, peek()
 Token Token_stream::peek() {
 	return get(true);
 }
@@ -176,7 +180,7 @@ Token Token_stream::get(bool peek)
 				}
 			}
 
-			std::cin.putback(ch); // put non-alplhanumeric back into std::cin
+			std::cin.putback(ch); // put non-alphanumeric back into std::cin
 
 			if (s == quit_key) {
 				if (output_trace) std::cout << "TOK: quit keyword found: " << s << '\n';
@@ -265,6 +269,7 @@ void print_greeting();					// program greeting / info string
 void calculate();						// parse and evaluate input
 double statement();						// read and evaluate a Statement
 double declaration();					// read and evaluate a Declaration
+double redefinition();					// CH07E02 redefine a variable
 double expression();					// read and evaluate an Expression
 double term();							// read and evaluate a Term
 double primary();						// read and evaluate a Primary
@@ -321,18 +326,15 @@ double statement()
 	case let:
 		if (output_trace) std::cout << "STA: declaration keyword found, get declaration()" << '\n';
 		return declaration();
+		break;
 	case name: {
+		// CH07E02 Redefine if 'name' is followed by 'assignment' token
 		if (output_trace) std::cout << "STA: name found, try to get assigment" << '\n';
-		string var_name{ t.name };
-		Token t_peek = ts.peek();
+		Token t_peek = ts.peek(); // peek ahead
 		if (t_peek.kind == assign) {
-			ts.putback({ reassign, var_name });
-			if (output_trace) {
-				std::cout << "STA: name followed by assignment keyword found, "
-							<< "get (re)declaration() for token(" << reassign <<
-							", " << var_name << ")" << '\n';
-			}
-			return declaration(); // reassign
+			if (output_trace) std::cout << "STA: name followed by assignment keyword found, put back token: " << t.kind << '\n';
+			ts.putback(t);
+			return redefinition();
 		} else {
 			if (output_trace) std::cout << "STA: no assigment operator found" << '\n';
 		}
@@ -346,40 +348,40 @@ double statement()
 }
 
 //-------------------------------------------------------------------
-// CH07E02: Allow reassignment by passing reassign==true as parameter
+// CH07E02: Redefinition of a variable
+
+double redefinition() {
+	// after detecting statement w. a name followed by the assignment operator
+	if (output_trace) std::cout << "RED: get token, expecting name." << '\n';
+	Token t{ ts.get() };
+	if (t.kind != name) {
+		error("Expected name in redefinition");
+	}
+	if (output_trace) std::cout << "RED: get token, expecting assignment." << '\n';
+	Token t2{ ts.get() };
+	if (t2.kind != assign) {
+		error("Expected assigment operator in redefinition");
+	}
+	if (output_trace) std::cout << "RED: get expression()" << '\n';
+	double d = expression();
+	if (output_trace) std::cout << "RED: set_value(" << t.name << d << ')' << '\n';
+	set_value(t.name, d);
+	return d;
+}
 
 double declaration()
 {
-	// after detecting the declaration-keyword
-	// or
-	// after a name followed by the assignment operator
-	bool should_reassign { false };
+	// after detecting statement w. the declaration-keyword
 	Token t = ts.get();
-	string var_name{ "" };
-
-	if (t.kind == reassign) {
-		// reassignment: mame and assignment operator already confirmed
-		var_name = t.name;
-		should_reassign = true;
-		t = ts.get();
-	} else {
-		// initialization
-		if (t.kind != name) {
-			error("name expected in declaration");
-		}
-		var_name = t.name;
-		t = ts.get();
-		if (t.kind != '=') error("= missing in declaration of ", var_name);
+	if (t.kind != name) {
+		error("name expected in declaration");
 	}
+	Token t2 = ts.get();
+	if (t2.kind != '=') error("= missing in declaration of ", t.name);
 	if (output_trace) std::cout << "DEC: get expression()" << '\n';
 	double d = expression();
-	if (!should_reassign) {
-		if (output_trace) std::cout << "DEC: define_name(" << var_name << ", " << d << ")" << '\n';
-		define_name(var_name, d);
-	} else {
-		if (output_trace) std::cout << "DEC: set_value(" << var_name << ", " << d << ")" << '\n';
-		set_value(var_name, d);
-	}
+	if (output_trace) std::cout << "DEC: define_name(" << t.name << ", " << d << ")" << '\n';
+	define_name(t.name, d);
 	return d;
 }
 
@@ -501,6 +503,12 @@ double term() {
 			t = ts.get();
 			break;
 		}
+		case assign: // CH07E02, assignment not allowed as part of an expression
+			error(
+				"The assignment operator cannot be used in this context. "
+				"Variables may only be redefined as separate statements.");
+				break;
+			break;
 		default:
 			if (output_trace) std::cout << "TER: put back" << t.kind << " into buffer" << '\n';
 			ts.putback(t);
