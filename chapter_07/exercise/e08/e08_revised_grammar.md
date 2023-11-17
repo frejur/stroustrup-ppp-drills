@@ -52,8 +52,8 @@ __Primary:__
 * sqrt( Expression )
 
 __Name:__
-* string-literal
-  (May only contain alphanumericals and underscores, first must be a letter)
+* string-literal  
+(May only contain alphanumericals and underscores, first character must be a letter)
 
 __Number:__
 * floating-point-literal
