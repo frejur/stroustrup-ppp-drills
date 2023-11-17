@@ -46,8 +46,8 @@ __Primary:__
 * Number
 * Name
 * ( Expression )
-* + Primary
-* - Primary
+* \+ Primary
+* \- Primary
 * pow( Expression , Expression )
 * sqrt( Expression )
 
