@@ -1,48 +1,41 @@
 #include "../../lib/std_lib_facilities.h"
 
-// Chapter 7, Exercise 2. Allow (re)assignment using "=".
-// Scroll down to comments marked: CH07E02
+// Chapter 7, Exercise 3. Add feature to define constant variables.
 
-// First of all, it doesn't seem very useful to be able to reassign values in
-// in the middle of any expression. This code adds the ability to define
-// a variable using '=' in a statement only (Much like a declaration).
+// The syntax for defining a constant:
+// const <variable-name> = <value>;
 
-//	Pros and cons of this addition
-//	Pros:	Definitely nice to have, avoids having to restart the program to
-//			reuse the same 'syntax'.
-//			Makes more sense, not all variables are constants by definition.
-//	Cons:	Feature creep: more work, introducing new bugs.
-//			Also, users may assume that variables containing references to other
-//			variables will dynamically update when the values of those
-//			references are redefined. They may argue that you cannot implement
-//			A without also implementing B.
+// To review relevant sections of the code, search for comments marked: CH07E03
 
 using std::string;
 
 constexpr bool output_trace{ false }; // debug
 
 // various tokens with descriptive names
-constexpr char prompt{ '>' };
-constexpr char result{ '=' };
-constexpr char number{ '8' };
-constexpr char print { ';' };
+constexpr char prompt	{ '>' };
+constexpr char result	{ '=' };
+constexpr char number	{ '8' };
+constexpr char print	{ ';' };
 
-constexpr char name  { 'a' };   // variable name token
-constexpr char let   { 'L' };   // declaration token
-const string declkey { "#" };   // declaration keyword
-constexpr char assign{ '=' };   // assignment token
+constexpr char name		{ 'a' };	// variable name token
+constexpr char let		{ 'L' };	// declaration token
+constexpr char const_token
+						{ 'C' };	// CH07E03
+const string declkey	{ "let" };	// declaration keyword
+const string constkey	{ "const" };// CH07E03
+constexpr char assign	{ '=' };    // assignment token
 
 // quitting
 constexpr char quit_token{ 'q' };
 const string   quit_key  { "quit" };
 
 // squareroot
-const string   sqrt_word { "sqrt" }; // keyword
-constexpr char sqrt_token{ 's' };    // token
+const string   sqrt_word { "sqrt" };// keyword
+constexpr char sqrt_token{ 's' };	// token
 
 // power of
-const string    pow_word { "pow" }; // keyword
-constexpr char  pow_token{ 'p' };   // token
+const string    pow_word { "pow" };	// keyword
+constexpr char  pow_token{ 'p' };	// token
 
 vector<string> available_fn{ sqrt_word, pow_word };
 
@@ -192,6 +185,11 @@ Token Token_stream::get(bool peek)
 				return Token(let);
 			}
 
+			if (s == constkey) { // CH07E03
+				if (output_trace) std::cout << "TOK: const keyword found: " << s << '\n';
+				return Token(const_token);
+			}
+
 			if (s == sqrt_word) {
 				if (output_trace) std::cout << "TOK: squareroot keyword found: " << s << '\n';
 				return Token(sqrt_token);
@@ -217,6 +215,7 @@ class Variable {
 public:
 	string name;
 	double value;
+	bool is_const; // CH07E03
 };
 
 vector<Variable> var_table;
@@ -240,7 +239,10 @@ void set_value(string s, double d)
 	// attempts to find variable s and set its value to d
 	for (Variable& v : var_table)
 		if (v.name == s) {
-			v.value = d; // success
+			if (v.is_const) {
+				error("Cannot reassign a constant"); // CH03E07
+			}
+			v.value = d;
 			return;
 		}
 	error("unable to assign value to undefined variable ",
@@ -255,11 +257,12 @@ bool is_declared(string s)
 	return false;
 }
 
-double define_name(string var, double val)
+// CH03E07
+double define_name(string var, double val, bool is_const)
 {
 	if (is_declared(var)) error(var, " declared twice");
 	if (output_trace) std::cout << "DEF: adding " << var << " = " << val << '\n';
-	var_table.push_back(Variable{ var, val });
+	var_table.push_back(Variable{ var, val, is_const });
 	return val;
 }
 //-------------------------------------------------------------------
@@ -283,9 +286,9 @@ int main()
 	print_greeting();
 
 	// predefined variables
-	define_name("pi", 3.1415926535);
-	define_name("e", 2.7182818284);
-	define_name("k", 1000);
+	define_name("pi", 3.1415926535, true);
+	define_name("e", 2.7182818284, true);
+	define_name("k", 1000, true);
 
 	calculate();
 	for (Variable x : var_table) {
@@ -323,8 +326,9 @@ double statement()
 {
 	Token t = ts.get();
 	switch (t.kind) {
-	case let:
+	case let: case const_token:
 		if (output_trace) std::cout << "STA: declaration keyword found, get declaration()" << '\n';
+		ts.putback(t); // CH07E03
 		return declaration();
 		break;
 	case name: {
@@ -369,19 +373,25 @@ double redefinition() {
 	return d;
 }
 
+// CH0703, modififed declaration() to handle both constants and regular vars
 double declaration()
 {
-	// after detecting statement w. the declaration-keyword
+	// after detecting statement w. the declaration or constant keyword
 	Token t = ts.get();
-	if (t.kind != name) {
+	if (t.kind != let && t.kind != const_token) {
+		error("Expected a declaration or constant token");
+	}
+	bool is_const{ (t.kind == const_token) };
+	Token t2 = ts.get();
+	if (t2.kind != name) {
 		error("name expected in declaration");
 	}
-	Token t2 = ts.get();
-	if (t2.kind != '=') error("= missing in declaration of ", t.name);
+	Token t3 = ts.get();
+	if (t3.kind != '=') error("= missing in declaration of ", t.name);
 	if (output_trace) std::cout << "DEC: get expression()" << '\n';
 	double d = expression();
-	if (output_trace) std::cout << "DEC: define_name(" << t.name << ", " << d << ")" << '\n';
-	define_name(t.name, d);
+	if (output_trace) std::cout << "DEC: define_name(" << t2.name << ", " << d << ")" << '\n';
+	define_name(t2.name, d, is_const);
 	return d;
 }
 
