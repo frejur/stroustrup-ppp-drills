@@ -17,7 +17,7 @@ constexpr char	result		{ '=' };
 constexpr char	number		{ '8' };
 constexpr char	print		{ ';' };
 
-constexpr char	name			{ 'a' };	// variable name token
+constexpr char	name		{ 'a' };	// variable name token
 constexpr char	let			{ 'L' };	// declaration token
 constexpr char 	const_token
 							{ 'C' };	// CH07E03
