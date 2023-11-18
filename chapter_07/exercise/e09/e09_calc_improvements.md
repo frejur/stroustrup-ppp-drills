@@ -29,7 +29,7 @@ Suggestions for improvements to the calculator:
 ```
 6. Boolean operators:
 ```
-	!expr			(returns: 1 if expr == 0)
+	!expr			(returns: 1 if expr <= 0)
 	expr_a && expr_b	(returns: 1 if both expr > 0)
 	expr_a || expr_b	(returns: 1 if either expr > 0)
 ```
