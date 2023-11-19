@@ -50,7 +50,7 @@ vector<string> available_fn{ sqrt_word, pow_word };
 //------------------------------------------------------------------------------
 // CH07E09
 double hextodec(std::string hex) {
-    float dec{ 0 };
+    double dec{ 0 };
     for (int i = 0; i < hex.size(); ++i) {
         int char_int{ hex.at(i) - '0' };
         if (0 <= char_int && char_int <= 9) {
