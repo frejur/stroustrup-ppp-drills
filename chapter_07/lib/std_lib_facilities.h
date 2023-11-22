@@ -202,7 +202,7 @@ inline void simple_error(std::string s)	// write ``error: s and exit program
 template<class R, class A> R narrow_cast(const A& a)
 {
 	R r = R(a);
-	if (A(r) != a) error(string("info loss"));
+	if (A(r) != a) error(std::string("info loss"));
 	return r;
 }
 
