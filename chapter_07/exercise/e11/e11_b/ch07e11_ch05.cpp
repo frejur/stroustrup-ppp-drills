@@ -30,7 +30,24 @@
 // 8. Try to break the program with random input data, fix bugs.
 //------------------------------------------------------------------------------
 //
-// Program description TODO
+// Activity Logger
+//
+// A program that allows users to track the time they spent on a specific task
+// or activity over the course of a week. It provides an interface for
+// inputting time logs and generating a summary of the logged time.
+//
+// Users specify the name of the task or activity they want to track at the
+// beginning of the program.
+//
+// Users can then enter time logs on a line-by-line basis. Each time log
+// consists of the day of the week followed by the duration of time spent on
+// expressed in hours, minutes, and seconds (See the grammar below for more
+// details).
+//
+// When requested, the program prints out:
+// - Additional instructions and hints.
+// - A list of the days-of-the-week as defined by the program.
+// - A summary of the total time logged for each day of the week.
 //
 // All values are stored as <double>s but the user may only put in whole values.
 //
@@ -41,6 +58,9 @@
 //	Command:
 //		[QUIT]'\n'
 //		[PRINT]'\n'
+//		[HELP]'\n'
+//		[HINT]'\n'
+//		[WEEK]'\n'
 //		Activity-Record'\n'
 //
 //	Activity-Record:
@@ -79,14 +99,38 @@
 constexpr char PROMPT{ '>' };
 const std::string QUIT{ "exit" };
 const std::string PRINT{ "print" };
+const std::string HELP{ "help" };
+const std::string HINT{ "hint" };
+const std::string WEEK{ "week" };
+
+const std::string UNIT_HOURS{ "h" };
+const std::string UNIT_MINUTES{ "m" };
+const std::string UNIT_SECONDS{ "s" };
+
+constexpr char TOKEN_QUIT{ 'Q' };
+constexpr char TOKEN_PRINT{ 'P' };
+constexpr char TOKEN_HELP{ 'H' };
+constexpr char TOKEN_HINT{ '!' };
+constexpr char TOKEN_WEEK{ 'W' };
+constexpr char TOKEN_DAY{ 'D' };
+constexpr char TOKEN_NUMBER{ '#' };
+constexpr char TOKEN_HOURS{ 'h' };
+constexpr char TOKEN_MINUTES{ 'm' };
+constexpr char TOKEN_SECONDS{ 's' };
 
 constexpr int DAY_MINUTES{ 24 * 60};
 constexpr int DAY_SECONDS{ DAY_MINUTES * 60 };
 constexpr int HOUR_SECONDS{ 3600 };
 
-//------------------------------------------------------------------------------
-// Convert string / char into lowercase (TODO: swap for something proper)
+// These keywords may not be used as shorthands for days-of-the-week
+const vector<std::string> RESERVED_WORDS{
+	QUIT, PRINT, HELP, HINT, WEEK, UNIT_HOURS, UNIT_MINUTES, UNIT_SECONDS
+};
 
+//------------------------------------------------------------------------------
+// "Hacks" TODO: Replace all of these with something proper.
+
+// Convert string / char into lowercase
 constexpr int LOWER_OFFS{ 'a' - 'A' };
 
 char to_lower(char c) {
@@ -111,7 +155,7 @@ std::string to_lower(std::string s) {
     return low;
 }
 
-// Trim spaces TODO: Swap with something built-in
+// Trim spaces
 std::string trim(std::string s) {
 	std::string new_s;
 	int sp_count{ (s.front() == ' ') };
@@ -191,9 +235,13 @@ void Week::add_day(Day_of_the_week day) {
 	}
 }
 //------------------------------------------------------------------------------
+
 // Expresses durations in a more human-readable format
-class HMS_Duration {
+class HMS_duration {
 public:
+	HMS_duration() : hours(0), minutes(0), seconds(0) {};
+	HMS_duration(double h, double m, double s)
+	: hours(h), minutes(m), seconds(s) {};
 	double hours;
 	double minutes;
 	double seconds;
@@ -209,10 +257,16 @@ public:
 	bool add(double h, double m, double s);
 
 	double total() { return sum; }; // seconds
-	HMS_Duration as_units();
+	HMS_duration as_units();
 private:
 	double sum;
 	double max;
+};
+
+class Activity_record {
+public:
+	std::string day;
+	HMS_duration hms;
 };
 
 bool Duration::add_seconds(double s) {
@@ -227,7 +281,7 @@ bool Duration::add(double h, double m, double s) {
 	return add_seconds(h * 60 * 60 + m * 60 + s);
 }
 
-HMS_Duration Duration::as_units() {
+HMS_duration Duration::as_units() {
 	if (sum == 0) {
 		return {0, 0, 0};
 	}
@@ -243,30 +297,51 @@ HMS_Duration Duration::as_units() {
 
 class Activity_log {
 public:
-	void init(std::string activity, vector<Day_of_the_week> days);
-	void add_record(std::string name_of_day, double h, double m, double s);
+	Activity_log() : is_init(false) {};
+	bool has_been_initialized() { return is_init; };
+	void init(
+		std::string activity,
+		vector<Day_of_the_week> days,
+		vector<std::string> reserved_words
+	);
+	void add_record(Activity_record record);
+	int day_index(std::string day) { return week.search(day); };
 
 	// returns the sum of all the logged time for a given day
 	double sum_of_day(int day_idx);
-	HMS_Duration unit_sum_of_day(int day_idx);
+	HMS_duration unit_sum_of_day(int day_idx);
 
 	std::string activity() { return act; };
 	std::string name_of_day(int day_idx) { return week.name_of_day(day_idx); };
 private:
+	bool is_init;
 	std::string act;
+	vector<std::string> reserved; // list of reserved words
 	Week week;
 	vector<Duration> sums;
 	void update_sum(int day_idx, double h, double m, double s);
-	int fail_count; // number of rejected entries
 };
 
-void Activity_log::init(std::string a, vector<Day_of_the_week> days) {
+void Activity_log::init(
+	std::string a,
+	vector<Day_of_the_week> days,
+	vector<std::string> reserved_words
+) {
 	act = a;
 	if (days.size() != 7) {
 		error("Failed to specify all seven days of the week");
 	}
+	reserved = reserved_words;
 	week = Week{ };
 	for (Day_of_the_week d : days) {
+		for (std::string w : reserved) {
+			if (d.search_str == w) {
+				error(
+					"Reserved word '" + w + "' may not be used as a short-hand "
+					"for a day-of-the-week"
+				);
+			}
+		}
 		week.add_day(d);
 	}
 
@@ -275,7 +350,7 @@ void Activity_log::init(std::string a, vector<Day_of_the_week> days) {
 	d.init(DAY_SECONDS);
 	sums = { d, d, d, d, d, d, d };
 
-	fail_count = 0;
+	is_init = true;
 }
 
 void Activity_log::update_sum(int day_idx, double h, double m, double s) {
@@ -300,22 +375,22 @@ void Activity_log::update_sum(int day_idx, double h, double m, double s) {
 	}
 }
 
-void Activity_log::add_record(
-	std::string name_of_day, double h, double m, double s)
+void Activity_log::add_record(Activity_record record)
 {
 	try {
-		int day_idx{ week.search(name_of_day) };
+		int day_idx{ week.search(record.day) };
 		if (day_idx == -1) {
 			error("Invalid day-of-the-week");
 		}
-		update_sum(day_idx, h, m, s);
+		update_sum(
+			day_idx,
+			record.hms.hours, record.hms.minutes, record.hms.seconds
+		);
 	}
 	catch(std::exception& e) {
-		++fail_count;
 		error(e.what());
 	}
 	catch(...) {
-		++fail_count;
 		error("Unknown error evaluating sum");
 	}
 }
@@ -324,7 +399,7 @@ double Activity_log::sum_of_day(int day_idx) {
 	return sums.at(day_idx).total();
 }
 
-HMS_Duration Activity_log::unit_sum_of_day(int day_idx) {
+HMS_duration Activity_log::unit_sum_of_day(int day_idx) {
 	return sums.at(day_idx).as_units();
 }
 
@@ -337,10 +412,7 @@ Activity_log al{}; // Global instance
 void print_intro()
 {
 	std::cout
-		<< "Activity Logger (Days-of-the-week revisited)" << '\n'
-		<< "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << '\n'
-		<< "This program allows the user to log time for a certain" << '\n'
-		<< "activity or task over the course of a week."
+		<< "Activity Logger (Days-of-the-week revisited)"
 		<< '\n' << '\n';
 }
 
@@ -361,19 +433,14 @@ void print_hints()
 		"+ Only include the units of time relevant to your log entry:" "\n"
 		"  \"1h 20m\", \"500s\", \"30m\" are all valid duration values."
 	};
-	static const std::string TXT_PRINT {
-		"+ Type '" + PRINT + "' to print a summary of the logged values."
-	};
 	std::cout
-		<< TXT_LAZY << '\n'
+		<< "Hints:" << '\n'
+		<< TXT_LAZY << '\n' << '\n'
 		<< TXT_TIME << '\n'
-		<< TXT_PRINT << '\n'
 		<< '\n';
 }
 
-void print_help_for_log() {
-	std::string TXT_EXAMPLE{ al.name_of_day(0) + " 1h 20m 30s" };
-
+void print_week() {
 	std::cout << "Here's the full list of the days-of-the-week:" << '\n';
 	for (int i = 0; i < 7; ++i) {
 		if (i > 0) {
@@ -381,15 +448,55 @@ void print_help_for_log() {
 		}
 		std::cout << al.name_of_day(i);
 	}
+	std::cout << '\n' << '\n';
+}
 
+void print_commands() {
 	std::cout
-		<< '\n' << '\n'
-		<< "You may now log time for the chosen activity." << '\n'
-		<< "Please specify the day-of-the-week and the time spent." << '\n'
-		<< "Example input: '" << TXT_EXAMPLE << '\'' << '\n'
-		<< '\n';
+		<< "'" << HELP << "' '" << HINT << "' '" << WEEK
+		<< "' '" << PRINT << "' '" << QUIT << "'";
+}
 
-	print_hints();
+void print_more_help_for_log() {
+	std::string TXT_EXAMPLE{ al.name_of_day(0) + " 1h 20m 30s" };
+	std::cout
+		<< "Logs are entered one at a time."
+		<< '\n' << '\n'
+		<< "First enter the day-of-the-week." << '\n'
+		<< "(Type '" << WEEK << "' to list the days defined by the program)"
+		<< '\n' << '\n'
+		<< "Then, on the same line, state the duration of time spent," << '\n'
+		<< "expressed in hours, minutes and seconds."
+		<< '\n' << '\n'
+		<< "Example input: '" << TXT_EXAMPLE << '\''
+		<< '\n' << '\n'
+		<< "Other available commands: " << '\n';
+		print_commands();
+	std::cout << "\n";
+}
+
+void print_help_for_log() {
+	std::cout
+		<< "Please specify the day-of-the-week and the time spent." << '\n'
+		<< "(Type '" << HELP << "' for more info)" <<'\n';
+}
+
+void print_continue()
+{
+	std::cout
+		<< '\n'
+		<< "Please submit another entry, or type '" << QUIT << "'" << '\n';
+}
+
+void print_success(Activity_record record) {
+	int day_idx{ al.day_index(record.day) };
+	std::string day{ al.name_of_day(day_idx) };
+	HMS_duration d{ al.unit_sum_of_day(day_idx) };
+	std::cout
+		<< day << " was updated successfully." << '\n'
+		<< "  New total: " << '\t'
+		<< d.hours << "h " << d.minutes << "m " << d.seconds << "s"
+		<<  '\n';
 }
 
 void print_summary() {
@@ -397,24 +504,13 @@ void print_summary() {
 		<< "Summary of last week" << '\n'
 		<< "Activity: '" << al.activity() << "'" << '\n';
 	for (int i = 0; i < 7; ++i) {
-		HMS_Duration d{ al.unit_sum_of_day(i) };
+		HMS_duration d{ al.unit_sum_of_day(i) };
 		std::cout
 			<< "  " << d.hours << "h " << d.minutes << "m " << d.seconds << "s"
 			<< '\t' << " on "
 			<< al.name_of_day(i)
 			<<  '\n';
 	}
-}
-
-void print_continue()
-{
-	print_summary();
-
-	std::cout
-		<< '\n'
-		<< "Please submit another entry, or enter '" << QUIT << "' to exit"
-		<< '\n';
-	print_hints();
 }
 
 void print_outro()
@@ -424,6 +520,7 @@ void print_outro()
 }
 
 //------------------------------------------------------------------------------
+
 // Reads entire line into string and returns it if it contains characters
 std::string get_activity() {
 	std::string activity{ "" };
@@ -452,38 +549,343 @@ std::string get_activity() {
 // Prepares the global Activity_log instance for input
 void init_log()
 {
-	al.init(
-		trim(get_activity()),
-		{
-			{ "Monday", "mo" }, { "Tuesday", "tu" }, { "Wednesday", "we" },
-			{ "Thursday", "th" }, { "Friday", "fr" },
-			{ "Saturday", "sa" }, { "Sunday", "su" }
+	try {
+		al.init(
+			trim(get_activity()),
+			{
+				{ "Monday", "mo" }, { "Tuesday", "tu" }, { "Wednesday", "we" },
+				{ "Thursday", "th" }, { "Friday", "fr" },
+				{ "Saturday", "sa" }, { "Sunday", "su" }
+			},
+			RESERVED_WORDS
+		);
+	}
+	catch (std::exception& e) {
+		std::cerr << "Error initiliazing Activity_log: " << e.what() << '\n';
+		return;
+	}
+	catch (...) {
+		std::cerr << "Unknown error initializing Activity_log" << '\n';
+		return;
+	}
+}
+
+//------------------------------------------------------------------------------
+// Parses user input and represents them as Tokens
+
+class Token
+{
+public:
+	char kind;
+	double value;
+	std::string day; // day-of-the-week
+
+	Token(char k) : kind(k), value(0) {};
+	Token(char k, double v) : kind(k), value(v) {};
+	Token(char k, std::string d) : kind(k), value(0), day(d) {};
+};
+
+class Token_stream
+{
+public:
+	Token_stream() : buffer(0), buffer_is_full(false) {};
+	Token get();
+	void ignore();
+
+	bool next_is_eol();
+
+	void putback(Token t);
+	void putback_eol(Token t); // Only if token == '\n'
+	Token get_buffer();
+private:
+	Token buffer;
+	bool buffer_is_full;
+};
+
+void Token_stream::ignore() {
+	if (buffer_is_full && get_buffer().kind == '\n') {
+		return;
+	}
+	char c{};
+	while (std::cin.get(c)) {
+		 if (c == '\n') return;
+	}
+}
+
+void Token_stream::putback(Token t) {
+	if (buffer_is_full) {
+		error("Cannot put back Token into full buffer");
+	}
+	buffer = t;
+	buffer_is_full = true;
+}
+
+void Token_stream::putback_eol(Token t) {
+	if (t.kind == '\n') {
+		putback(t);
+	}
+}
+
+Token Token_stream::get_buffer() {
+	if (!buffer_is_full) {
+		error("Cannot retrieve Token from empty buffer");
+	}
+	buffer_is_full = false;
+	return buffer;
+}
+
+Token Token_stream::get() {
+	if (buffer_is_full) {
+		return get_buffer();
+	}
+
+	char c{};
+
+	// Get next non-whitespace or linebreak
+	while (std::cin.get(c) && isspace(c)) {
+		if (c == '\n') {
+			return { '\n' }; // EOL
 		}
-	);
-	std::cout
-		<< '\n'
-		<< "Then let's log time for the activity / task by the name of:" << '\n'
-		<< "'" << al.activity() << "'" << '\n'
-		<< '\n';
+	}
+
+	if (isalpha(c)) {
+		std::string s{};
+		std::cin.putback(c);
+		std::cin >> s;
+
+		if (s == QUIT) {
+			return { TOKEN_QUIT };
+		}
+		else
+		if (s == PRINT) {
+			return { TOKEN_PRINT };
+		}
+		else
+		if (s == HELP) {
+			return { TOKEN_HELP };
+		}
+		else
+		if (s == HINT) {
+			return { TOKEN_HINT };
+		}
+		else
+		if (s == WEEK) {
+			return { TOKEN_WEEK };
+		}
+		else
+		if (s == UNIT_HOURS) {
+			return { TOKEN_HOURS };
+		}
+		else
+		if (s == UNIT_MINUTES) {
+			return { TOKEN_MINUTES };
+		}
+		else
+		if (s == UNIT_SECONDS) {
+			return { TOKEN_SECONDS };
+		}
+		else {
+			return { TOKEN_DAY, s };
+		}
+	}
+	else
+	if (isdigit(c)) {
+		double val{};
+		std::cin.putback(c);
+		std::cin >> val;
+		return { TOKEN_NUMBER, val };
+	}
+	else {
+		error("Bad token");
+	}
+
+	return 0;
+}
+
+bool Token_stream::next_is_eol() {
+	Token t{ get() };
+	putback(t);
+	return t.kind == '\n';
+}
+
+Token_stream ts{}; // Global intance of Token_stream
+
+//------------------------------------------------------------------------------
+
+Activity_record parse_activity_record();
+HMS_duration parse_duration();
+double parse_number();
+char parse_time_unit();
+double hours();
+double minutes();
+double seconds();
+
+//------------------------------------------------------------------------------
+// Parses Tokens
+
+Activity_record parse_activity_record() {
+	Token t{ ts.get() };
+	HMS_duration hms{};
+	if (t.kind == TOKEN_DAY ) {
+		hms = parse_duration();
+	}
+	else {
+		ts.putback_eol(t);
+		error("Expected day-of-the-week string");
+	}
+	return { t.day, hms };
+}
+
+char parse_time_unit() {
+	Token t{ ts.get() };
+	if (t.kind != TOKEN_HOURS
+	    && t.kind != TOKEN_MINUTES
+	    && t.kind != TOKEN_SECONDS)
+	{
+		ts.putback_eol(t);
+		error("Expected a unit of time");
+	}
+	return t.kind;
+}
+
+HMS_duration parse_duration() {
+	HMS_duration hms{};
+
+	// Hours, minutes or seconds
+	double a_val{ parse_number() };
+	char a_unit{ parse_time_unit() };
+	bool has_minutes{ false };
+
+	if (a_unit == TOKEN_SECONDS) {
+		hms.seconds = a_val;
+		return hms;
+	}
+	else
+	if (a_unit == TOKEN_MINUTES) {
+		hms.minutes = a_val;
+		has_minutes = true;
+	}
+	else {
+		hms.hours = a_val;
+	}
+
+	if (ts.next_is_eol()) {
+		return hms;
+	}
+
+	// Minutes or seconds
+	double b_val{ parse_number() };
+	char b_unit{ parse_time_unit() };
+
+	if (b_unit == TOKEN_SECONDS) {
+		hms.seconds = b_val;
+	}
+	else
+	if (b_unit == TOKEN_MINUTES && !has_minutes) {
+		hms.minutes = b_val;
+	}
+	else {
+		error("Invalid sequence of time units");
+	}
+
+	if (ts.next_is_eol()) {
+		return hms;
+	}
+
+	// Seconds
+	double c_val{ parse_number() };
+	char c_unit{ parse_time_unit() };
+
+	if (c_unit == TOKEN_SECONDS) {
+		hms.seconds = c_val;
+	}
+	else {
+		error("Expected seconds");
+	}
+
+	return hms;
+}
+
+double parse_number() {
+	Token t{ ts.get() };
+	if (t.kind != TOKEN_NUMBER) {
+		ts.putback_eol(t);
+		error("Expected number");
+	}
+	return t.value;
 }
 
 //------------------------------------------------------------------------------
 
+// Listens for user input and commands
 void log_time()
 {
 	while (std::cin)
 	try {
-		std::string dotw{};
-		double h{}, m{}, s{};
-		std::cin >> dotw >> h >> m >> s;
-		al.add_record(dotw, h, m, s);
-		print_continue();
+		Activity_record rec{};
+		std::cout << PROMPT << ' ';
+		Token t{ ts.get() };
+
+		if (t.kind != TOKEN_QUIT && t.kind != TOKEN_PRINT
+		    && t.kind != TOKEN_HELP && t.kind != TOKEN_HINT
+		    && t.kind != TOKEN_WEEK) {
+			ts.putback(t);
+			rec = parse_activity_record();
+		}
+
+		Token t2{ ts.get() };
+		if (t2.kind != '\n') {
+			error("Expected end of command");
+		}
+
+		if (t.kind == TOKEN_QUIT) {
+			return;
+		}
+		else
+		if (t.kind == TOKEN_PRINT) {
+			print_summary();
+			continue;
+		}
+		else
+		if (t.kind == TOKEN_HELP) {
+			print_more_help_for_log();
+			continue;
+		}
+		else
+		if (t.kind == TOKEN_HINT) {
+			print_hints();
+			continue;
+		}
+		else
+		if (t.kind == TOKEN_WEEK) {
+			print_week();
+			continue;
+		}
+		else {
+			try {
+				al.add_record(rec);
+			}
+			catch (std::exception& e) {
+				ts.putback('\n'); // prevent ignore() hang-ups
+				error(e.what());
+			}
+			catch (...) {
+				ts.putback('\n');
+				error("Unknown error");
+			}
+
+			print_success(rec);
+			print_continue();
+		}
+
 	}
 	catch (std::exception& e) {
 		std::cout << e.what() << '\n';
+		ts.ignore();
 	}
 	catch (...) {
 		std::cout << "Unknown error" << '\n';
+		ts.ignore();
 	}
 }
 
@@ -495,6 +897,10 @@ int main()
 	print_help_for_activity();
 	init_log();
 
+	if (!al.has_been_initialized()) {
+		return 1;
+	}
+
 	print_help_for_log();
 	log_time();
 
@@ -503,191 +909,3 @@ int main()
 	keep_window_open();
 	return 0;
 }
-
-//const std::string EXIT_WORD{ "print" };
-
-//// forward declare helpers
-//bool is_mon(std::string s); bool is_tue(std::string s);
-//bool is_wed(std::string s); bool is_thu(std::string s);
-//bool is_fri(std::string s); bool is_sat(std::string s);
-//bool is_sun(std::string s); bool is_x_day(std::string, vector<std::string> v);
-
-//int s_to_day_idx(std::string s) {
-//	// returns 0 - 6 (Monday - Sunday) on success
-//	// returns -1 on failure
-//	int i{ -1 };
-//	if (is_mon(s)) {
-//		i = 0;
-//	} else if (is_tue(s)) {
-//		i = 1;
-//	} else if (is_wed(s)) {
-//		i = 2;
-//	} else if (is_thu(s)) {
-//		i = 3;
-//	} else if (is_fri(s)) {
-//		i = 4;
-//	} else if (is_sat(s)) {
-//		i = 5;
-//	} else if (is_sun(s)) {
-//		i = 6;
-//	}
-//	return i;
-//}
-
-//void print_sum_ints(std::string name, vector<int> v) {
-//	if (v.size() == 0) {
-//		std::cout << name << ':' << '\t' << '-' << '\n';
-//		return;
-//	}
-//	double sum { 0 };
-//	for (int i : v) {
-//		sum = (double)narrow_cast<int>(sum + i);
-//	}
-//	std::cout << name << ':' << '\t' << (int)sum << '\n';
-//}
-
-
-
-//int main()
-//try {
-//	std::cout
-//		<< "The sum of values grouped by day-of-the-week." << '\n' << '\n'
-//		<< "Please enter a day-of-the-week and a value (integer) " << '\n'
-//		<< "associated with that day:"
-//		<< '\n' << '\n';
-
-//	vector<int> mon_v{}, tue_v{}, wed_v{}, thu_v{}, fri_v{}, sat_v{}, sun_v{};
-//	int count_accepted{ 0 };
-//	int count_rejected{ 0 };
-
-//	std::string day{};
-//	int val{};
-//	while (day != EXIT_WORD) {
-//		// name
-//		if (day.size() == 0) {
-//			if (!(std::cin >> day)) {
-//				error("Invalid input, expected a name");
-//			}
-//			continue; // move on to value
-//		}
-
-//		// value
-//		if (!(std::cin >> val)) {
-//			error("Invalid input, expected an integer");
-//		}
-//		int day_idx{ s_to_day_idx(day) };
-//		if (day_idx == -1) {
-//			++count_rejected;
-//			day = "";
-//			continue; //ignore
-//		}
-
-//		// add entry
-//		switch (day_idx) {
-//		case 0:
-//			mon_v.push_back(val);
-//			break;
-//		case 1:
-//			tue_v.push_back(val);
-//			break;
-//		case 2:
-//			wed_v.push_back(val);
-//			break;
-//		case 3:
-//			thu_v.push_back(val);
-//			break;
-//		case 4:
-//			fri_v.push_back(val);
-//			break;
-//		case 5:
-//			sat_v.push_back(val);
-//			break;
-//		case 6:
-//			sun_v.push_back(val);
-//			break;
-//		default:
-//			error("Invalid day-of-the-week index");
-//			break;
-//		}
-
-//		std::cout << "Keep adding entries, or enter 'print' to finish." << '\n';
-//		day = "";
-//		++count_accepted;
-//	}
-//	if (!std::cin) {
-//		error("Input error, expected a name-value pair.");
-//	}
-
-//	if (count_accepted) {
-//		std::cout << '\n'
-//			<< "Printing the sum of values:" << '\n'
-//			<< "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-//			<< '\n';
-//		print_sum_ints("MON", mon_v);
-//		print_sum_ints("TUE", tue_v);
-//		print_sum_ints("WED", wed_v);
-//		print_sum_ints("THU", thu_v);
-//		print_sum_ints("FRI", fri_v);
-//		print_sum_ints("SAT", sat_v);
-//		print_sum_ints("SUN", sun_v);
-//	} else {
-//		std::cout << "No entries were registered." << '\n';
-//	}
-//	if (count_rejected) {
-//		if (count_rejected == 1) {
-//			std::cout << "1 value was rejected" << '\n';
-//		} else {
-//			std::cout
-//				<< count_rejected << " value(s) were rejected." << '\n';
-//		}
-//	}
-
-//	keep_window_open();
-//	return 0;
-//}
-//catch (std::exception& e) {
-//	std::cerr << "Error: " << e.what() << '\n';
-//	keep_window_open();
-//	return 1;
-//}
-//catch (...) {
-//	std::cerr << "Unknown error" << '\n';
-//	keep_window_open();
-//	return 2;
-//}
-
-//bool is_x_day(std::string s, vector<std::string> names) {
-//	if (s.size() == 0) {
-//		return false;
-//	}
-//	for (std::string n : names) {
-//		if (s == n) {
-//			return true;
-//		}
-//	}
-//	return false;
-//}
-
-//bool is_mon(std::string s) {
-//	return is_x_day(s, { "Monday", "Mon", "mon", "monday" });
-//}
-//bool is_tue(std::string s) {
-//	return is_x_day(s, { "Tuesday", "Tue", "tue", "tuesday" });
-//}
-//bool is_wed(std::string s) {
-//	return is_x_day(s, { "Wednesday", "Wed", "wed", "wednesday" });
-//}
-//bool is_thu(std::string s) {
-//	return is_x_day(s, { "Thursday", "Thu", "thu", "thursday" });
-//}
-//bool is_fri(std::string s) {
-//	return is_x_day(s, { "Friday", "Fri", "fri", "friday" });
-//}
-//bool is_sat(std::string s) {
-//	return is_x_day(s, { "Saturday", "Sat", "sat", "saturday" });
-//}
-//bool is_sun(std::string s) {
-//	return is_x_day(s, { "Sunday", "Sun", "sun", "sunday" });
-//}
-
-
