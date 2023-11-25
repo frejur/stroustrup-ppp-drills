@@ -215,8 +215,14 @@ int Week::day_idx_lazy(std::string search_str) {
 	search_str = to_lower(search_str);
 	for (int i = 0; i < days.size(); ++i) {
 		std::string check_str{ days.at(i).search_str };
-		if (search_str.size() >= check_str.size() &&
-		    search_str.substr(0, check_str.size()) == check_str
+		std::string check_str_full{ to_lower(days.at(i).name) };
+		if ((search_str == check_str)
+		    || (search_str == check_str_full)
+		    || ((check_str.size() < search_str.size() &&
+		                            search_str.size() < check_str_full.size())
+		        &&
+		        search_str == check_str_full.substr(0, search_str.size())
+		       )
 		) {
 			return i;
 		}
@@ -517,6 +523,12 @@ void print_outro()
 {
 	std::cout << "Goodbye!" << '\n' << '\n';
 	print_summary();
+}
+
+void print_fail() {
+	std::cout
+		<< "(Type '" << HELP << "' or '"
+		<< HINT << "' if you're feeling lost)" << '\n';
 }
 
 //------------------------------------------------------------------------------
@@ -882,10 +894,12 @@ void log_time()
 	catch (std::exception& e) {
 		std::cout << e.what() << '\n';
 		ts.ignore();
+		print_fail();
 	}
 	catch (...) {
 		std::cout << "Unknown error" << '\n';
 		ts.ignore();
+		print_fail();
 	}
 }
 
