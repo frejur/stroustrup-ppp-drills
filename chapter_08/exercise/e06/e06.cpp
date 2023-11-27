@@ -16,8 +16,8 @@ vector<string> reverse_new(const vector<string>& v) {
 	return u;
 }
 
-void swap(int& a, int& b) {
-	int temp{ a };
+void swap(string& a, string& b) {
+	string temp{ a };
 	a = b;
 	b = temp;
 }
