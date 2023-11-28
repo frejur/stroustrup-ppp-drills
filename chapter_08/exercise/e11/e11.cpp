@@ -196,7 +196,7 @@ int main()
 try
 {
 	std::cout
-		<< "The greatest number (The max value of a given vector)"
+		<< "The stats (Min, max, mean, median values of a given vector)"
 		<< '\n';
 
 	bool should_continue{ true }; // passed by ref, false will trigger exit
