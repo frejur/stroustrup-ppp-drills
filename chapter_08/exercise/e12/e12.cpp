@@ -1,5 +1,5 @@
 #include "../../lib/std_lib_facilities.h"
-#include "./txt/excerpts.h"
+#include "../../lib/excerpts.h"
 
 // Chapter 8, Exercise 12. Print strings of vector until a match is found.
 
