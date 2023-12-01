@@ -8,7 +8,7 @@ Usually an object is passed by value if the intention is to modify it without af
 - Small size
 - Simple structure
 - Cheap copy operations
-- No dynamic memore allocation
+- No dynamic memory allocation
 - Immutable by nature
 - Identity is based solely on its value
 
