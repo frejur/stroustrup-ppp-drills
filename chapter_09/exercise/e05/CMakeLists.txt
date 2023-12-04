@@ -9,4 +9,6 @@ add_executable(${T_THIS}
 	readme.md
 	lib/book.h lib/book.cpp
 	test/test_book.h
+	lib/lib_helpers.h
+	lib/genre.cpp
 )

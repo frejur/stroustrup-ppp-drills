@@ -3,7 +3,17 @@
 These exercises describe a set of classes and operators used to manage a virtual library.
 
 ### 5a. Create a class named 'Book':
-- ISBN (String in the form of n-n-n-x. Should be validated)
+- ISBN (String in the form of n-n-n-x, where n is an integer and x is a single letter or digit. Should be validated)
+
+  The above "invariant" is a bit vague, so this version uses the following definition for a valid ISBN instead:
+  - 4 groups of characters, separated by hyphens ("-").
+  - A total number of exactly 10 characters.
+  - The last group may only contain a single digit, or the letter 'X'.
+  
+    (Lowercase 'x' is allowed but converted to uppercase)
+  - The first three groups may only contain digits.
+  
+  The official defintion of a valid ISBN is a lot more complex.
 - Title (String. Should not be empty)
 - Author (String. Should not be empty)
 - Date (Let's use the type defined in the Chapter 9 drill)

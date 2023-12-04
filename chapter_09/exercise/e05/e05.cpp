@@ -5,7 +5,6 @@
 
 #include <exception>
 #include <iostream>
-#include "lib/book.h"
 #include "test/test_book.h"
 
 int main()
