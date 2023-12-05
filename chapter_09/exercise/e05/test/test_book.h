@@ -21,28 +21,29 @@ void test_book_init() {
 	int max_step = 8;
 	int step = 0;
 	while (step < max_step)
-		try {
-			++step;
-			std::cout << "Step " << step << ": ";
-			if (step == 1)
-				Book b{"TooLoooooooong", "Title", "Author", {}};
-			if (step == 2)
-				Book b{"TooShort", "Title", "Author", {}};
-			if (step == 3)
-				Book b{"X00-200-300-X", "Title", "Author", {}};
-			if (step == 4)
-				Book b{"10--200-300-X", "Title", "Author", {}};
-			if (step == 5)
-				Book b{"1-2-3-4-5-6-X", "Title", "Author", {}};
-			if (step == 6)
-				Book b{"1---2-3-5-6-X", "Title", "Author", {}};
-			if (step == 7)
-				Book b{"100-200-300-A", "Title", "Author", {}};
-			if (step == 8)
-				Book b{"10000000000-X", "Title", "Author", {}};
-		} catch (std::exception& e) {
-			std::cerr << "Error: " << e.what() << '\n';
-		}
+	try {
+		++step;
+		std::cout << "Step " << step << ": ";
+		if (step == 1)
+			Book b{"TooLoooooooong", "Title", "Author", {}};
+		if (step == 2)
+			Book b{"TooShort", "Title", "Author", {}};
+		if (step == 3)
+			Book b{"X00-200-300-X", "Title", "Author", {}};
+		if (step == 4)
+			Book b{"10--200-300-X", "Title", "Author", {}};
+		if (step == 5)
+			Book b{"1-2-3-4-5-6-X", "Title", "Author", {}};
+		if (step == 6)
+			Book b{"1---2-3-5-6-X", "Title", "Author", {}};
+		if (step == 7)
+			Book b{"100-200-300-A", "Title", "Author", {}};
+		if (step == 8)
+			Book b{"10000000000-X", "Title", "Author", {}};
+	}
+	catch (std::exception& e) {
+		std::cerr << "Error: " << e.what() << '\n';
+	}
 }
 
 void test_book_checkout_checkin(Book &b) {

@@ -1,3 +1,6 @@
+#ifndef DATE_H
+#define DATE_H
+
 #include <iostream>
 
 enum class Month {
@@ -37,3 +40,5 @@ bool operator!=(const Date& a, const Date& b);
 std::ostream& operator<<(std::ostream& os,
 						 const Date& date);
 std::istream& operator>>(std::istream& is, Date& date);
+
+#endif // DATE_H

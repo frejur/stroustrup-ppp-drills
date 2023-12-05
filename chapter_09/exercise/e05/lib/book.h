@@ -38,7 +38,9 @@ private:
 std::string validate_title(const std::string& title);
 std::string validate_author(const std::string& author);
 std::string validate_ISBN(std::string& isbn);
+
 //------------------------------------------------------------------------------
+// See "genre.cpp"
 
 enum class Genre {
 	Misc=0, Fiction, Non_Fiction, Periodical, Biography, Children

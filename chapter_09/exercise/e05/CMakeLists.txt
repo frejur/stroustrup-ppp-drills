@@ -9,6 +9,9 @@ add_executable(${T_THIS}
 	readme.md
 	lib/book.h lib/book.cpp
 	test/test_book.h
-	lib/lib_helpers.h
+	lib/lib_helpers.h lib/lib_helpers.cpp
 	lib/genre.cpp
+	lib/patron.h lib/patron.cpp
+	test/test_patron.h
+
 )

@@ -40,7 +40,7 @@ These exercises describe a set of classes and operators used to manage a virtual
 - Add a getter function
 
 ### 8a. Create a 'Patron' class:
-- Name (String. Should not be empty)
+- Name (String. Should only consist of words separated by single spaces (' ') or single hyphens '-'. Words should only consist of letters. The name must start and end with a letter.)
 - Card Number (String. Only digits. Range: 100000 to 999999)
 - Vector of \<Fee\>'s (Different from the original exercise. See 4c)
 
@@ -56,7 +56,6 @@ These exercises describe a set of classes and operators used to manage a virtual
 *(In the original exercise the fee of a Patron is just a sum of money that can be modified to match the Patron's current balance. This version keeps track of the fees using User-defined type 'Fee')*
 
 - Date registered (\<Date\>)
-- Date updated (\<Date\> Must be >= Date registered if not empty)
 - Amount (Decimal number. Must be > 0)
 - Comment (String. May be left empty)
 - Is paid (Bool. Truthy if paid)

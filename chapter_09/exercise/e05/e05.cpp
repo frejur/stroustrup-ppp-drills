@@ -6,10 +6,12 @@
 #include <exception>
 #include <iostream>
 #include "test/test_book.h"
+#include "test/test_patron.h"
 
 int main()
 try {
-	test_book_class();
+	// test_book_class();
+	test_patron_class();
 
 	std::cin.get();
 	return 0;
