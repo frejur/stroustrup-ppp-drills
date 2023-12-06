@@ -13,5 +13,10 @@ add_executable(${T_THIS}
 	lib/genre.cpp
 	lib/patron.h lib/patron.cpp
 	test/test_patron.h
+	lib/library.h lib/library.cpp
+	test/test_library.h
+	test/print_helpers.h test/print_helpers.cpp
+	sample/sample_books.h
+	sample/sample_patrons.h
 
 )

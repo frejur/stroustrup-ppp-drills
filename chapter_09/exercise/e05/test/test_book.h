@@ -4,16 +4,7 @@
 #include <exception>
 #include <iostream>
 #include "../lib/book.h"
-
-void print(const Book& b) {
-	std::cout
-		<< "ISBN: " << b.ISBN() << ", "
-		<< "Title: " << b.title() << ", "
-		<< "Author: " << b.author() << ", "
-		<< "Copyright date: " << b.copyright_date() << ", "
-		<< "Is checked-out?: " << ( (b.is_checked_out()) ? "Yes" : "No" )
-		<< '\n';
-}
+#include "print_helpers.h"
 
 void test_book_init() {
 	std::cout << "Attempting to create invalid instances of Book..." << '\n';
@@ -63,7 +54,7 @@ void test_book_checkout_checkin(Book &b) {
 			if (step2 == 2) {
 				std::cout << "Checking out a book.." << '\n';
 				b.check_out();
-				print(b);
+				PRINT::print(b);
 			}
 			if (step2 == 3) {
 				std::cout << "Attempting to check out a book that is already"
@@ -73,7 +64,7 @@ void test_book_checkout_checkin(Book &b) {
 			if (step2 == 4) {
 				std::cout << "Checking in a book.." << '\n';
 				b.check_in();
-				print(b);
+				PRINT::print(b);
 			}
 		} catch (std::exception &e) {
 			std::cerr << "Error: " << e.what() << '\n';
@@ -106,7 +97,7 @@ void test_book_class() {
 
 	std::cout << "Creating a valid instance of Book..." << '\n';
 	Book a{"100-200-300-x", "A title", "An author", {}};
-	print(a);
+	PRINT::print(a);
 
 	std::cout << '\n';
 
@@ -116,7 +107,7 @@ void test_book_class() {
 
 	std::cout << "Creating a valid instance of Book..." << '\n';
 	Book b{"3000-20-999-0", "Another title", "Another author", {}};
-	print(b);
+	PRINT::print(b);
 
 	std::cout << '\n';
 

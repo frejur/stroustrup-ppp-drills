@@ -78,12 +78,26 @@ These exercises describe a set of classes and operators used to manage a virtual
 - Create transaction (Add transaction to vector. See 9c)
 
 ### 9c. Create a 'Transaction' struct:
-- Book
-- Patron
+*(Instead of storing the full Book and Patron objects, this version just stores the ISBN and user name)*
+- ID (Added)
+- Book ISBN
+- Patron user name
 - Date
 - \<Transaction_type\> (Not in the original exercise. See 9d)
 
 ### 9d. Create class Enum 'Transaction_type':
 - Check-in
 - Check-out
+- Empty
+
+  Used as a return type to signal: No matching Transaction was found
+- Purged
+
+  Used to mark a Transaction as purged while keeping the data, currently, Transactions marked as Purged are simply 'skipped'
+  
+### 10. Addition: Purging a transaction and forcefully checking in a book
+To simulate how data could get corrupted, functionality to delete a transaction was added.
+This will cause the check_out and check_in member functions of the Library class to throw an exception when the last recorded transaction for the given book is not of the expected type.
+
+The situation can be resolved by forcefully checking in the book in question. This is done by passing the optional "force_check_in=true" argument to the check_in function.
 

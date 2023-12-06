@@ -4,26 +4,7 @@
 #include <exception>
 #include <iostream>
 #include "../lib/patron.h"
-
-void print(const Patron& p) {
-	std::cout
-		<< "User name: " << p.user_name() << ", "
-		<< "Card number: " << p.card_number() << ", "
-		<< "Has unpaid fees: " << (p.has_unpaid_fees() ? "Yes" : "No") << ", "
-		<< "Debt: " << p.debt()
-		<< '\n';
-}
-
-void print(const std::vector<Fee>& fees) {
-	for (const Fee& f : fees) {
-		std::cout << "ID: " << f.id << ", "
-		          << "Amount: " << f.amount << ", "
-		          << "Registered: " << f.registered << ", "
-		          << "Comment: " << f.comment << ", "
-		          << "Status: " << (f.is_paid ? "Paid" : "NOT paid" )
-		          << '\n';
-	}
-}
+#include "print_helpers.h"
 
 void test_patron_init() {
 	std::cout << "Attempting to create invalid instance of Patron..." << '\n';
@@ -74,8 +55,8 @@ void test_patron_fees(Patron& p) {
 	std::cout << "Adding a fee with today's date..." << '\n';
 	p.add_fee(25, today);
 
-	print(p.all_fees());
-	print(p);
+	PRINT::print(p.all_fees());
+	PRINT::print(p);
 
 	std::cout << '\n';
 
@@ -90,8 +71,8 @@ void test_patron_fees(Patron& p) {
 
 	std::cout << "Marking the first fee as paid..." << '\n';
 	p.mark_fee_as_paid(0);
-	print(p.all_fees());
-	print(p);
+	PRINT::print(p.all_fees());
+	PRINT::print(p);
 
 	std::cout << '\n';
 
@@ -106,14 +87,14 @@ void test_patron_fees(Patron& p) {
 
 	std::cout << "Marking the second fee as paid, with a note..." << '\n';
 	p.mark_fee_as_paid(1, "Here's a note");
-	print(p.all_fees());
-	print(p);
+	PRINT::print(p.all_fees());
+	PRINT::print(p);
 
 	std::cout << '\n';
 
 	std::cout << "Updating the comment of the first fee..." << '\n';
 	p.update_fee_comment(0, "Here's another note");
-	print(p.all_fees());
+	PRINT::print(p.all_fees());
 }
 
 void test_patron_class() {
@@ -124,13 +105,11 @@ void test_patron_class() {
 	std::cout << "Creating a valid instance of Patron..." << '\n';
 	Patron p{ "Valid Name-Test", "100001" };
 
-	print(p);
+	PRINT::print(p);
 
 	std::cout << '\n';
 
 	test_patron_fees(p);
-
-
 }
 
 #endif // TEST_PATRON_H
