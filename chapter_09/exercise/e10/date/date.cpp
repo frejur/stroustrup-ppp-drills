@@ -71,7 +71,7 @@ int days_from_sofm_until_sofm(int y, Month m1, Month m2) {
 	for (int i = m1_i; i < m2_i; i++) {
 		d += month_days()[i-1];
 	}
-	if (m2 > Month::feb && is_leap_year(y)) {
+	if (m1 <= Month::feb && m2 > Month::feb && is_leap_year(y)) {
 		++d;
 	}
 
@@ -178,7 +178,8 @@ Date::Date(int yy, Month mm, int dd)
 	if (!is_date(yy, mm, dd)) throw std::runtime_error("Invalid date");
 }
 
-std::ostream& operator<<(std::ostream& os, const Month month) {
+std::ostream& operator<<(std::ostream& os, const DDATE::Date& month)
+{
 	os << static_cast<int>(month);
 	return os;
 }
