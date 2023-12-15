@@ -23,4 +23,5 @@ void test_r_opsub_multiple();
 
 void test_to_double(const RAT::Rational& r1, const double expected);
 void test_to_double_multiple();
+
 #endif // TEST_H

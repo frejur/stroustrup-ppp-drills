@@ -15,8 +15,8 @@ public:
 	long get_q() const { return q; };
 	void make_simple(); // Divide by greatest common divisor
 private:
-	long p;
-	long q;
+	long p; // nominator
+	long q; // denominator
 };
 
 // -----------------------------------------------------------------------------
