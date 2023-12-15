@@ -65,16 +65,22 @@ const bool RAT::operator!=(const Rational &a, const Rational &b) {
 
 RAT::Rational RAT::operator+(const Rational &a, const Rational &b)
 {
-	RAT::Rational r { a.get_p() * b.get_q() + b.get_p() * a.get_q(),
-	                  a.get_q() * b.get_q() };
+	RAT::Rational r =
+		(a.get_q() == b.get_q())
+		? RAT::Rational{ a.get_p() + b.get_p(), a.get_q() }
+		: RAT::Rational{ a.get_p() * b.get_q() + b.get_p() * a.get_q(),
+		                 a.get_q() * b.get_q() };
 	r.make_simple();
 	return r;
 }
 
 RAT::Rational RAT::operator-(const Rational &a, const Rational &b)
 {
-	RAT::Rational r { a.get_p() * b.get_q() - b.get_p() * a.get_q(),
-	                  a.get_q() * b.get_q() };
+	RAT::Rational r =
+		(a.get_q() == b.get_q())
+		? RAT::Rational{ a.get_p() - b.get_p(), a.get_q() }
+		: RAT::Rational{ a.get_p() * b.get_q() - b.get_p() * a.get_q(),
+		                 a.get_q() * b.get_q() };
 	r.make_simple();
 	return r;
 }
