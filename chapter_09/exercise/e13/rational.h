@@ -25,10 +25,10 @@ long greatest_common_divisor(long p, long q);
 
 // -----------------------------------------------------------------------------
 
-Rational operator+(const Rational& a, const Rational& b);
-Rational operator-(const Rational& a, const Rational& b);
 Rational operator*(const Rational& a, const Rational& b);
 Rational operator/(const Rational& a, const Rational& b);
+Rational operator+(const Rational& a, const Rational& b);
+Rational operator-(const Rational& a, const Rational& b);
 
 const bool operator==(const Rational& a, const Rational& b);
 const bool operator!=(const Rational& a, const Rational& b);
