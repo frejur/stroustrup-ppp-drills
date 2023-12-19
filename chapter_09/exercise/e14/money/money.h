@@ -53,9 +53,10 @@ public:
 	Currency get_currency(Currency_ID id) const;
 	double get_exchange_rate(Currency_ID id_a, Currency_ID id_b) const;
 
-	Money new_money(Monetary_math& self, Currency_ID id, long amt_in_c);
-	Money new_money(Monetary_math& self, Currency_ID id,
-	                double combined_amt);
+	Money new_money(Monetary_math& self, long amt_in_c=0,
+	                Currency_ID id=DEFAULT_CURRENCY().id);
+	Money new_combined_money(Monetary_math& self, double combined_amt=0,
+	                         Currency_ID id=DEFAULT_CURRENCY().id);
 	void add_currency(Currency cur);
 	void add_currency(Currency_ID id, const std::string& name,
 	                  const std::string& symbol);
@@ -84,8 +85,7 @@ void validate_session(const Money&a, const Money& b);
 class Money
 {
 public:
-	Money(Monetary_math& mmm, Currency_ID id=DEFAULT_CURRENCY().id,
-	      long cc=0);
+	Money(Monetary_math& mmm, long cc=0, Currency_ID id=DEFAULT_CURRENCY().id);
 
 	long amount() const { return c; }
 	double as_floating_point() const { return static_cast<float>(c / 100.0); }
@@ -93,7 +93,7 @@ public:
 	Currency currency() const { return cur; };
 	const Monetary_math& session() const { return mm; }; // can of worms
 	void deactivate_session() { mm.deactivate(); };\
-	Money new_amount(long new_amt) { return {mm, cur.id, new_amt }; };
+	Money new_amount(long new_amt) { return {mm, new_amt, cur.id }; };
 private:
 	Monetary_math& mm; // can of worms
 	const Currency cur;
@@ -125,13 +125,14 @@ struct Monetary_math_session
 {
 	Monetary_math_session(Monetary_math mmm={}) : mm{ mmm } {};
 	const Monetary_math& session() { return mm; };
-	Money new_money(Currency_ID id, long amt_in_c)
+	Money new_money(long amt_in_c=0, Currency_ID id=DEFAULT_CURRENCY().id)
 	{
-		return mm.new_money(mm, id, amt_in_c);
+		return mm.new_money(mm, amt_in_c, id);
 	};
-	Money new_money(Currency_ID id, double combined_amt)
+	Money new_combined_money(double combined_amt=0,
+	                         Currency_ID id=DEFAULT_CURRENCY().id)
 	{
-		return mm.new_money(mm, id, combined_amt);
+		return mm.new_combined_money(mm, combined_amt, id);
 	};
 	void add_currency(Currency cur) { mm.add_currency(cur); };
 	void add_currency(Currency_ID id, const std::string& name,

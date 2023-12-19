@@ -1,6 +1,7 @@
 #include <exception>
 #include <iostream>
 #include "money/money.h"
+#include "test/test.h"
 
 /* Chapter 9, Exercise 14 - 16. Money class.
  *
@@ -40,23 +41,13 @@ try {
 		<< "Press <ENTER> to run a series of tests" << '\n';
 	std::cin.get();
 
-	Monetary_math_session s{};
-	s.add_currency({ Currency_ID::EUR, "Euros", "EUR" });
-	s.add_currency({ Currency_ID::JPY, "Japanese Yen", "JPY" });
-	s.add_exchange_rate(Currency_ID::USD, Currency_ID::EUR, 0.91756953);
-	s.add_exchange_rate(Currency_ID::JPY, Currency_ID::USD, 0.0070300116);
-	while (s == true) {
-		std::cout << "m" << '\n';
-		Money m{ s.new_money(Currency_ID::USD, 1.0) };
-		std::cout << "m2" << '\n';
-		Money m2{ s.new_money(Currency_ID::JPY, (long)5000) };
-		std::cout << "m3" << '\n';
-		Money m3{ (m + m2) };
-		std::cout << "result" << '\n';
-		std::cout << m3.amount();
-		break;
-	}
+	test_mmath();
 
+	test_table();
+
+	test_money();
+
+	test_op_arithm();
 	std::cout << '\n'
 		<< "All tests passed without terminating the program pre-maturely!"
 		<< '\n' << '\n';

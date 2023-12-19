@@ -21,7 +21,7 @@ bool ML::Conversion_table::already_exists(const ML::Currency_ID a,
 {
 	for (int i = 0; i < tbl.size(); ++i) {
 		if ((tbl[i].base == a && tbl[i].counter == b) ||
-		    (tbl[i].counter == a && tbl[i].counter == b)) {
+		    (tbl[i].counter == a && tbl[i].base == b)) {
 			return true;
 		}
 	}
@@ -30,6 +30,11 @@ bool ML::Conversion_table::already_exists(const ML::Currency_ID a,
 
 void ML::Conversion_table::add(const ML::Currency_pair cur)
 {
+	if (cur.base == Currency_ID::Not_a_currency ||
+	    cur.counter == Currency_ID::Not_a_currency)
+	{
+		throw std::runtime_error("Invalid Currency ID");
+	}
 	if (cur.base == cur.counter) {
 		throw std::runtime_error("Invalid Currency pair, base and counter are "
                                  "identical");

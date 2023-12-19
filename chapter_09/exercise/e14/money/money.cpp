@@ -5,11 +5,11 @@ namespace ML = Money_lib;
 
 //------------------------------------------------------------------------------
 
-ML::Money::Money(ML::Monetary_math& mmm, ML::Currency_ID id, long cc)
+ML::Money::Money(ML::Monetary_math& mmm, long cc, ML::Currency_ID id)
 : mm{ mmm }, cur{ mm.get_currency(id) }, c{ cc }
 {
 	if (mm != true) {
-		throw std::runtime_error("Cannot create money, the Monetary_math"
+		throw std::runtime_error("Cannot create money, the Monetary_math "
 								 "session has not been properly initialized "
 								 "or is no longer active");
 	}
@@ -167,5 +167,4 @@ void ML::validate_session(const ML::Money&a, const ML::Money& b) {
 		throw std::runtime_error("Monetary_math session mismatch");
 	}
 	ML::validate_session(a);
-	ML::validate_session(b);
 }
