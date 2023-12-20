@@ -66,15 +66,14 @@ void test_op_arithm_add(Monetary_math_session& s, Money a, Money b,
 {
 	try {
 		std::cout
-			<< "Calculating " << a.amount() << " " << a.currency().symbol
-			<< " + " << b.amount() << " " << b.currency().symbol << "... ";
+			<< "Calculating " << a << " + " << b << "... ";
 		Money result{ a + b };
 		if (result.amount() != expected.amount() ||
 		    result.currency().id != expected.currency().id) {
 			throw std::runtime_error(
-				"Expected " + std::to_string(expected.amount()) + " " +
+				"Expected " + std::to_string(expected.as_floating_point()) + " " +
 				expected.currency().symbol + " but got " +
-				std::to_string(result.amount()) + " " +
+				std::to_string(result.as_floating_point()) + " " +
 				result.currency().symbol);
 		}
 	}

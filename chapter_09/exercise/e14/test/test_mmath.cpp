@@ -213,8 +213,8 @@ void test_new_money_single(Money_lib::Monetary_math_session& s,
 {
 	try {
 		std::cout
-			<< "Adding new Money: " << value << DEFAULT_CURRENCY().symbol
-			<< "... ";
+			<< "Adding new Money: " << value * 0.01 << " "
+			<< DEFAULT_CURRENCY().symbol << "... ";
 		Money m{ s.new_money(value) };
 		if (m.amount() != expected) {
 			throw std::runtime_error("Expected " + std::to_string(expected) +
@@ -243,8 +243,8 @@ void test_new_combined_money_single(Money_lib::Monetary_math_session& s,
 {
 	try {
 		std::cout
-			<< "Adding new Money: " << value << DEFAULT_CURRENCY().symbol
-			<< "... ";
+			<< "Adding new Money: " << value << " "
+			<< DEFAULT_CURRENCY().symbol << "... ";
 		Money m{ s.new_combined_money(value) };
 		if (m.amount() != expected) {
 			throw std::runtime_error("Expected " + std::to_string(expected) +

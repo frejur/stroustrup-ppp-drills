@@ -2,6 +2,7 @@
 #define MONEY_H
 #include <string>
 #include <vector>
+#include <iostream>
 
 namespace Money_lib { // -------------------------------------------------------
 
@@ -119,6 +120,11 @@ bool operator>=(Money& a, const Money& b);
 bool operator>(Money& a, const Money& b);
 
 //------------------------------------------------------------------------------
+
+std::istream& operator>>(std::istream& is, Money m);
+std::ostream& operator<<(std::ostream& is, Money m);
+
+//------------------------------------------------------------------------------
 // Monetary_math_session - Wrapper with a simplified Monetary_math interface
 
 struct Monetary_math_session
@@ -154,6 +160,6 @@ private:
 bool operator==(const Monetary_math_session& mm, const bool b);
 bool operator!=(const Monetary_math_session& mm, const bool b);
 
-} // namespace Money_lib -------------------------------------------------------
+} // namespace Money_lib ------------------------------------------------------
 
 #endif // MONEY_H

@@ -153,6 +153,17 @@ bool ML::operator>=(ML::Money& a, const ML::Money& b) {
 	return !ML::operator<(a, b) || ML::operator==(a, b);
 }
 
+// Input / Output operators ----------------------------------------------------
+
+std::ostream& ML::operator<<(std::ostream& os, ML::Money m) {
+	os << m.as_floating_point() << ' ' << m.currency().symbol;
+	return os;
+}
+
+std::istream& ML::operator>>(std::istream& is, ML::Money m) {
+	return is; // TODO
+}
+
 //------------------------------------------------------------------------------
 
 void ML::validate_session(const ML::Money&a) {
