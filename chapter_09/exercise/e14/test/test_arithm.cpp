@@ -18,39 +18,38 @@ void test_op_arithm() {
 	s.add_exchange_rate(xrate_eur.base, xrate_eur.counter, xrate_eur.xrate);
 	s.add_exchange_rate(xrate_yen.base, xrate_yen.counter, xrate_yen.xrate);
 
+	// Addition
 	Money m{ s.new_money() };
 	test_op_arithm_add(s, m, m, m);
 
-	{	Money m_a{ s.new_money(297) };
-		Money m_b{ s.new_money(654) };
-		Money result{ s.new_money(297+654) };
-		test_op_arithm_add(s, m_a, m_b, result);
-	}
+	test_op_arithm_add(s, 297, 654, 297 + 654);
 
-	{	Money m_a{ s.new_money(0, Currency_ID::EUR) };
-		Money m_b{ s.new_money(100, Currency_ID::USD) };
-		Money expected{ s.new_money(
-			static_cast<long>(
-				(xrate_eur.xrate * 100 * 10 + 5) / 10),
-			Currency_ID::EUR)
-		};
-		test_op_arithm_add(s, m_a, m_b, expected);
-	}
+	test_op_arithm_add(s, 0, Currency_ID::EUR, 100, Currency_ID::USD,
+	                   static_cast<long>((xrate_eur.xrate * 100 * 10 + 5) / 10),
+	                   cur_eur);
+	test_op_arithm_add(s, 0, Currency_ID::EUR, 2700, Currency_ID::USD,
+	                   2472, cur_eur);
 
-	{	Money m_a{ s.new_money(0, Currency_ID::EUR) };
-		Money m_b{ s.new_money(2700, Currency_ID::USD) };
-		Money expected{ s.new_money( 2472, Currency_ID::EUR) };
-		test_op_arithm_add(s, m_a, m_b, expected);
-	}
-	// Test addition
-	// Same currency
-	// Different currency
+	// Subtraction
+	Money m2{ s.new_money() };
+	test_op_arithm_sub(s, m, m, m);
 
-	// Test subtraction
-	// Same currency
-	// Different currency
+	test_op_arithm_sub(s, -133, 7, -140);
 
-	// Test division
+	test_op_arithm_sub(s, 1100, Currency_ID::EUR, 100, Currency_ID::USD,
+	                   1100 -
+	                   static_cast<long>((xrate_eur.xrate * 100 * 10 + 5) / 10),
+	                   cur_eur);
+	test_op_arithm_sub(s, 7999, Currency_ID::EUR, 2353, Currency_ID::USD,
+	                   7999 -
+	                   static_cast<long>(
+	                       (xrate_eur.xrate * 2353 * 10 + 5) / 10
+	                   ),
+	                   cur_eur);
+
+	// Division
+	Money m3{ s.new_money(1) };
+	// test_op_arithm_div(s, m, m, m);
 	// Same currency
 	// Different currency
 	// Floating-point division
@@ -60,30 +59,3 @@ void test_op_arithm() {
 }
 
 
-
-void test_op_arithm_add(Monetary_math_session& s, Money a, Money b,
-                        Money expected)
-{
-	try {
-		std::cout
-			<< "Calculating " << a << " + " << b << "... ";
-		Money result{ a + b };
-		if (result.amount() != expected.amount() ||
-		    result.currency().id != expected.currency().id) {
-			throw std::runtime_error(
-				"Expected " + std::to_string(expected.as_floating_point()) + " " +
-				expected.currency().symbol + " but got " +
-				std::to_string(result.as_floating_point()) + " " +
-				result.currency().symbol);
-		}
-	}
-	catch (std::exception& e) {
-		std::cout << "FAILED" << '\n';
-		throw e;
-	}
-	catch (...) {
-		std::cout << "FAILED" << '\n';
-		throw std::runtime_error("Unknown error");
-	}
-	std::cout << "PASSED" << '\n';
-}

@@ -105,7 +105,7 @@ private:
 Money operator+(Money& a, const Money& b);
 Money operator-(Money& a, const Money& b);
 
-double operator/(Money& a, const Money& b);
+long double operator/(Money& a, const Money& b);
 Money operator/(Money& a, const double b);
 
 Money operator*(Money& a, const double b);
