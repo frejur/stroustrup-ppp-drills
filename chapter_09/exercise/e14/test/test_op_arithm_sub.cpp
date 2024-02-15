@@ -11,7 +11,7 @@ void test_op_arithm_sub(Monetary_math_session& s,
 		Money m_a{ s.new_money(a, id_a) };
 		Money m_b{ s.new_money(b, id_b) };
 		std::cout
-			<< "Calculating " << a << " - " << b << "... ";
+			<< "Calculating " << m_a << " - " << m_b << "... ";
 		Money result{ m_a - m_b };
 		if ((result.amount() != expected) ||
 		    (result.currency().id != expected_cur.id))

@@ -3,15 +3,20 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "moneyhelpers.h"
+#include "exchangerate.h"
 
 namespace Money_lib { // -------------------------------------------------------
+
+namespace XRT = Exchange_rate_lib;
 
 enum class Currency_ID{ Not_a_currency=-1, USD, EUR, JPY };
 
 struct Currency_pair{
 	Currency_ID base;
 	Currency_ID counter;
-	double xrate;
+	XRT::Exchange_rate xrate; // store whole number part + fractional part as
+	                          // XRATE_SIGNIFICANT_DIGITS no. of of digits
 };
 
 struct Currency{
@@ -25,13 +30,11 @@ const Currency& DEFAULT_CURRENCY();
 class Money; // Forward-declaration
 
 //------------------------------------------------------------------------------
-
 // Exchange rates
 
 class Conversion_table
 {
 public:
-	Conversion_table() : tbl{ {} } {};;
 	Currency_pair get(const Currency_ID id_a, const Currency_ID id_b) const;
 	void add(const Currency_pair cur);
 private:
@@ -46,18 +49,20 @@ private:
  * currencies and their exchange rates
  */
 
-
 class Monetary_math {
 public:
-	Monetary_math();
+	Monetary_math(std::istream& istr = std::cin);
 
 	Currency get_currency(Currency_ID id) const;
-	double get_exchange_rate(Currency_ID id_a, Currency_ID id_b) const;
+	Currency get_currency_by_symbol(const std::string& symbol) const;
+	XRT::Exchange_rate get_exchange_rate(Currency_ID id_a, Currency_ID id_b)
+		const;
+	std::vector<std::string> get_currency_list() const;
 
 	Money new_money(Monetary_math& self, long amt_in_c=0,
 	                Currency_ID id=DEFAULT_CURRENCY().id);
-	Money new_combined_money(Monetary_math& self, double combined_amt=0,
-	                         Currency_ID id=DEFAULT_CURRENCY().id);
+	Money new_decimal_money(Monetary_math& self, double combined_amt=0,
+	                        Currency_ID id=DEFAULT_CURRENCY().id);
 	void add_currency(Currency cur);
 	void add_currency(Currency_ID id, const std::string& name,
 	                  const std::string& symbol);
@@ -71,6 +76,39 @@ private:
 	std::vector<Currency> cur_v{};
 	Conversion_table tbl{};
 	bool has_currency() const { return cur_v.size() > 0; }
+	std::istream& is;
+};
+
+// Operators -------------------------------------------------------------------
+
+enum class Money_Operator_ID{
+	Not_an_operator=-1, Addition, Subtraction, Division, Multiplication,
+	Equal_to, Not_equal_to, Less_than, Less_than_or_equal_to,
+	Greater_than_or_equal_to, Greater_than
+};
+
+struct Money_Operator{
+public:
+	Money_Operator_ID id;
+	std::string symbol;
+	std::string name;
+};
+
+static const std::vector<Money_Operator> Money_Operators{
+	{ Money_Operator_ID::Addition, "+", "Addition" },
+	{ Money_Operator_ID::Subtraction, "-", "Subtraction" },
+	{ Money_Operator_ID::Division, "/", "Division" },
+	{ Money_Operator_ID::Multiplication, "*", "Multiplication" },
+	{ Money_Operator_ID::Equal_to, "==", "Equal to" },
+	{ Money_Operator_ID::Not_equal_to, "!=", "Not equal to" },
+	{ Money_Operator_ID::Less_than, "<", "Less than" },
+	{ Money_Operator_ID::Less_than_or_equal_to,
+	  "<=",
+	 "Less than or equal to" },
+	{ Money_Operator_ID::Greater_than_or_equal_to,
+	  ">=",
+	 "Greater than or equal to" },
+	{ Money_Operator_ID::Greater_than, ">", "Greater than" }
 };
 
 //------------------------------------------------------------------------------
@@ -89,15 +127,30 @@ public:
 	Money(Monetary_math& mmm, long cc=0, Currency_ID id=DEFAULT_CURRENCY().id);
 
 	long amount() const { return c; }
-	double as_floating_point() const { return static_cast<float>(c / 100.0); }
+	double as_floating_point() const { return static_cast<double>(c / 100.0); }
 
 	Currency currency() const { return cur; };
 	const Monetary_math& session() const { return mm; }; // can of worms
-	void deactivate_session() { mm.deactivate(); };\
-	Money new_amount(long new_amt) { return {mm, new_amt, cur.id }; };
+	void deactivate_session() { mm.deactivate(); };
+	Money new_amount(long new_amt, Currency_ID new_cur) {
+		return mm.new_money(mm, new_amt, new_cur);
+	}
+	Money new_amount(long new_amt) { return new_amount(new_amt, cur.id); };
+	Money new_decimal_amount(double new_decimal_amt, Currency_ID new_cur) {
+		return mm.new_decimal_money(mm, new_decimal_amt, new_cur);
+	}
+	Money new_decimal_amount(double new_decimal_amt) {
+		return new_decimal_amount(new_decimal_amt, cur.id);
+	};
+	void update_amount(long new_amt, Currency_ID new_id);
+	void update_amount(long new_amt) { update_amount(new_amt, cur.id); };
+	void update_decimal_amount(double new_amt, Currency_ID new_id);
+	void update_decimal_amount(double new_amt) {
+		update_decimal_amount(new_amt, cur.id);
+	};
 private:
 	Monetary_math& mm; // can of worms
-	const Currency cur;
+	Currency cur = DEFAULT_CURRENCY();
 	long c;
 };
 
@@ -121,8 +174,8 @@ bool operator>(Money& a, const Money& b);
 
 //------------------------------------------------------------------------------
 
-std::istream& operator>>(std::istream& is, Money m);
 std::ostream& operator<<(std::ostream& is, Money m);
+std::istream& operator>>(std::istream& is, Money& m);
 
 //------------------------------------------------------------------------------
 // Monetary_math_session - Wrapper with a simplified Monetary_math interface
@@ -135,10 +188,10 @@ struct Monetary_math_session
 	{
 		return mm.new_money(mm, amt_in_c, id);
 	};
-	Money new_combined_money(double combined_amt=0,
+	Money new_decimal_money(double combined_amt=0,
 	                         Currency_ID id=DEFAULT_CURRENCY().id)
 	{
-		return mm.new_combined_money(mm, combined_amt, id);
+		return mm.new_decimal_money(mm, combined_amt, id);
 	};
 	void add_currency(Currency cur) { mm.add_currency(cur); };
 	void add_currency(Currency_ID id, const std::string& name,
@@ -148,6 +201,9 @@ struct Monetary_math_session
 	}
 	void add_exchange_rate(Currency_ID id_a, Currency_ID id_b, double xrate) {
 		mm.add_exchange_rate(id_a, id_b, xrate);
+	};
+	std::vector<std::string> get_currency_list() const {
+		return mm.get_currency_list();
 	};
 	bool status() const { return mm.status(); };
 	void deactivate() { mm.deactivate(); };

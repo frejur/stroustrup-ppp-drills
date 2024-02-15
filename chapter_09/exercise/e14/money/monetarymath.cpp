@@ -2,6 +2,9 @@
 #include <stdexcept>
 
 namespace ML = Money_lib;
+namespace MLH = Money_lib_helpers;
+namespace XRT = Exchange_rate_lib;
+
 //------------------------------------------------------------------------------
 // Helpers (Defintions at the bottom)
 
@@ -16,7 +19,8 @@ const ML::Currency& ML::DEFAULT_CURRENCY() {
 	return cur;
 }
 
-ML::Monetary_math::Monetary_math() : is_active{ true }
+ML::Monetary_math::Monetary_math(std::istream& istr) : is_active{ true },
+	                                                   is{ istr }
 {
 	add_currency(ML::DEFAULT_CURRENCY());
 	is_active = has_currency();
@@ -32,6 +36,30 @@ ML::Currency ML::Monetary_math::get_currency(ML::Currency_ID id) const {
 		}
 	}
 	return { ML::Currency_ID::Not_a_currency, {}, {} };
+}
+
+ML::Currency ML::Monetary_math::get_currency_by_symbol(
+	const std::string& symbol
+) const
+{
+	for (ML::Currency c : cur_v) {
+		if (c.symbol == symbol) {
+			return c;
+		}
+	}
+	return { ML::Currency_ID::Not_a_currency, {}, {} };
+};
+
+std::vector<std::string> ML::Monetary_math::get_currency_list() const {
+	std::vector<std::string> list;
+	if (cur_v.size() == 0) {
+		list.push_back("No currencies available");
+	} else {
+		for (const Money_lib::Currency& c : cur_v) {
+			list.push_back(c.symbol + "    (" + c.name + ")");
+		}
+	}
+	return list;
 }
 
 void ML::Monetary_math::add_currency(ML::Currency cur) {
@@ -64,23 +92,26 @@ void ML::Monetary_math::add_currency(Currency_ID id, const std::string& name,
 	add_currency({ id, name, symbol });
 }
 
-double ML::Monetary_math::get_exchange_rate(ML::Currency_ID id_a,
-                                            ML::Currency_ID id_b) const
+XRT::Exchange_rate ML::Monetary_math::get_exchange_rate(ML::Currency_ID id_a,
+                                                        ML::Currency_ID id_b)
+	const
 {
 	ML::Currency_pair p{ tbl.get(id_a, id_b) };
 	if (p.base == id_a) {
 		return p.xrate;
 	} else {
-		return 1 / p.xrate;
+		p.xrate.flip_currencies();
+		return p.xrate;
 	}
 }
 
 void ML::Monetary_math::add_exchange_rate(ML::Currency_ID id_a,
-                                          ML::Currency_ID id_b, double xrate)
+                                          ML::Currency_ID id_b,
+                                          double xrate_as_dbl)
 {
 	validate_status(status());
 	try {
-		tbl.add({ id_a, id_b, xrate });
+		tbl.add({ id_a, id_b, { xrate_as_dbl } });
 	}
 	catch (std::exception& e) {
 		is_active = false;
@@ -103,20 +134,13 @@ ML::Money ML::Monetary_math::new_money(Monetary_math& self,
 	}
 }
 
-ML::Money ML::Monetary_math::new_combined_money(Monetary_math& self,
+ML::Money ML::Monetary_math::new_decimal_money(Monetary_math& self,
                                                 double amt_as_dbl,
                                                 ML::Currency_ID id)
 {
 	validate_status(status());
 	try {
-		amt_as_dbl *= 100;
-		long amt_as_long{ static_cast<long>(amt_as_dbl) };
-		if (amt_as_dbl != amt_as_long) {
-			throw std::runtime_error("Cannot create Money from the given "
-									 "floating-point value since it would lead "
-									 "to information loss");
-		}
-		return { self, amt_as_long, id };
+		return{ self, MLH::decimal_to_cents(amt_as_dbl), id };
 	}
 	catch (std::exception& e) {
 		is_active = false;
@@ -139,8 +163,12 @@ bool ML::operator!=(const ML::Monetary_math_session& mm, const bool b) {
 long ML::convert_currency_amt(long amt, ML::Currency_ID in, ML::Currency_ID out,
                               const ML::Monetary_math& mm)
 {
-	double xrate{ mm.get_exchange_rate(in, out) };
-	return static_cast<long>((10 * amt * xrate + 5) / 10);
+	long new_amt{ 0 };
+	if (amt != 0) {
+		XRT::Exchange_rate xrate{ mm.get_exchange_rate(in, out) };
+		new_amt = xrate * amt;
+	}
+	return new_amt;
 }
 
 //------------------------------------------------------------------------------

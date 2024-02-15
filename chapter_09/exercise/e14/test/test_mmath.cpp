@@ -162,19 +162,19 @@ void test_new_money(Money_lib::Monetary_math_session& s) {
 			double val{ 0.001 };
 			std::cout << "Attempting to initialize Money with floating-point "
 			             "value " << val << "... ";
-			Money m{ s.new_combined_money(val) };
+			Money m{ s.new_decimal_money(val) };
 		}
 		if (step==2) {
 			double val{ -3.123 };
 			std::cout << "Attempting to initialize Money with floating-point "
 			             "value " << val << "... ";
-			Money m{ s.new_combined_money(val) };
+			Money m{ s.new_decimal_money(val) };
 		}
 		if (step==3) {
 			double val{ 1/3.0 };
 			std::cout << "Attempting to initialize Money with floating-point "
 			             "value " << val << "... ";
-			Money m{ s.new_combined_money(val) };
+			Money m{ s.new_decimal_money(val) };
 		}
 		throw 0; // reaching this points means one of the tests failed
 	}
@@ -199,9 +199,9 @@ void test_new_money(Money_lib::Monetary_math_session& s) {
 	long test_1{ -99 };
 	test_new_money_single(s, test_1);
 	double test_2{ 25.55 };
-	test_new_combined_money_single(s, test_2, 2555);
+	test_new_decimal_money_single(s, test_2, 2555);
 	double test_3{ -0.01 };
-	test_new_combined_money_single(s, test_3, -1);
+	test_new_decimal_money_single(s, test_3, -1);
 	long test_4{ 0 };
 	test_new_money_single(s, test_4, 0);
 	double test_5{ 0 };
@@ -238,14 +238,14 @@ void test_new_money_single(Money_lib::Monetary_math_session& s,
 	test_new_money_single(s, value, value);
 }
 
-void test_new_combined_money_single(Money_lib::Monetary_math_session& s,
+void test_new_decimal_money_single(Money_lib::Monetary_math_session& s,
                                     const double value, const long expected)
 {
 	try {
 		std::cout
 			<< "Adding new Money: " << value << " "
 			<< DEFAULT_CURRENCY().symbol << "... ";
-		Money m{ s.new_combined_money(value) };
+		Money m{ s.new_decimal_money(value) };
 		if (m.amount() != expected) {
 			throw std::runtime_error("Expected " + std::to_string(expected) +
 			                         " but got " + std::to_string(m.amount()));

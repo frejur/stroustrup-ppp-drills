@@ -4,8 +4,7 @@
 namespace ML = Money_lib;
 
 ML::Currency_pair ML::Conversion_table::get(const Currency_ID id_a,
-                                            const Currency_ID id_b)
-const
+                                            const Currency_ID id_b) const
 {
 	for (int i = 0; i < tbl.size(); ++i) {
 		if ((tbl[i].base == id_a && tbl[i].counter == id_b) ||
@@ -13,6 +12,7 @@ const
 			return tbl[i];
 		}
 	}
+	throw std::runtime_error("Could not convert the given currency");
 	return {};
 }
 
@@ -43,7 +43,7 @@ void ML::Conversion_table::add(const ML::Currency_pair cur)
 		throw std::runtime_error("Cannot add entry, there is already a value "
 		                         "recorded for the given Currency pair");
 	}
-	if (cur.xrate <=0) {
+	if (cur.xrate.value() <= 0) {
 		throw std::runtime_error("Cannot add entry, the exchange rate must "
 		                         "be greater than 0 (zero)");
 	}

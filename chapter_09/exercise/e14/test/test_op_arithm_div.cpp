@@ -2,6 +2,7 @@
 
 using namespace Money_lib;
 
+// Division by any currency ----------------------------------------------------
 void test_op_arithm_div(Monetary_math_session& s,
                         long a, Money_lib::Currency_ID id_a,
                         long b, Money_lib::Currency_ID id_b,
@@ -11,7 +12,7 @@ void test_op_arithm_div(Monetary_math_session& s,
 		Money m_a{ s.new_money(a, id_a) };
 		Money m_b{ s.new_money(b, id_b) };
 		std::cout
-			<< "Calculating " << a << " / " << b << "... ";
+			<< "Calculating " << m_a << " / " << m_b << "... ";
 		long double result{ m_a / m_b };
 		if (result != expected) {
 			throw std::runtime_error(
@@ -32,6 +33,7 @@ void test_op_arithm_div(Monetary_math_session& s,
 	std::cout << "PASSED" << '\n';
 }
 
+// Division by same currency ---------------------------------------------------
 void test_op_arithm_div(Monetary_math_session& s, long a, long b,
                         long double expected)
 {
@@ -48,6 +50,8 @@ void test_op_arithm_div(Monetary_math_session& s, Money m_a, Money m_b,
 	                   m_b.currency().id, expected);
 }
 
+
+// Division by non-monetary number ---------------------------------------------
 void test_op_arithm_div(Monetary_math_session& s, long amount, Currency_ID id,
                         long double denominator, long expected_amount)
 {
@@ -76,5 +80,46 @@ void test_op_arithm_div(Monetary_math_session& s, long amount, Currency_ID id,
 		throw std::runtime_error("Unknown error");
 	}
 	std::cout << "PASSED" << '\n';
+}
+
+// Division by zero ------------------------------------------------------------
+void test_op_arithm_div_by_zero(Monetary_math_session& s) {
+	std::cout << "Attempting to divide by zero... ";
+	try {
+		Money m{ s.new_money() };
+		m / 0;
+	}
+	catch (std::exception& e) {
+		std::cout << "PASSED" << '\n';
+		std::cout << "  Function threw exception as expected:" << '\n';
+		std::cout << "    \"" << e.what() << '"' << '\n';
+		return;
+	}
+	catch (...) {
+		std::cout << "FAILED" << '\n';
+		throw std::runtime_error("Unknown error");
+	}
+	std::cout << "FAILED" << '\n';
+	throw std::runtime_error("Expected an exception to be thrown");
+}
+
+void test_op_arithm_div_by_zero(Monetary_math_session& s, Money m_a,
+                                Money m_b) {
+	std::cout << "Attempting to divide by zero... ";
+	try {
+		m_a / m_b;
+	}
+	catch (std::exception& e) {
+		std::cout << "PASSED" << '\n';
+		std::cout << "  Function threw exception as expected:" << '\n';
+		std::cout << "    \"" << e.what() << '"' << '\n';
+		return;
+	}
+	catch (...) {
+		std::cout << "FAILED" << '\n';
+		throw std::runtime_error("Unknown error");
+	}
+	std::cout << "FAILED" << '\n';
+	throw std::runtime_error("Expected an exception to be thrown");
 }
 

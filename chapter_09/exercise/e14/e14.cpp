@@ -2,6 +2,7 @@
 #include <iostream>
 #include "money/money.h"
 #include "test/test.h"
+#include "test/test_interactive.h"
 
 /* Chapter 9, Exercise 14 - 16. Money class.
  *
@@ -34,26 +35,49 @@
 
 using namespace Money_lib;
 
+enum class Selection { Quit=0, Run_tests, Expression_parser };
+
+Selection get_selection(std::istream& is) {
+	Selection s{ Selection::Quit };
+	char temp{};
+
+	try {
+		is.get(temp);
+		if (temp == 'a') {
+			s = Selection::Run_tests;
+		} else if (temp == 'b') {
+			s = Selection::Expression_parser;
+		}
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Error: " << e.what() << '\n';
+	}
+	catch (...) {
+		throw std::runtime_error("Unknown error");
+	}
+
+	if (temp != '\n') {
+		clear_buffer(is);
+	}
+	return s;
+}
+
 int main()
 try {
 	std::cout
 		<< "Money class" << '\n' << '\n'
-		<< "Press <ENTER> to run a series of tests" << '\n';
-	std::cin.get();
+		<< "Enter 'a' to run a series of tests." << '\n'
+		<< "Enter 'b' to run a very basic expression parser." << '\n'
+		<< "(Any other input will exit the program)" << '\n';
 
-	test_mmath();
+	std::cout << "> ";
+	Selection s{ get_selection(std::cin) };
+	if (s == Selection::Run_tests) {
+		test_all();
+	} else if (s == Selection::Expression_parser) {
+		test_interactive();
+	}
 
-	test_table();
-
-	test_money();
-
-	test_op_arithm();
-	std::cout << '\n'
-		<< "All tests passed without terminating the program pre-maturely!"
-		<< '\n' << '\n';
-
-	std::cout << "Enter any key to exit" << '\n';
-	std::cin.get();
 	return 0;
 }
 catch (std::exception& e) {

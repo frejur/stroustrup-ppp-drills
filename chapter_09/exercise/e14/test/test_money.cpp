@@ -9,7 +9,6 @@ void test_money()
 	test_money_exp_failure(s);
 	s.reset();
 
-
 	Monetary_math_session s2{ test_mmath_init_session() };
 	Money m1{ test_money_exp_success(s) };
 	Money m2{ test_money_exp_success(s2) };
