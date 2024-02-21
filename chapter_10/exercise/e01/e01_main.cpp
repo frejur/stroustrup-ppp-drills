@@ -31,10 +31,10 @@ try {
 	print_goodbye(std::cout);
 	std::cin.get();
 
-	return 1;
+	return 0;
 } catch (const std::exception& e) {
 	std::cerr << "Error: " << e.what() << '\n';
-	return 0;
+	return 1;
 } catch (...) {
 	std::cerr << "Unknown error" << '\n';
 	return 2;
