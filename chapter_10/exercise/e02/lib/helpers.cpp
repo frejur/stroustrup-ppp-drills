@@ -68,8 +68,39 @@ std::string help::double_to_string(double d, int decimal_count)
 	return s;
 }
 
+char help::chtoupper(char c)
+{
+	if (c < 'a' || c > 'z') {
+		return c;
+	}
+	return static_cast<char>(c - ('a' - 'A'));
+}
+
 void help::clear_buffer(std::istream& is)
 {
 	for (char temp{}; is.get(temp) && temp != '\n';) { /* Repeat until newline */
 	}
+}
+// Temperature conversion ------------------------------------------------------
+
+const std::string help::abs_zero_error_msg()
+{
+	static std::string msg{"Invalid argument, value is below absolute zero"};
+	return msg;
+}
+
+double help::ctof(double c)
+{
+	if (c < abs_zero_celsius) {
+		throw std::runtime_error("ctof() \"" + abs_zero_error_msg() + '"');
+	}
+	return 9 / 5.0 * c + 32;
+}
+
+double help::ftoc(double f)
+{
+	if (f < abs_zero_fahrenheit) {
+		throw std::runtime_error("ftoc() \"" + abs_zero_error_msg() + '"');
+	}
+	return (f - 32) * 5.0 / 9;
 }

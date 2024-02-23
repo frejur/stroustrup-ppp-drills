@@ -5,6 +5,8 @@
 
 void e03::execute()
 {
+	std::cout << e03::info() << '\n' << '\n';
+
 	std::string read_f{share::file_path_readings() + share::file_extension()};
 
 	std::cout << "Reading values from '" << read_f << "'..." << '\n';
@@ -30,4 +32,12 @@ void e03::execute()
 	}
 
 	std::cout << '\n' << "Done!" << '\n' << '\n';
+}
+
+const std::string& e03::info()
+{
+	static std::string p{
+	    "This option loads the Readings stored on disk and calculates\n"
+	    "some statistics such as the mean and median temperatures."};
+	return p;
 }

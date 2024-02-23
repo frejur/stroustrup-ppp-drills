@@ -11,6 +11,16 @@ char digit_to_char(int i);
 std::string double_to_string(double d, int decimal_count = 2);
 void clear_buffer(std::istream& is);
 
+char chtoupper(char c);
+
+// Temperature conversion ------------------------------------------------------
+constexpr double abs_zero_celsius{-273.15};
+constexpr double abs_zero_fahrenheit{-459.67};
+const std::string abs_zero_error_msg();
+
+double ctof(double c);
+double ftoc(double f);
+
 // Random number generators (From stdlibfacilities.h) --------------------------
 
 inline std::default_random_engine& get_rand()

@@ -8,14 +8,13 @@
 namespace share { //------------------------------------------------------------
 
 constexpr char symbol_degree{ '\370' };
-constexpr double abs_zero_celsius{ -273.15 };
-constexpr double abs_zero_fahrenheit{ -459.67 };
-const std::string abs_zero_error_msg();
-
-double ctof(double c);
-double ftoc(double f);
-
 enum class Temperature_unit { Not_a_unit = -1, Fahrenheit, Celsius };
+
+Temperature_unit temp_unit_from_ch(char ch);
+char ch_from_temp_unit(Temperature_unit u);
+std::string str_from_temp_unit(Temperature_unit u);
+
+double conv_temp(double t, Temperature_unit in, Temperature_unit out);
 
 constexpr char symbol_reading_start{'('};
 constexpr char symbol_reading_delimiter{','};
@@ -28,7 +27,9 @@ struct Reading
 	Temperature_unit unit = Temperature_unit::Not_a_unit;
 };
 
-std::vector<double> temps_v_from_readings(const std::vector<Reading> v);
+std::vector<double> temps_v_from_readings(
+    const std::vector<Reading> v,
+    Temperature_unit base_unit = Temperature_unit::Not_a_unit);
 
 std::ostream& operator<<(std::ostream& os, const Reading& r);
 std::istream& operator>>(std::istream& is, Reading& r);
@@ -39,6 +40,7 @@ std::vector<Reading> generate_readings(int min_count,
                                        int max_count,
                                        double min_temp,
                                        double max_temp,
+                                       bool generate_units = false,
                                        int num_dec_places = 2);
 
 // Stats -----------------------------------------------------------------------
@@ -50,10 +52,12 @@ struct Stats
 	double med;
 	double min;
 	double max;
+	Temperature_unit unit;
 };
 
 double sumv(const std::vector<Reading>& v);
-Stats statsv(const std::vector<Reading>& v);
+Stats statsv(const std::vector<Reading>& v,
+             Temperature_unit base_unit = Temperature_unit::Not_a_unit);
 
 std::string equals_as_str(bool e);
 void print_stats(std::ostream& os, const Stats& stats);

@@ -1,5 +1,6 @@
 #include "e02/e02.h"
 #include "e03/e03.h"
+#include "e04/e04.h"
 #include "share/e02_to_04_shared.h"
 #include <exception>
 #include <iostream>
@@ -14,15 +15,16 @@
  *             Convert temperatures into Fahrenheit on read.
  *
  * Differences from the exercises described in the book:
- *   - Allow the user to select which exercise to execute.
- *   - Split exercise 4 into 2 'steps'.
- *   - Generate a random number of readings, generate random hour and
+ *   - Allows the user to select which exercise to execute.
+ *   - Splits exercise 4 into 2 'steps'.
+ *   - Generates a random number of readings, generates random hour and
  *     temperature values (Including the assigned unit).
- *   - When generating the data, calculate the mean and median and store the
+ *   - When generating the data, calculates the mean and median and stores the
  *     results in a separate text file.
- *   - In that same results file, also store the number of generated values.
- *   - When calculating the mean and median of the temperature readings
- *     extracted from the data file, cross check with the values stored in the
+ *   - In that same results file, also stores the number of generated values,
+ *     minimum value, maximum value and base unit.
+ *   - When calculating statistics for the temperature readings extracted from
+ *     the data file also cross checks with the values previously stored in the
  *     results file.
  */
 
@@ -46,10 +48,10 @@ try {
 			e03::execute();
 			break;
 		case share::Selection::Generate_with_units:
-			std::cout << "Generating file with units..." << '\n';
+			e04::execute_step_1();
 			break;
 		case share::Selection::Read_with_units:
-			std::cout << "Reading from file with units..." << '\n';
+			e04::execute_step_2();
 			break;
 		case share::Selection::Invalid_selection:
 		default:

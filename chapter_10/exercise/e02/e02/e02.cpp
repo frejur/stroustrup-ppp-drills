@@ -4,6 +4,8 @@
 
 void e02::execute()
 {
+	std::cout << e02::info() << '\n' << '\n';
+
 	std::cout << "Generating values..." << '\n' << '\n';
 
 	std::vector<share::Reading> readings{
@@ -27,4 +29,15 @@ void e02::execute()
 	share::write_stats_to_disk(results_f, stats);
 
 	std::cout << '\n' << "Done!" << '\n' << '\n';
+}
+
+const std::string& e02::info()
+{
+	static std::string p{
+	    "This option generates a series of temperature readings and\n"
+	    "stores them in a text file.\n"
+	    "\n"
+	    "Some statistics such as the mean and median temperatures are\n"
+	    "also calculated and stored in a separate text file."};
+	return p;
 }

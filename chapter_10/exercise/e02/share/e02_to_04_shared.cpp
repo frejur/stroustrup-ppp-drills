@@ -2,34 +2,68 @@
 #include "../lib/helpers.h"
 #include <fstream>
 
-double share::ctof(double c)
+double share::conv_temp(double t, Temperature_unit in, Temperature_unit out)
 {
-	if (c < abs_zero_celsius) {
-		throw std::runtime_error("ctof() \"" + abs_zero_error_msg() + '"');
+	if (in == Temperature_unit::Celsius && out == Temperature_unit::Fahrenheit) {
+		return help::ctof(t);
 	}
-	return 9 / 5.0 * c + 32;
-}
-
-double share::ftoc(double f)
-{
-	if (f < abs_zero_fahrenheit) {
-		throw std::runtime_error("ftoc() \"" + abs_zero_error_msg() + '"');
+	if (in == Temperature_unit::Fahrenheit && out == Temperature_unit::Celsius) {
+		return help::ftoc(t);
 	}
-	return (f - 32) * 5.0 / 9;
+
+	throw std::runtime_error("Invalid arguments for conversion");
+	return t;
 }
 
-const std::string share::abs_zero_error_msg()
+share::Temperature_unit share::temp_unit_from_ch(char ch)
 {
-	static std::string msg{ "Invalid argument, value is below absolute zero" };
-	return msg;
+	if (ch == 'f') {
+		return Temperature_unit::Fahrenheit;
+	}
+	if (ch == 'c') {
+		return Temperature_unit::Celsius;
+	}
+	return Temperature_unit::Not_a_unit;
 }
 
-std::vector<double> share::temps_v_from_readings(const std::vector<Reading> v)
+char share::ch_from_temp_unit(Temperature_unit u)
 {
+	// Returns 0 if not a unit
+	char ch = 0;
+	if (u == Temperature_unit::Celsius) {
+		ch = 'c';
+	} else if (u == Temperature_unit::Fahrenheit) {
+		ch = 'f';
+	}
+	return ch;
+}
+
+std::string share::str_from_temp_unit(Temperature_unit u)
+{
+	// Returns empty when unit == 0 == Not_a_unit
+	std::string s{};
+	char unit{help::chtoupper(ch_from_temp_unit(u))};
+	if (unit != 0) {
+		// Format: "<Unit> °"
+		s.push_back(symbol_degree);
+		s.push_back(unit);
+	}
+	return s;
+}
+
+std::vector<double> share::temps_v_from_readings(const std::vector<Reading> v,
+                                                 Temperature_unit base_unit)
+{
+	/* Note that this function also converts to the base_unit of temperature if
+	 *  specified by the caller */
 	std::vector<double> temps;
-
+	bool should_conv{base_unit != Temperature_unit::Not_a_unit};
 	for (const Reading& r : v) {
-		temps.push_back(r.temperature);
+		if (should_conv && r.unit != base_unit) {
+			temps.push_back(conv_temp(r.temperature, r.unit, base_unit));
+		} else {
+			temps.push_back(r.temperature);
+		}
 	}
 
 	return temps;
@@ -37,8 +71,12 @@ std::vector<double> share::temps_v_from_readings(const std::vector<Reading> v)
 
 std::ostream& share::operator<<(std::ostream& os, const Reading& r)
 {
+	std::string u{};
+	if (r.unit != share::Temperature_unit::Not_a_unit) {
+		u.push_back(share::ch_from_temp_unit(r.unit));
+	}
 	return os << symbol_reading_start << r.hour << symbol_reading_delimiter
-	          << ' ' << r.temperature << symbol_reading_end;
+	          << ' ' << r.temperature << u << symbol_reading_end;
 }
 
 std::istream& share::operator>>(std::istream& is, Reading& r)
@@ -65,6 +103,14 @@ std::istream& share::operator>>(std::istream& is, Reading& r)
 	double t{};
 	is >> t;
 
+	// Attempts to fetch unit char, ignores it if no match
+	char unit_ch{};
+	is >> unit_ch;
+	Temperature_unit unit{temp_unit_from_ch(unit_ch)};
+	if (unit == Temperature_unit::Not_a_unit) {
+		is.unget();
+	}
+
 	char end_c{};
 	is >> end_c;
 	if (end_c != symbol_reading_end) {
@@ -75,6 +121,7 @@ std::istream& share::operator>>(std::istream& is, Reading& r)
 
 	r.hour = h;
 	r.temperature = t;
+	r.unit = unit;
 
 	return is;
 }
@@ -90,7 +137,8 @@ double share::sumv(const std::vector<Reading>& v)
 	return sum;
 }
 
-share::Stats share::statsv(const std::vector<Reading>& v)
+share::Stats share::statsv(const std::vector<Reading>& v,
+                           Temperature_unit base_unit)
 {
 	int num_readings{static_cast<int>(v.size())};
 	if (num_readings == 0) {
@@ -101,20 +149,32 @@ share::Stats share::statsv(const std::vector<Reading>& v)
 		        (double) v.front().temperature,
 		        (double) v.front().temperature,
 		        v.front().temperature,
-		        v.front().temperature};
+		        v.front().temperature,
+		        base_unit};
 	}
 
 	std::vector<double> temperatures = {temps_v_from_readings(v)};
 	std::sort(temperatures.begin(), temperatures.end());
 	double avg{sumv(v) / (double) v.size()};
-	avg = static_cast<int>(avg * 100 + 5) / 100.0; // enough precision
-	double med{static_cast<double>((v.size() % 2 == 0)
-	                                   ? (temperatures[num_readings / 2 - 1]
-	                                      + temperatures[num_readings / 2])
-	                                         * 0.5
-	                                   : temperatures[num_readings / 2])};
+	avg = static_cast<int>(avg * 100 + 5 * (avg >= 0 ? 1 : -1))
+	      / 100.0; // enough precision
+	double med = 0;
+	if (v.size() % 2 == 0) {
+		med = (temperatures[num_readings / 2 - 1]
+		       + temperatures[num_readings / 2])
+		      * 0.5;
+		med = static_cast<int>(med * 100 + 5 * (avg >= 0 ? 1 : -1))
+		      / 100.0; // enough precision
+	} else {
+		med = temperatures[num_readings / 2];
+	}
 
-	return {num_readings, avg, med, temperatures.front(), temperatures.back()};
+	return {num_readings,
+	        avg,
+	        med,
+	        temperatures.front(),
+	        temperatures.back(),
+	        base_unit};
 }
 
 std::string share::equals_as_str(bool e)
@@ -127,40 +187,56 @@ std::string share::equals_as_str(bool e)
 
 void share::print_stats(std::ostream& os, const Stats& stats)
 {
-	os << "Count   " << stats.num << '\n'
-	   << "Min:    " << stats.min << '\n'
-	   << "Max:    " << stats.max << '\n'
-	   << "Mean:   " << stats.avg << '\n'
-	   << "Median: " << stats.med << '\n';
+	// Unit if present
+	std::string u{share::str_from_temp_unit(stats.unit)};
+	if (u.size()) {
+		u = " " + u;
+	}
+
+	os << "Count   " << stats.num << u << '\n'
+	   << "Min:    " << stats.min << u << '\n'
+	   << "Max:    " << stats.max << u << '\n'
+	   << "Mean:   " << stats.avg << u << '\n'
+	   << "Median: " << stats.med << u << '\n';
 }
 
 void share::print_stats(std::ostream& os,
                         const Stats& stats_a,
                         const Stats& stats_b)
 {
+	// Units if present
+	std::string ua{share::str_from_temp_unit(stats_a.unit)};
+	if (ua.size()) {
+		ua = " " + ua;
+	}
+	std::string ub{share::str_from_temp_unit(stats_b.unit)};
+	if (ub.size()) {
+		ub = " " + ub;
+	}
+
 	os << "Calculated vs. Expected" << '\n'
 	   << "-----------------------" << '\n'
-	   << "Count:   " << stats_a.num << ' '
-	   << equals_as_str(stats_a.num == stats_b.num) << ' ' << stats_b.num
+	   << "Count:   " << stats_a.num << ua << ' '
+	   << equals_as_str(stats_a.num == stats_b.num) << ' ' << stats_b.num << ub
 	   << '\n'
-	   << "Min:     " << stats_a.min << ' '
-	   << equals_as_str(stats_a.min == stats_b.min) << ' ' << stats_b.min
+	   << "Min:     " << stats_a.min << ua << ' '
+	   << equals_as_str(stats_a.min == stats_b.min) << ' ' << stats_b.min << ub
 	   << '\n'
-	   << "Max:     " << stats_a.max << ' '
-	   << equals_as_str(stats_a.max == stats_b.max) << ' ' << stats_b.max
+	   << "Max:     " << stats_a.max << ua << ' '
+	   << equals_as_str(stats_a.max == stats_b.max) << ' ' << stats_b.max << ub
 	   << '\n'
-	   << "Mean:    " << stats_a.avg << ' '
-	   << equals_as_str(stats_a.avg == stats_b.avg) << ' ' << stats_b.avg
+	   << "Mean:    " << stats_a.avg << ua << ' '
+	   << equals_as_str(stats_a.avg == stats_b.avg) << ' ' << stats_b.avg << ub
 	   << '\n'
-	   << "Median:  " << stats_a.med << ' '
-	   << equals_as_str(stats_a.med == stats_b.med) << ' ' << stats_b.med
+	   << "Median:  " << stats_a.med << ua << ' '
+	   << equals_as_str(stats_a.med == stats_b.med) << ' ' << stats_b.med << ub
 	   << '\n';
 }
 
 bool share::operator==(const Stats& a, const Stats& b)
 {
 	return (a.num == b.num && a.avg == b.avg && a.med == b.med && a.min == b.min
-	        && a.max == b.max);
+	        && a.max == b.max && a.unit == b.unit);
 }
 
 bool share::operator!=(const Stats& a, const Stats& b)
@@ -170,8 +246,13 @@ bool share::operator!=(const Stats& a, const Stats& b)
 
 std::ostream& share::operator<<(std::ostream& os, const Stats& s)
 {
+	std::string unit;
+	char unit_ch{share::ch_from_temp_unit(s.unit)};
+	if (unit_ch != 0) {
+		unit.push_back(unit_ch);
+	}
 	return os << s.num << ' ' << s.avg << ' ' << s.med << ' ' << s.min << ' '
-	          << s.max;
+	          << s.max << ' ' << unit;
 }
 
 std::istream& share::operator>>(std::istream& is, Stats& s)
@@ -181,15 +262,32 @@ std::istream& share::operator>>(std::istream& is, Stats& s)
 	double max_val = 0;
 	double mean = 0;
 	double median = 0;
+	char unit_ch = 0;
+	Temperature_unit unit = Temperature_unit::Not_a_unit;
 
 	is >> num_vals >> mean >> median >> min_val >> max_val;
 
-	if (is) {
+	// Attempts to read unit, skip if not present
+	if (!is.eof()) {
+		is >> unit_ch;
+		if (is.fail()) {
+			is.clear();
+		} else {
+			unit = share::temp_unit_from_ch(unit_ch);
+			if (unit == Temperature_unit::Not_a_unit) {
+				is.unget();
+				is.clear(std::ios_base::failbit);
+			}
+		}
+	}
+
+	if (is || is.eof()) {
 		s.num = num_vals;
 		s.avg = mean;
 		s.med = median;
 		s.min = min_val;
 		s.max = max_val;
+		s.unit = unit;
 	}
 
 	return is;
@@ -201,6 +299,7 @@ std::vector<share::Reading> share::generate_readings(int min_count,
                                                      int max_count,
                                                      double min_temp,
                                                      double max_temp,
+                                                     bool generate_units,
                                                      int num_dec_places)
 {
 	if (min_count >= max_count || min_count < 1) {
@@ -224,6 +323,10 @@ std::vector<share::Reading> share::generate_readings(int min_count,
 		r.temperature = help::randint(static_cast<int>(min_temp * scale_f),
 		                              static_cast<int>(max_temp * scale_f))
 		                / static_cast<double>(scale_f);
+		if (generate_units) {
+			r.unit = help::randint(1) ? Temperature_unit::Celsius
+			                          : Temperature_unit::Fahrenheit;
+		}
 	}
 	return readings;
 }
@@ -293,6 +396,7 @@ share::Stats share::load_stats_from_disk(const std::string& file_path)
 		                         + "'.");
 	}
 
+	/* Expects a file with a single line of stats, anything else is ignored */
 	Stats stats;
 	ifs.exceptions(ifs.exceptions() | std::ios_base::badbit); // throw if bad
 	ifs >> stats;
@@ -330,50 +434,42 @@ const std::string& share::file_path_results_suffix()
 	return s;
 }
 
-const std::string& share::info_option_generate()
+const std::string& share::symbol_prompt()
 {
-	static std::string p{"Generates a series of temperature readings and "
-	                     "stores them as whitespace-separated values in: \""
-	                     + file_path_readings() + file_extension() + "\""};
+	static std::string p{"> "};
 	return p;
 }
 
-const std::string& share::symbol_prompt()
+const std::string& share::info_option_generate()
 {
-	static std::string p{ "> " };
+	static std::string p{"Generates and stores temperature readings in a "
+	                     "text file."};
 	return p;
 }
 
 const std::string& share::info_option_read()
 {
-	static std::string p{"Calculates the mean and median temperature of the "
-	                     "readings contained in: \""
-	                     + file_path_readings() + file_extension() + "\""};
+	static std::string p{"Loads temperature readings from a text file."};
 	return p;
 }
 
 const std::string& share::info_option_generate_units()
 {
-	static std::string p{"Generates a series of temperature readings, in "
-	                     "Fahrenheit or Celsius, and stores them as "
-	                     "whitespace-separated values in: \""
-	                     + file_path_readings_with_units() + file_extension()
-	                     + "\""};
+	static std::string p{"Generates and stores temperatures readings of "
+	                     "varying units in a text file."};
 	return p;
 }
 
 const std::string& share::info_option_read_units()
 {
-	static std::string p{"Calculates the mean and median temperature of the "
-	                     "readings contained in: \""
-	                     + file_path_readings_with_units() + file_extension()
-	                     + "\""};
+	static std::string p{"Loads temperature readings of varying units from "
+	                     "disks."};
 	return p;
 }
 
 const std::string& share::info_option_quit()
 {
-	static std::string p{ "Quit the program." };
+	static std::string p{"Quits the program."};
 	return p;
 }
 
