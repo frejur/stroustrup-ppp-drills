@@ -9,7 +9,9 @@ const std::string& input_file_path()
 
 void print_hello(std::ostream& os)
 {
-	os << "Sum of whitespace-separated values in a text file" << '\n'
+	os << "Sum of whitespace-separated values in a text"
+	      "file"
+	   << '\n'
 	   << "Press <ENTER> to calculate the sum of \"" << input_file_path()
 	   << "\"." << '\n';
 }
