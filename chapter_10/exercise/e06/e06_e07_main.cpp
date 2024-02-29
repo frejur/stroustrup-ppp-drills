@@ -1,3 +1,4 @@
+#include "calc/calc.h"
 #include "help/help.h"
 #include "roman/roman.h"
 #include "test/test_roman.h"
@@ -26,7 +27,8 @@ try {
 	std::cout << "Roman numerals" << '\n';
 	std::cin.get();
 
-	trom::run_tests();
+	// trom::run_tests();
+	calc::run();
 
 	return 0;
 } catch (const trom::Test_case& t) {

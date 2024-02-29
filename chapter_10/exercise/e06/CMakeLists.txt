@@ -8,6 +8,8 @@ add_executable(${T_THIS}
     test/test_roman.cpp
     roman/roman.h roman/roman.cpp
     help/help.h help/help.cpp
+    calc/calc.cpp
+    calc/calc.h
 )
 
 file(COPY test/data DESTINATION .)

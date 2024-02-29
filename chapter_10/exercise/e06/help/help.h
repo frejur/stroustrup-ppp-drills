@@ -1,5 +1,8 @@
 #ifndef HELP_H
 #define HELP_H
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
 #include <string>
 
 namespace help {
@@ -50,6 +53,43 @@ inline constexpr int exp_f_from_int(int i)
 		exp *= 10;
 	}
 	return exp;
+}
+
+// from stdlibfacilities.h -----------------------------------------------------
+
+inline void error(const std::string& s)
+{
+	throw std::runtime_error(s);
+}
+
+inline void error(const std::string& s, const std::string& s2)
+{
+	error(s + s2);
+}
+
+inline void error(const std::string& s, int i)
+{
+	std::ostringstream os;
+	os << s << ": " << i;
+	error(os.str());
+}
+
+template<class R, class A>
+R narrow_cast(const A& a)
+{
+	R r = R(a);
+	if (A(r) != a)
+		error(std::string("info loss"));
+	return r;
+}
+
+inline void keep_window_open()
+{
+	std::cin.clear();
+	std::cout << "Please enter a character to exit\n";
+	char ch;
+	std::cin >> ch;
+	return;
 }
 
 } // namespace help
