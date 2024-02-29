@@ -1,9 +1,26 @@
 #ifndef HELP_H
 #define HELP_H
-#include <stdexcept>
 #include <string>
 
 namespace help {
+
+char digit_to_char(int i);
+inline int char_to_digit(char c)
+{
+	if ('0' > c || c > '9') {
+		return '0';
+	}
+	return c - '0';
+}
+std::string double_to_string(double d, int decimal_count = 2);
+inline std::string int_to_string(int i)
+{
+	return double_to_string(i, 0);
+}
+int string_to_int(const std::string& s);
+
+void clear_buffer(std::istream& is);
+void wait_for_enter();
 
 std::string extract_ch_from_end(std::string& s, int num_ch, bool copy = false);
 inline std::string copy_ch_from_end(std::string& s, int num_ch)

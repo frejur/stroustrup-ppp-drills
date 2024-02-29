@@ -14,10 +14,24 @@ inline const std::string& file_path()
 	return p;
 }
 
+inline const std::string& error_keyword()
+{
+	static std::string p{"EXPECT_ERROR"};
+	return p;
+}
+
+struct Bool_pair
+{
+	bool a = false;
+	bool b = false;
+};
+
 struct Test_case
 {
 	romi::Roman_int a;
 	romi::Roman_int b;
+	Bool_pair expect_e;
+	bool inv = false;
 	std::string error_msg;
 };
 
