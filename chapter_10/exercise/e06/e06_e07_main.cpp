@@ -28,7 +28,8 @@ try {
 	std::cin.get();
 
 	// trom::run_tests();
-	calc::run();
+	// calc::run();
+	calc::run(calc::Calculator_version::Roman);
 
 	return 0;
 } catch (const trom::Test_case& t) {

@@ -64,20 +64,25 @@ const std::vector<Roman_symbol>& lookup_symbols();
 std::vector<Roman_symbol> generate_lookup_symbols();
 const int symbol_max_len();
 
+inline bool ch_is_valid(char c)
+{
+	bool is_valid = false;
+	for (char valid : lookup_terms_string()) {
+		if (c == valid) {
+			is_valid = true;
+			break;
+		}
+	}
+	return is_valid;
+}
+
 inline bool has_only_valid_ch(const std::string& s)
 {
 	if (s == "N") {
 		return true;
 	}
 	for (char c : s) {
-		bool is_valid = false;
-		for (char valid : lookup_terms_string()) {
-			if (c == valid) {
-				is_valid = true;
-				break;
-			}
-		}
-		if (!is_valid) {
+		if (!ch_is_valid(c)) {
 			return false;
 		}
 	}

@@ -28,21 +28,153 @@ int calc::hextodec(std::string hex)
 }
 //------------------------------------------------------------------------------
 
+std::ostream& calc::operator<<(std::ostream& os, const Result& r)
+{
+	if (r.type == Result_type::Floating_point_value) {
+		os << r.val_dec;
+	} else if (r.type == Result_type::Integer_value) {
+		os << r.val_int;
+	} else if (r.type == Result_type::Roman_numeral) {
+		os << r.val_rom.as_roman();
+	}
+	return os;
+}
+
+bool calc::operator==(const Result& a, const Result& b)
+{
+	return a.as_floating_point() == b.as_floating_point();
+}
+bool calc::operator!=(const Result& a, const Result& b)
+{
+	return !(a == b);
+}
+bool calc::operator==(const Result& a, double b)
+{
+	return a.as_floating_point() == b;
+}
+bool calc::operator!=(const Result& a, double b)
+{
+	return !(a == b);
+}
+
+bool calc::operator<(const Result& a, double b)
+{
+	return a.as_floating_point() < b;
+}
+
+bool calc::operator<=(const Result& a, double b)
+{
+	return (a < b) && (a == b);
+}
+
+bool calc::operator>=(const Result& a, double b)
+{
+	return (a > b) && (a == b);
+}
+
+bool calc::operator>(const Result& a, double b)
+{
+	return a.as_floating_point() > b;
+}
+calc::Result calc::operator*(const Result& a, const Result& b)
+{
+	if (a.type == Result_type::Roman_numeral
+	    || b.type == Result_type::Roman_numeral) {
+		return {Result_type::Roman_numeral,
+		        help::narrow_cast<int>(
+		            help::narrow_cast<int>(a.as_floating_point())
+		            * help::narrow_cast<int>(b.as_floating_point()))};
+	}
+	return {Result_type::Floating_point_value,
+	        a.as_floating_point() * b.as_floating_point()};
+}
+calc::Result calc::operator/(const Result& a, const Result& b)
+{
+	if (a.type == Result_type::Roman_numeral
+	    || b.type == Result_type::Roman_numeral) {
+		return {Result_type::Roman_numeral,
+		        help::narrow_cast<int>(
+		            help::narrow_cast<int>(a.as_floating_point())
+		            / help::narrow_cast<int>(b.as_floating_point()))};
+	}
+	return {Result_type::Floating_point_value,
+	        a.as_floating_point() / b.as_floating_point()};
+}
+calc::Result calc::operator%(const Result& a, const Result& b)
+{
+	if (a.type == Result_type::Roman_numeral
+	    || b.type == Result_type::Roman_numeral) {
+		return {Result_type::Roman_numeral,
+		        help::narrow_cast<int>(
+		            help::narrow_cast<int>(a.as_floating_point())
+		            % help::narrow_cast<int>(b.as_floating_point()))};
+	}
+	throw std::runtime_error("Cannot perform modulus on floating-point values");
+}
+calc::Result calc::operator*(const Result& a, int b)
+{
+	if (a.type != Result_type::Floating_point_value) {
+		return {a.type, help::narrow_cast<int>(a.as_floating_point() * b)};
+	}
+	return {a.type, a.as_floating_point() * b};
+}
+
+calc::Result calc::operator*(int a, const Result& b)
+{
+	return b * a;
+}
+calc::Result calc::operator+(const Result& a, const Result& b)
+{
+	if (a.type == Result_type::Roman_numeral
+	    || b.type == Result_type::Roman_numeral) {
+		return {Result_type::Roman_numeral,
+		        help::narrow_cast<int>(
+		            help::narrow_cast<int>(a.as_floating_point())
+		            + help::narrow_cast<int>(b.as_floating_point()))};
+	}
+	return {Result_type::Floating_point_value,
+	        a.as_floating_point() + b.as_floating_point()};
+}
+
+calc::Result calc::operator-(const Result& a, const Result& b)
+{
+	if (a.type == Result_type::Roman_numeral
+	    || b.type == Result_type::Roman_numeral) {
+		return {Result_type::Roman_numeral,
+		        help::narrow_cast<int>(
+		            help::narrow_cast<int>(a.as_floating_point())
+		            - help::narrow_cast<int>(b.as_floating_point()))};
+	}
+	return {Result_type::Floating_point_value,
+	        a.as_floating_point() - b.as_floating_point()};
+}
+
+//------------------------------------------------------------------------------
 // CH07E03, Symbol_table
 
-int calc::Symbol_table::get(string name)
+romi::Roman_int calc::Symbol_table_roman::get(string name)
 {
 	// attempts to find Variable s and return its value
-	for (const Variable& v : var_table)
+	for (const Variable_roman& v : var_table)
 		if (v.name == name) return v.value;
 	help::error("unable to get undefined variable; ", name);
 	return 0;
 }
 
-void calc::Symbol_table::set(string name, int val)
+double calc::Symbol_table_decimal::get(string name)
+{
+	// attempts to find Variable s and return its value
+	for (const Variable_decimal& v : var_table)
+		if (v.name == name)
+			return v.value;
+	help::error("unable to get undefined variable; ", name);
+	return 0;
+}
+
+void calc::Symbol_table_roman::set(string name, romi::Roman_int val)
 {
 	// attempts to find variable s and set its value to d
-	for (Variable& v : var_table)
+	for (Variable_roman& v : var_table)
 		if (v.name == name) {
 			if (v.is_const) {
 				help::error("Cannot reassign a constant"); // CH03E07
@@ -53,9 +185,23 @@ void calc::Symbol_table::set(string name, int val)
 	help::error("unable to assign value to undefined variable ", name);
 }
 
-bool calc::Symbol_table::is_declared(string name)
+void calc::Symbol_table_decimal::set(string name, double val)
 {
-	for (const Variable& v : var_table) {
+	// attempts to find variable s and set its value to d
+	for (Variable_decimal& v : var_table)
+		if (v.name == name) {
+			if (v.is_const) {
+				help::error("Cannot reassign a constant"); // CH03E07
+			}
+			v.value = val;
+			return;
+		}
+	help::error("unable to assign value to undefined variable ", name);
+}
+
+bool calc::Symbol_table_roman::is_declared(string name)
+{
+	for (const Variable_roman& v : var_table) {
 		if (v.name == name) {
 			return true;
 		}
@@ -63,19 +209,44 @@ bool calc::Symbol_table::is_declared(string name)
 	return false;
 }
 
-int calc::Symbol_table::declare(string name, int val, bool is_const)
+bool calc::Symbol_table_decimal::is_declared(string name)
+{
+	for (const Variable_decimal& v : var_table) {
+		if (v.name == name) {
+			return true;
+		}
+	}
+	return false;
+}
+
+romi::Roman_int calc::Symbol_table_roman::declare(string name,
+                                                  romi::Roman_int val,
+                                                  bool is_const)
+{
+	if (is_declared(name))
+		help::error(name, " declared twice");
+	if (output_trace)
+		std::cout << "DEF: adding " << name << " = " << val << '\n';
+	var_table.push_back(Variable_roman{name, val, is_const});
+	return val;
+}
+
+double calc::Symbol_table_decimal::declare(string name,
+                                           double val,
+                                           bool is_const)
 {
 	if (is_declared(name))
 		help::error(name, " declared twice");
 	if (output_trace) std::cout << "DEF: adding " << name << " = " << val << '\n';
-	var_table.push_back(Variable{ name, val, is_const });
+	var_table.push_back(Variable_decimal{name, val, is_const});
 	return val;
 }
 //------------------------------------------------------------------------------
 
-calc::Token_stream::Token_stream()
+calc::Token_stream::Token_stream(Calculator_version v)
     : full(false)
     , buffer(0)
+    , ver(v)
 {}
 
 void calc::Token_stream::putback(Token t)
@@ -153,10 +324,26 @@ calc::Token calc::Token_stream::get(bool peek)
 			if (s.size() == 0) {
 				help::error("Incomplete Hexadecimal number");
 			}
-			return Token(hex_token, s);
+			if (ver == Calculator_version::Roman) {
+				return Token(hex_token,
+				             {Result_type::Roman_numeral, hextodec(s)});
+			}
+			return Token(hex_token, {Result_type::Integer_value, hextodec(s)});
 		}
 		std::cin.putback(ch2);
 		std::cin.putback(ch);
+	}
+
+	// check for roman numeral
+	if (ver == Calculator_version::Roman
+	    && (ch == 'N' || romi::ch_is_valid(ch))) {
+		std::string r{ch};
+		char ch2{};
+		while (std::cin.get(ch2) && isalnum(ch2)) {
+			r += ch2;
+		}
+		std::cin.putback(ch2);
+		return Token(roman, {Result_type::Roman_numeral, r});
 	}
 
 	switch (ch) {
@@ -170,39 +357,50 @@ calc::Token calc::Token_stream::get(bool peek)
 	case '%':
 	case ',':
 	case assign:
-		if (output_trace) std::cout << "TOK: operator '" << ch << "'" << '\n';
+		if (output_trace)
+			std::cout << "TOK: operator '" << ch << "'" << '\n';
 		if (peek) {
 			std::cin.putback(ch);
 		}
-		return Token(ch);   // characters represent themselves
-	case '0': case '1': case '2': case '3': case '4': // CH07E10, removed dot
-	case '5': case '6': case '7': case '8': case '9':
-	{
-		std::cin.putback(ch);    // put digit back into input stream
-		double val_dbl; // CH07E10
-		int val;
-		std::cin >> val_dbl;
-		val = help::narrow_cast<int>(val_dbl);
-		if (output_trace) std::cout << "TOK: number " << val << '\n';
-		if (peek) {
-			for (char c : std::to_string(val)) {
-				std::cin.putback(c);
+		return Token(ch); // characters represent themselves
+	case '.':
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9': {
+		if (ver == Calculator_version::Decimal) {
+			std::cin.putback(ch); // put digit back into input stream
+			double val_dbl;       // CH07E10
+			std::cin >> val_dbl;
+			if (output_trace)
+				std::cout << "TOK: number " << val_dbl << '\n';
+			if (peek) {
+				for (char c : std::to_string(val_dbl)) {
+					std::cin.putback(c);
+				}
 			}
+			return Token(number, {Result_type::Floating_point_value, val_dbl});
 		}
-		return Token(number, val);
+		break;
 	}
 	default:
 		if (isalpha(ch) || ch == declkey.front() || ch == quit_key.front()) {
-			if (output_trace) std::cout << "TOK: alphanumeric character found: " << ch << '\n';
+			if (output_trace)
+				std::cout << "TOK: alphanumeric character found: " << ch
+				          << '\n';
 			string s;
 			s += ch;
 
 			// read through std::cin, feed alphanumeric chars into string
 			// CH07E01: add underscore to list of valid characters
-			while (
-				std::cin.get(ch)
-				&& (isalpha(ch) || isdigit(ch) || ch == '_')
-			) {
+			while (std::cin.get(ch)
+			       && (isalpha(ch) || isdigit(ch) || ch == '_')) {
 				s += ch;
 			}
 
@@ -215,37 +413,45 @@ calc::Token calc::Token_stream::get(bool peek)
 			std::cin.putback(ch); // put non-alphanumeric back into std::cin
 
 			if (s == quit_key) {
-				if (output_trace) std::cout << "TOK: quit keyword found: " << s << '\n';
+				if (output_trace)
+					std::cout << "TOK: quit keyword found: " << s << '\n';
 				return Token(quit_token);
 			}
 
 			if (s == help_key) {
-				if (output_trace) std::cout << "TOK: help keyword found: " << s << '\n';
+				if (output_trace)
+					std::cout << "TOK: help keyword found: " << s << '\n';
 				return Token(help_token);
 			}
 
 			if (s == declkey) {
-				if (output_trace) std::cout << "TOK: declaration keyword found: " << s << '\n';
+				if (output_trace)
+					std::cout << "TOK: declaration keyword found: " << s
+					          << '\n';
 				return Token(let);
 			}
 
 			if (s == constkey) { // CH07E03
-				if (output_trace) std::cout << "TOK: const keyword found: " << s << '\n';
+				if (output_trace)
+					std::cout << "TOK: const keyword found: " << s << '\n';
 				return Token(const_token);
 			}
 
 			if (s == sqrt_word) {
-				if (output_trace) std::cout << "TOK: squareroot keyword found: " << s << '\n';
+				if (output_trace)
+					std::cout << "TOK: squareroot keyword found: " << s << '\n';
 				return Token(sqrt_token);
 			}
 
 			if (s == pow_word) {
-				if (output_trace) std::cout << "TOK: power of keyword found: " << s << '\n';
+				if (output_trace)
+					std::cout << "TOK: power of keyword found: " << s << '\n';
 				return Token(pow_token);
 			}
 			if (islower(s.front())) {
-				if (output_trace) std::cout << "TOK: string found: " << s << '\n';
-				return Token{ name, s };
+				if (output_trace)
+					std::cout << "TOK: string found: " << s << '\n';
+				return Token{name, s};
 			}
 		}
 		help::error("Bad token");
@@ -256,41 +462,45 @@ calc::Token calc::Token_stream::get(bool peek)
 
 //------------------------------------------------------------------------------
 
-int calc::run()
+void calc::run(Calculator_version v)
 {
-	calc::Token_stream ts;
-	print_greeting();
-
-	// predefined variables
-	ts.sym.declare("rmin", romi::min_int, true);
-	ts.sym.declare("rmax", romi::max_int, true);
+	calc::Token_stream ts(v);
+	if (v == Calculator_version::Decimal) {
+		print_greeting();
+		ts.declare("pi",
+		           {Result_type::Floating_point_value, 3.14159265358979323846},
+		           true);
+	} else {
+		print_greeting_latin();
+		ts.declare("rmin", {Result_type::Roman_numeral, romi::min_int}, true);
+		ts.declare("rmax", {Result_type::Roman_numeral, romi::max_int}, true);
+	}
 
 	calculate(ts);
 	help::keep_window_open();
-	return 0;
 }
 
 //------------------------------------------------------------------------------
 
-// void calc::print_instructions()
-// {
-// 	std::cout
-// 		<< "The following arithmetic operators are available: " << '\n'
-// 		<< "    " << "'-', '+', '/', '*' ,'%'" << '\n'
-// 		<< "Use parentheses for grouping.\n"
-// 		<< "Declare / define variables using:" << '\n'
-// 		<< "    '" << declkey << " name " << assign << " value'" << '\n'
-// 		<< "    '" << constkey << " name " << assign << " value'"
-// 			<< " (immutable variable)" << '\n'
-// 		<< "    'name " << assign << " value'"
-// 			<< " (reassign value to existing)" << '\n'
-// 		<< "Available functions:" << '\n';
-// 	for (const string& fn : available_fn()) {
-// 		std::cout << "    " << fn << '\n';
-// 	}
-// }
-
 void calc::print_instructions()
+{
+	std::cout << "The following arithmetic operators are available: " << '\n'
+	          << "    "
+	          << "'-', '+', '/', '*' ,'%'" << '\n'
+	          << "Use parentheses for grouping.\n"
+	          << "Declare / define variables using:" << '\n'
+	          << "    '" << declkey << " name " << assign << " value'" << '\n'
+	          << "    '" << constkey << " name " << assign << " value'"
+	          << " (immutable variable)" << '\n'
+	          << "    'name " << assign << " value'"
+	          << " (reassign value to existing)" << '\n'
+	          << "Available functions:" << '\n';
+	for (const string& fn : available_fn()) {
+		std::cout << "    " << fn << '\n';
+	}
+}
+
+void calc::print_instructions_latin()
 {
 	std::cout << "Sequentes operatores arithmetici sunt disponibiles: " << '\n'
 	          << "    "
@@ -310,22 +520,20 @@ void calc::print_instructions()
 
 //------------------------------------------------------------------------------
 
-// void calc::print_greeting() {
-// 	std::cout
-// 		<< "Calculator\n"
-// 		<< "Please enter expressions using floating-point numbers, " << '\n'
-// 		<< "finish with <Enter>.\n"
-// 		<< "(!) Use the '" << hex_prefix << "' prefix to define numbers using "
-// 		<< '\n'
-// 		<< "    hexadecimal notation. e.g. '0xFF' equals '255'" << '\n'
-// 		<< "(!) Write '" << quit_key << "' to exit"
-// 		<< " or '" << help_key << "' for more info." << '\n'
-// 		<< "(!) This version of the calculator operates on <int>'s " << '\n'
-// 		<< "    only so loss of precision may occur, e.g. anything" << '\n'
-// 		<< "    above 0x7FFFFFFF will cause overflow on most systems." << '\n';
-// }
-
 void calc::print_greeting()
+{
+	std::cout << "Calculator\n"
+	          << "Please enter expressions using floating-point numbers, "
+	          << '\n'
+	          << "finish with <Enter>.\n"
+	          << "(!) Use the '" << hex_prefix
+	          << "' prefix to define numbers using " << '\n'
+	          << "    hexadecimal notation. e.g. '0xFF' equals '255'" << '\n'
+	          << "(!) Write '" << quit_key << "' to exit"
+	          << " or '" << help_key << "' for more info." << '\n';
+}
+
+void calc::print_greeting_latin()
 {
 	std::cout
 	    << "Computus\n"
@@ -347,7 +555,7 @@ void calc::print_greeting()
 
 //------------------------------------------------------------------------------
 
-int calc::statement(Token_stream& ts)
+calc::Result calc::statement(Token_stream& ts)
 {
 	Token t = ts.get();
 	switch (t.kind) {
@@ -374,12 +582,12 @@ int calc::statement(Token_stream& ts)
 		return expression(ts);
 		break;
 	}
-	return 0;
+	return {};
 }
 
 //------------------------------------------------------------------------------
 
-int calc::redefinition(Token_stream& ts)
+calc::Result calc::redefinition(Token_stream& ts)
 {
 	// after detecting statement w. a name followed by the assignment operator
 	if (output_trace) std::cout << "RED: get token, expecting name." << '\n';
@@ -393,14 +601,14 @@ int calc::redefinition(Token_stream& ts)
 		help::error("Expected assigment operator in redefinition");
 	}
 	if (output_trace) std::cout << "RED: get expression()" << '\n';
-	int d = expression(ts);
+	Result d = expression(ts);
 	if (output_trace) std::cout << "RED: set_value(" << t.name << ", " << d << ')' << '\n';
-	ts.sym.set(t.name, d);
+	ts.set(t.name, d);
 	return d;
 }
 
 // CH0703, modififed declaration() to handle both constants and regular vars
-int calc::declaration(Token_stream& ts)
+calc::Result calc::declaration(Token_stream& ts)
 {
 	// after detecting statement w. the declaration or constant keyword
 	Token t = ts.get();
@@ -416,9 +624,9 @@ int calc::declaration(Token_stream& ts)
 	if (t3.kind != '=')
 		help::error("= missing in declaration of ", t.name);
 	if (output_trace) std::cout << "DEC: get expression()" << '\n';
-	int d = expression(ts);
+	Result d = expression(ts);
 	if (output_trace) std::cout << "DEC: define_name(" << t2.name << ", " << d << ")" << '\n';
-	ts.sym.declare(t2.name, d, is_const);
+	ts.declare(t2.name, d, is_const);
 	return d;
 }
 
@@ -433,12 +641,16 @@ void calc::calculate(Token_stream& ts)
 		while (t.kind == print) t = ts.get(); // eat print tokens
 		if (t.kind == quit_token) return;
 		if (t.kind == help_token) {
-			print_instructions();
+			if (ts.version() == Calculator_version::Decimal) {
+				print_instructions();
+			} else {
+				print_instructions_latin();
+			}
 			ts.ignore('\n');
 			continue;
 		}
 		ts.putback(t);
-		std::cout << result << ' ' << statement(ts) << '\n';
+		std::cout << result_sign << ' ' << statement(ts) << '\n';
 	}
 	catch (std::exception& e) {
 		std::cerr << e.what() << '\n';
@@ -452,7 +664,7 @@ void calc::calculate(Token_stream& ts)
 
 //------------------------------------------------------------------------------
 
-int calc::primary(Token_stream& ts)
+calc::Result calc::primary(Token_stream& ts)
 {
 	if (output_trace) std::cout << "PRI: get token" << '\n';
 	Token t = ts.get();
@@ -460,7 +672,7 @@ int calc::primary(Token_stream& ts)
 	case '(':   // expression
 	{
 		if (output_trace) std::cout << "PRI: found '(', get expression" << '\n';
-		int exp = expression(ts);
+		Result exp = expression(ts);
 		if (output_trace) std::cout << "PRI: eof expression, expecting ')'" << '\n';
 		t = ts.get();
 		if (t.kind != ')')
@@ -475,14 +687,20 @@ int calc::primary(Token_stream& ts)
 		if (output_trace) std::cout << "PRI: found '(' after square root keyword, "
 							   << "get expression() of which we want to get "
 							   << "the square root" << '\n';
-		int exp = expression(ts);
+		Result exp = expression(ts);
 		if (exp < 0)
 			help::error("cannot calculate square root of a negative number");
 		t = ts.get();
 		if (t.kind != ')')
 			help::error("expected ')' after square root expression");
 		if (output_trace) std::cout << "PRI: getting squareroot." << '\n';
-		return static_cast<int>(sqrt(exp));
+		double sqrt_val{sqrt(exp.as_floating_point())};
+		Result_type type{exp.type};
+		if (type == Result_type::Floating_point_value) {
+			return {type, sqrt_val};
+		} else {
+			return {type, help::narrow_cast<int>(sqrt_val)};
+		}
 	}
 	case pow_token: // power of
 	{
@@ -491,41 +709,58 @@ int calc::primary(Token_stream& ts)
 			help::error("expected '(' after power of keyword");
 		if (output_trace) std::cout << "PRI: found '(' after power of keyword, "
 			<< "get the expression() of which we want to raise by a number" << '\n';
-		int expr = expression(ts);
+		Result expr = expression(ts);
 		t = ts.get();
 		if (t.kind != ',')
 			help::error("expected ',' after expression");
 		if (output_trace) std::cout << "PRI: getting exponent expression()" << '\n';
-		int expo = help::narrow_cast<int>(expression(ts));
+		Result expo = expression(ts);
 		t = ts.get();
 		if (t.kind != ')')
 			help::error("expected ')' after exponent");
-		return help::narrow_cast<int>(pow(expr, expo));
+		double pow_val = 0;
+		double expr_val = expr.as_floating_point();
+		double expo_val = expr.as_floating_point();
+		Result_type type_expr{expr.type};
+		Result_type type_expo{expo.type};
+		Result_type type_return{Result_type::Floating_point_value};
+		if (type_expr != Result_type::Floating_point_value
+		    || type_expo != Result_type::Floating_point_value) {
+			expr_val = help::narrow_cast<int>(expr_val);
+			expo_val = help::narrow_cast<int>(expo_val);
+			pow_val = help::narrow_cast<int>(pow(expr_val, expo_val));
+			type_return = Result_type::Roman_numeral;
+		} else {
+			pow_val = pow(expr_val, expo_val);
+		}
+		return {type_return, pow_val};
 	}
 	case number:   // number
-		if (output_trace) std::cout << "PRI: found number: " << t.value << '\n';
-		return t.value;
+		if (output_trace)
+			std::cout << "PRI: found number: " << t.result << '\n';
+		return t.result;
 	case hex_token: // CH07E09
-		return hextodec(t.name);
+		return t.result;
+	case roman: // CH07E09
+		return t.result;
 	case '-':
-		return -primary(ts);
+		return -1 * primary(ts);
 	case '+':
 		return primary(ts);
 	case name:
-		return ts.sym.get(t.name);
+		return ts.get(t.name);
 	default:
 		help::error("expected Primary");
 	}
-	return 0;
+	return {};
 }
 
 //------------------------------------------------------------------------------
 
-int calc::term(Token_stream& ts)
+calc::Result calc::term(Token_stream& ts)
 {
 	if (output_trace) std::cout << "TER: get primary" << '\n';
-	int left{primary(ts)};
-	double left_dbl{ (double)left };
+	Result left{primary(ts)};
 
 	if (output_trace) std::cout << "TER: get next token" << '\n';
 	Token t = ts.get(); // get next token
@@ -534,8 +769,7 @@ int calc::term(Token_stream& ts)
 		switch (t.kind) {
 		case '*':       // multiply
 			if (output_trace) std::cout << "TER: multiply, getting primary" << '\n';
-			left_dbl *= primary(ts);
-			left = help::narrow_cast<int>(left_dbl);
+			left = left * primary(ts);
 			if (output_trace) std::cout << "TER: result of multiplication: " << left << '\n';
 			if (output_trace) std::cout << "TER: get next token" << '\n';
 			t = ts.get();
@@ -543,11 +777,10 @@ int calc::term(Token_stream& ts)
 		case '/':       // division
 		{
 			if (output_trace) std::cout << "TER: divide, getting primary" << '\n';
-			int prim = primary(ts);
+			Result prim = primary(ts);
 			if (prim == 0)
 				help::error("divide by zero");
-			left_dbl /= prim;
-			left = static_cast<int>(left_dbl);
+			left = left / prim;
 			if (output_trace) std::cout << "TER: result of division: " << left << '\n';
 			if (output_trace) std::cout << "TER: get next token" << '\n';
 			t = ts.get();
@@ -555,11 +788,13 @@ int calc::term(Token_stream& ts)
 		}
 		case '%':       // modulo
 		{
-			int i1 = primary(ts);
-			if (i1 == 0)
-				help::error("% divide by zero");
-			left %= i1;
-			t = ts.get();
+			if (ts.version() == Calculator_version::Roman) {
+				Result i1 = primary(ts);
+				if (i1 == 0)
+					help::error("% divide by zero");
+				left = left / i1;
+				t = ts.get();
+			}
 			break;
 		}
 		case assign: // CH07E02, assignment not allowed as part of an expression
@@ -574,16 +809,15 @@ int calc::term(Token_stream& ts)
 			return left;
 		}
 	}
-	return 0;
+	return {};
 }
 
 //------------------------------------------------------------------------------
 
-int calc::expression(Token_stream& ts)
+calc::Result calc::expression(Token_stream& ts)
 {
 	if (output_trace) std::cout << "EXP: get term" << '\n';
-	int left = term(ts);
-	double left_dbl{ (double)left };
+	Result left = term(ts);
 
 	if (output_trace) std::cout << "EXP: get next token" << '\n';
 	Token t = ts.get();  // get next token
@@ -591,16 +825,14 @@ int calc::expression(Token_stream& ts)
 		switch (t.kind) {
 		case '+':       // addition
 			if (output_trace) std::cout << "EXP: add, getting term" << '\n';
-			left_dbl += term(ts);
-			left = help::narrow_cast<int>(left_dbl);
+			left = left + term(ts);
 			if (output_trace) std::cout << "EXP: result of addition " << left << '\n';
 			if (output_trace) std::cout << "EXP: get next token" << '\n';
 			t = ts.get();
 			break;
 		case '-':       // subtraction
 			if (output_trace) std::cout << "EXP: subtract, getting term" << '\n';
-			left_dbl -= term(ts);
-			left = help::narrow_cast<int>(left_dbl);
+			left = left - term(ts);
 			if (output_trace) std::cout << "EXP: result of subtraction " << left << '\n';
 			if (output_trace) std::cout << "EXP: get next token" << '\n';
 			t = ts.get();
@@ -612,7 +844,7 @@ int calc::expression(Token_stream& ts)
 			return left;
 		}
 	}
-	return 0;
+	return {};
 }
 
 //------------------------------------------------------------------------------
