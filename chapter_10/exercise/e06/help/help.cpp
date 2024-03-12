@@ -141,3 +141,10 @@ int help::string_to_int(const std::string& s)
 	}
 	return sign * num;
 }
+
+void help::putback_str(std::istream& is, const std::string& s)
+{
+	for (int i = s.size() - 1; i >= 0; --i) {
+		is.putback(s[i]);
+	}
+}

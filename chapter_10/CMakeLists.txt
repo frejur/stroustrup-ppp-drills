@@ -15,7 +15,7 @@ set(T_DRILL_X "Drill Extra")
 set(T_E01 "Exercise 1")
 set(T_E02 "Exercise 2 to 4")
 set(T_E05 "Exercise 5")
-set(T_E06 "Exercise 6 and 7")
+set(T_E06 "Exercise 6, 7 and 10")
 
 set(SELECTED_TARGET ${T_TEST} CACHE STRING "Selected target")
 set_property(CACHE SELECTED_TARGET PROPERTY STRINGS

@@ -7,6 +7,50 @@
 
 namespace help {
 
+inline std::string prepend_char(const std::string& s, char c)
+{
+	return c + s;
+}
+inline bool isvalidch(char c)
+{
+	return (-1 <= c && c <= 255);
+}
+
+inline bool isspace(char c)
+{
+	return (isvalidch(c) && ::isspace(c));
+}
+
+inline bool isalpha(char c)
+{
+	return (isvalidch(c) && ::isalpha(c));
+}
+
+inline bool isdigit(char c)
+{
+	return (isvalidch(c) && ::isdigit(c));
+}
+
+inline bool isalnum(char c)
+{
+	return (isvalidch(c) && ::isalnum(c));
+}
+
+inline void append_x_ch(std::string& s, int indent_w, char c = ' ')
+{
+	if (indent_w <= s.size()) {
+		return;
+	}
+	for (int i = s.size(); i <= indent_w; ++i) {
+		s.push_back(c);
+	}
+}
+
+inline void append_spaces(std::string& s, int indent_w)
+{
+	append_x_ch(s, indent_w);
+}
+
 char digit_to_char(int i);
 inline int char_to_digit(char c)
 {
@@ -83,13 +127,36 @@ R narrow_cast(const A& a)
 	return r;
 }
 
-inline void keep_window_open()
+inline void keep_window_open(const std::string& action = "exit")
 {
-	std::cin.clear();
-	std::cout << "Please enter a character to exit\n";
-	char ch;
-	std::cin >> ch;
-	return;
+	std::cout << "Press <ENTER> to " << action << '\n';
+	std::cin.get(); // wait for input
+}
+
+void putback_str(std::istream& is, const std::string& s);
+
+// -----------------------------------------------------------------------------
+
+inline char skipto_break_nonws(std::istream& istr)
+{
+	char ch{' '};
+	while (istr && (help::isspace(ch) && ch != '\n')) {
+		istr.get(ch);
+	}
+	return ch;
+}
+
+inline std::string feed_into_string_until_newline(std::istream& is)
+{
+	std::string s;
+	char ch = 0;
+	for (;; is.get(ch)) {
+		if (!is || ch == '\n') {
+			break;
+		}
+		s.push_back(ch);
+	}
+	return s;
 }
 
 } // namespace help

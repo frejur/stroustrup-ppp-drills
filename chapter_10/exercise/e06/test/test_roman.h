@@ -10,7 +10,7 @@ namespace trom {
 
 inline const std::string& file_path()
 {
-	static std::string p{"data/int_to_roman_test_data.txt"};
+	static std::string p{"data/roman/int_to_roman_test_data.txt"};
 	return p;
 }
 

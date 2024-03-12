@@ -1,0 +1,36 @@
+# Testing exception handling
+Hex_invalid = 1                                      0xFF%
+Hex_incomplete = 2                                   0x
+Expression_too_long = 4                              I ; I ; I ; I ; I ; I ; I ; I ; I ; I ; I
+Expression_too_long = 4                              I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I
+Token_bad = 5                                        II&
+Primary_expected = 6                                 ()
+Divide_by_zero = 7                                   ( I + II ) / (III - IV + V - VI)
+Get_undefined = 8                                    undefined_name
+Assign_to_undefined = 9                              undefined_name = I
+= I                                                  const a = I
+Reassign_constant = 10                               a = II
+= I                                                  let b = I
+Redeclaration = 11                                   let b = II
+Name_expected_in_declaration = 12                    let I
+Name_expected_in_declaration = 12                    const II
+Assignment_operator_expected_in_declaration = 13     let c I
+Assignment_operator_expected_in_declaration = 13     const d I
+= I                                                  let e = I
+Assignment_operator_invalid_context = 14             I + e = II
+= I                                                  const f = III
+Assignment_operator_invalid_context = 14             I + f = IIII
+Parentheses_expected_at_expression_end = 15          (I + II
+Parentheses_expected_at_square_root_start = 16       sqrt III
+Parentheses_expected_at_square_root_end = 17         sqrt(IV
+Square_root_of_negative_value = 18                   sqrt(-V)
+Parentheses_expected_at_power_of_start = 19          pow VI
+Parentheses_expected_at_power_of_end = 20            pow(VII, II
+Comma_expected_after_power_of_base = 21              pow(VII)
+Command_not_last_in_chain = 22                       I ; from x; II
+Command_not_last_in_chain = 22                       I ; to y; II
+Quit_while_reading = 23                              quit
+# Integer values only
+Modulo_divide_by_zero = 24                           I % N
+# Floating-point values only
+# Modulus_on_floating_point = 25                     3 % 2
