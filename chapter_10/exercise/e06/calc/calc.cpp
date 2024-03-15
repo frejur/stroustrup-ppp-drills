@@ -304,7 +304,7 @@ void calc::clean_up_mess(Token_stream& ts, std::istream& istr)
 
 char calc::Token_stream::skipto_break_nonws(std::istream& istr)
 {
-	char ch{ ' ' };
+	char ch{' '};
 	while (istr && (help::isspace(ch) && ch != '\n')) {
 		istr.get(ch);
 	}
@@ -660,12 +660,13 @@ calc::Write_quota calc::calculate(Token_stream& ts,
 						throw 0;
 					}
 				}
+				std::string expr{e[i]};
 				help::putback_str(streams.in(), {e[i] + "\n"});
 
 				// Check for high priority commands
 				Token t{ts.get(streams.in())};
 				if (t.kind == quit_token) {
-					throw_if_not_end(ts);
+					throw_if_not_end(ts, streams.in());
 					if (streams.read_mode() == RM::Read_from_console) {
 						ts.get();               // consume newline token
 						std::cin.putback('\n'); // put back newline char
@@ -680,7 +681,7 @@ calc::Write_quota calc::calculate(Token_stream& ts,
 					        quota.statements - num_statem_written};
 				}
 				if (t.kind == help_token) {
-					throw_if_not_end(ts);
+					throw_if_not_end(ts, streams.in());
 					ts.get(streams.in()); // consume newline
 					if (ts.version() == Calculator_version::Decimal) {
 						print_instructions(streams.out());
@@ -697,7 +698,7 @@ calc::Write_quota calc::calculate(Token_stream& ts,
 						calc_error(EC::File_path_expected, "Expected file path");
 					}
 
-					throw_if_not_end(ts);
+					throw_if_not_end(ts, streams.in());
 					ts.get(streams.in()); // consume newline
 
 					if (streams.read_mode() != RM::Read_from_console) {
@@ -757,7 +758,7 @@ calc::Write_quota calc::calculate(Token_stream& ts,
 				// Proceed with statement
 				ts.putback(t);
 				Result st{statement(ts, streams.in())};
-				throw_if_not_end(ts);
+				throw_if_not_end(ts, streams.in());
 				ts.get(streams.in()); // consume newline
 
 				if (streams.write_mode() == WM::Write_to_file) {

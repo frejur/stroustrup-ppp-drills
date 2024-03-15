@@ -152,6 +152,10 @@ const std::string& file_path_test_in_decimal();
 const std::string& file_path_test_in_roman();
 const std::string& file_path_test_out_decimal();
 const std::string& file_path_test_out_roman();
+const std::string& file_path_test_cases_decimal();
+const std::string& file_path_test_cases_roman();
+const std::string& file_path_fuzz_cases_decimal();
+const std::string& file_path_fuzz_cases_roman();
 const std::string& file_path_test_merged_decimal();
 const std::string& file_path_test_merged_roman();
 const std::string& file_path_fuzz_in_decimal();
@@ -382,19 +386,35 @@ public:
 	void set(std::string name, Result val)
 	{
 		if (ver == Calculator_version::Decimal) {
-			sym_dec.set(name, val.val_dec);
+			sym_dec.set(name, val.as_floating_point());
 		} else {
-			sym_rom.set(name, val.val_rom);
+			if (val.type == Result_type::Integer_value) {
+				sym_rom.set(name, romi::Roman_int{val.val_int});
+			} else {
+				sym_rom.set(name, val.val_rom);
+			}
 		}
 	}
 	Result declare(std::string name, Result val, bool is_const)
 	{
 		if (ver == Calculator_version::Decimal) {
+			double v = 0;
+			if (val.type == Result_type::Integer_value) {
+				v = static_cast<double>(val.val_int);
+			} else {
+				v = val.val_dec;
+			}
 			return {Result_type::Floating_point_value,
-			        sym_dec.declare(name, val.val_dec, is_const)};
+			        sym_dec.declare(name, v, is_const)};
 		} else {
+			romi::Roman_int v{};
+			if (val.type == Result_type::Integer_value) {
+				v = romi::Roman_int{val.val_int};
+			} else {
+				v = val.val_rom;
+			}
 			return {Result_type::Roman_numeral,
-			        sym_rom.declare(name, val.val_rom, is_const)};
+			        sym_rom.declare(name, v, is_const)};
 		}
 	}
 	bool is_declared(std::string name);
@@ -453,9 +473,9 @@ int hextodec(std::string hex);
 
 //------------------------------------------------------------------------------
 
-inline void throw_if_not_end(Token_stream& ts)
+inline void throw_if_not_end(Token_stream& ts, std::istream& is)
 {
-	Token t{ts.get()};
+	Token t{ts.get(is)};
 	ts.putback(t);
 	if (t.kind != '\n') {
 		calc_error(Error_code::End_of_statement_expected,

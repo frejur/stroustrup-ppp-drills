@@ -123,7 +123,7 @@ std::ostream& tcal::operator<<(std::ostream& os, const Test_case& t)
 {
 	std::string output;
 	if (t.type == tcal::Test_case_type::None) {
-		os << "Incomplete Test Case";
+		os << "Test Case N/A";
 	} else if (t.type == Test_case_type::Error) {
 		std::string c{help::int_to_string(static_cast<int>(t.error_code))};
 		output = "E_" + c + " " + t.error_str;
@@ -137,14 +137,13 @@ std::ostream& tcal::operator<<(std::ostream& os, const Test_case& t)
 	return os;
 }
 
-std::vector<tcal::Test_case> tcal::load_decimal_test_cases()
+std::vector<tcal::Test_case> tcal::load_test_cases(const std::string& file_path)
 {
 	std::vector<Test_case> test_cases;
-	std::ifstream is{calc::file_path_test_merged_decimal()};
+	std::ifstream is{file_path};
 
 	if (!is) {
-		throw std::runtime_error("Could not load file: '"
-		                         + calc::file_path_test_merged_decimal() + "'");
+		throw std::runtime_error("Could not load file: '" + file_path + "'");
 	}
 	is.exceptions(is.exceptions() | std::ios_base::badbit);
 
@@ -201,18 +200,57 @@ int tcal::get_indent_w(const std::vector<Test_case>& test_cases)
 
 void tcal::run_decimal_test()
 {
-	std::cout << "Reading from '" << calc::file_path_test_merged_decimal()
+	std::cout << "Reading from '" << calc::file_path_test_cases_decimal()
 	          << "'..." << '\n';
 
-	std::vector<Test_case> test_cases{load_decimal_test_cases()};
+	std::vector<Test_case> test_cases{
+	    load_test_cases(calc::file_path_test_cases_decimal())};
 
-	int indent_w{get_indent_w(test_cases)};
+	int indent_w_test{get_indent_w(test_cases)};
 
-	print_test_cases(std::cout, test_cases, indent_w);
+	print_test_cases(std::cout, test_cases, indent_w_test);
+	std::cout << '\n';
 
-	std::cout << "Writing to '" << calc::file_path_test_in_decimal() << "'..."
-	          << '\n';
+	std::cout << "Writing to '" << calc::file_path_test_in_decimal() << "'...";
 	save_decimal_test_input(test_cases);
+	std::cout << " Done!" << '\n' << '\n';
+
+	std::cout << "Creating a new Calculator session." << '\n'
+	          << "Reading from: " << '\'' << calc::file_path_test_in_decimal()
+	          << '\'' << '\n'
+	          << "Writing to:   " << '\'' << calc::file_path_test_out_decimal()
+	          << '\'' << '\n'
+	          << "...";
+	load_evaluate_and_save_decimal_test_expressions();
+	std::cout << " Done!" << '\n' << '\n';
+
+	std::cout << "Merging in and out data into one file." << '\n'
+	          << "Reading from: " << '\'' << calc::file_path_test_in_decimal()
+	          << '\'' << '\n'
+	          << "And from:     " << '\'' << calc::file_path_test_out_decimal()
+	          << '\'' << '\n'
+	          << "Writing to:   " << '\''
+	          << calc::file_path_test_merged_decimal() << '\'' << '\n'
+	          << "...";
+	merge_and_save_in_and_out_data();
+	std::cout << " Done!" << '\n' << '\n';
+
+	std::cout << "Loading merged data as test cases." << '\n'
+	          << "Reading from: '" << calc::file_path_test_merged_decimal()
+	          << "'...";
+
+	std::vector<Test_case> merged_data{
+	    load_test_cases(calc::file_path_test_merged_decimal())};
+
+	std::cout << " Done!" << '\n';
+
+	int indent_w_merged{get_indent_w(merged_data)};
+	int indent_w_compare = (indent_w_test > indent_w_merged) ? indent_w_test
+	                                                         : indent_w_merged;
+	print_test_comparison(std::cout, test_cases, merged_data, indent_w_compare);
+
+	std::cout << '\n';
+	help::keep_window_open("return to the main program");
 }
 
 void tcal::save_decimal_test_input(const std::vector<Test_case>& test_cases)
@@ -233,4 +271,145 @@ void tcal::save_decimal_test_input(const std::vector<Test_case>& test_cases)
 	for (const Test_case& t : test_cases) {
 		os << t.input << '\n';
 	}
+}
+
+void tcal::load_evaluate_and_save_decimal_test_expressions()
+{
+	calc::Token_stream ts{};
+	calc::session(ts,
+	              calc::Read_mode::Read_from_file,
+	              calc::Write_mode::Write_to_file,
+	              calc::file_path_test_in_decimal(),
+	              calc::file_path_test_out_decimal());
+}
+
+std::vector<std::string> tcal::file_to_strings(const std::string& file_path)
+{
+	std::ifstream is{file_path};
+
+	if (!is) {
+		throw std::runtime_error("Could not load file: '" + file_path + "'");
+	}
+	is.exceptions(is.exceptions() | std::ios_base::badbit);
+
+	std::vector<std::string> strings;
+	while (is) {
+		std::string s{help::feed_into_string_until_newline(is)};
+		strings.push_back(s);
+	}
+	return strings;
+}
+
+void tcal::merge_and_save_in_and_out_data()
+{
+	std::vector<std::string> result_strings{
+	    file_to_strings(calc::file_path_test_out_decimal())};
+
+	int max_len = 0;
+	for (std::string& s : result_strings) {
+		if (s.size() != 0 && s.front() != '=' && s.front() == 'E') {
+			int wspace_pos = 1; // assumes whitespace after 'E'
+			for (; wspace_pos < s.size(); ++wspace_pos) {
+				if (help::isspace(s[wspace_pos])) {
+					break;
+				}
+			}
+			if (wspace_pos < (s.size() - 1)) {
+				std::string temp{
+				    help::extract_ch_from_end(s, s.size() - wspace_pos)};
+				s += " " + str_to_error_msg(temp);
+			}
+		}
+		max_len = (max_len < s.size()) ? s.size() : max_len;
+	}
+
+	std::vector<std::string> expr_strings{
+	    file_to_strings(calc::file_path_test_in_decimal())};
+
+	save_string_pairs_to_file(calc::file_path_test_merged_decimal(),
+	                          result_strings,
+	                          expr_strings,
+	                          max_len);
+}
+
+void tcal::save_string_pairs_to_file(const std::string& file_path,
+                                     const std::vector<std::string>& a,
+                                     const std::vector<std::string>& b,
+                                     int indent_w)
+{
+	int max_count = (a.size() > b.size()) ? a.size() : b.size();
+	if (max_count < 1) {
+		return;
+	}
+
+	std::ofstream os{file_path};
+
+	if (!os) {
+		throw std::runtime_error("Could not open file '" + file_path
+		                         + "' for writing.");
+	}
+
+	os.exceptions(os.exceptions() | std::ios_base::badbit);
+
+	for (int i = 0; i < max_count; ++i) {
+		std::string result, expr;
+		if (i > (a.size() - 1)) {
+			result = "= 0";
+		} else {
+			result = a[i];
+		}
+		help::append_spaces(result, indent_w + 2);
+
+		if (i > (b.size() - 1)) {
+			expr = "N/A";
+		} else {
+			expr = b[i];
+		}
+
+		os << result << expr << '\n';
+	}
+}
+
+void tcal::print_test_comparison(std::ostream& os,
+                                 std::vector<Test_case>& test_cases,
+                                 std::vector<Test_case>& merged_data,
+                                 int indent_w)
+{
+	os << "Comparing the test cases with the merged data:" << '\n' << '\n';
+
+	std::string hdr_col_a{"Expected Outcome"};
+	std::string hdr_col_b{"Input"};
+	help::append_spaces(hdr_col_a, indent_w + 2);
+	std::string div;
+	help::append_x_ch(div, (hdr_col_a.size() + hdr_col_b.size() + 20), '-');
+	os << hdr_col_a << hdr_col_b << '\n' << div << '\n';
+
+	int max_len = (test_cases.size() > merged_data.size()) ? test_cases.size()
+	                                                       : merged_data.size();
+	int count_success = 0;
+	for (int i = 0; i < max_len; ++i) {
+		Test_case a, b;
+		if (i < test_cases.size()) {
+			a = test_cases[i];
+		} else {
+			a.type = Test_case_type::None;
+		}
+		a.indent_w = indent_w + 2;
+
+		if (i < merged_data.size()) {
+			b = merged_data[i];
+		} else {
+			b.type = Test_case_type::None;
+		}
+		b.indent_w = indent_w + 2;
+
+		count_success += ((a == b) ? 1 : 0);
+		os << ((a == b) ? "PASSED" : "FAILED") << '\n';
+		os << a << '\n';
+		os << b << '\n';
+		os << div << '\n';
+	}
+	std::cout << '\n'
+	          << count_success << " out of " << max_len
+	          << " tests passed successfully!" << '\n';
 }

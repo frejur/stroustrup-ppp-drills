@@ -150,7 +150,8 @@ inline std::string feed_into_string_until_newline(std::istream& is)
 {
 	std::string s;
 	char ch = 0;
-	for (;; is.get(ch)) {
+	for (;;) {
+		is.get(ch);
 		if (!is || ch == '\n') {
 			break;
 		}
