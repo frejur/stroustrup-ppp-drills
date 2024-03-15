@@ -30,10 +30,10 @@ E_20 Comma_expected_after_power_of_base              pow(7)
 E_21 Command_not_last_in_chain                       from x; 2
 E_21 Command_not_last_in_chain                       to y; 2
 E_22 Quit_while_reading                              quit
-# Integer values only
-# E_23 Modulo_divide_by_zero                           
+E_23 Modulo_divide_by_zero                           1 % 0
+= 1                                                  3 % 2
 # Floating-point values only
-E_24 Modulus_on_floating_point                       3 % 2
+E_24 Modulus_on_floating_point                       3 % 2.5
 
 # Testing arithmetic expressions
 = -4.875                                             ((25.0 * ((14.43 / -74.0))))

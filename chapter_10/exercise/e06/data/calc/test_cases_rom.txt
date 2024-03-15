@@ -1,36 +1,63 @@
 # Testing exception handling
-Hex_invalid = 1                                      0xFF%
-Hex_incomplete = 2                                   0x
-Expression_too_long = 4                              I ; I ; I ; I ; I ; I ; I ; I ; I ; I ; I
-Expression_too_long = 4                              I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I
-Token_bad = 5                                        II&
-Primary_expected = 6                                 ()
-Divide_by_zero = 7                                   ( I + II ) / (III - IV + V - VI)
-Get_undefined = 8                                    undefined_name
-Assign_to_undefined = 9                              undefined_name = I
+E_1 Hex_invalid                                      0xFFq
+E_2 Hex_incomplete                                   0x
+E_3 Expression_too_long                              I ; I ; I ; I ; I ; I ; I ; I ; I ; I ; I
+E_3 Expression_too_long                              I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I
+E_4 Token_bad                                        II&
+E_5 Primary_expected                                 ()
+E_6 Divide_by_zero                                   ( I + II ) / (III - IV - V + VI)
+E_7 Get_undefined                                    undefined_name
+E_8 Assign_to_undefined                              undefined_name = I
 = I                                                  const a = I
-Reassign_constant = 10                               a = II
+E_9 Reassign_constant                                a = II
 = I                                                  let b = I
-Redeclaration = 11                                   let b = II
-Name_expected_in_declaration = 12                    let I
-Name_expected_in_declaration = 12                    const II
-Assignment_operator_expected_in_declaration = 13     let c I
-Assignment_operator_expected_in_declaration = 13     const d I
+E_10 Redeclaration                                   let b = II
+E_11 Name_expected_in_declaration                    let I
+E_11 Name_expected_in_declaration                    const II
+E_12 Assignment_operator_expected_in_declaration     let c I
+E_12 Assignment_operator_expected_in_declaration     const d I
 = I                                                  let e = I
-Assignment_operator_invalid_context = 14             I + e = II
-= I                                                  const f = III
-Assignment_operator_invalid_context = 14             I + f = IIII
-Parentheses_expected_at_expression_end = 15          (I + II
-Parentheses_expected_at_square_root_start = 16       sqrt III
-Parentheses_expected_at_square_root_end = 17         sqrt(IV
-Square_root_of_negative_value = 18                   sqrt(-V)
-Parentheses_expected_at_power_of_start = 19          pow VI
-Parentheses_expected_at_power_of_end = 20            pow(VII, II
-Comma_expected_after_power_of_base = 21              pow(VII)
-Command_not_last_in_chain = 22                       I ; from x; II
-Command_not_last_in_chain = 22                       I ; to y; II
-Quit_while_reading = 23                              quit
-# Integer values only
-Modulo_divide_by_zero = 24                           I % N
+E_13 Assignment_operator_invalid_context             I + e = II
+= III                                                const f = III
+E_13 Assignment_operator_invalid_context             I + f = IIII
+E_14 Parentheses_expected_at_expression_end          (I + II
+E_15 Parentheses_expected_at_square_root_start       sqrt III
+E_16 Parentheses_expected_at_square_root_end         sqrt(IV
+E_17 Square_root_of_negative_value                   sqrt(-V)
+E_18 Parentheses_expected_at_power_of_start          pow VI
+E_19 Parentheses_expected_at_power_of_end            pow(VII, II
+E_20 Comma_expected_after_power_of_base              pow(VII)
+E_21 Command_not_last_in_chain                       from x; II
+E_21 Command_not_last_in_chain                       to y; II
+E_22 Quit_while_reading                              quit
+E_23 Modulo_divide_by_zero                           I % N
+= I                                                  III % II
 # Floating-point values only
-# Modulus_on_floating_point = 25                     3 % 2
+# E_24 Modulus_on_floating_point                     3 % 2.5
+
+# Testing arithmetic expressions
+= MMCDI                                              -XXV - (LIII + (XXXVII * -LXVII))
+= -XXXVII                                            -XXVIII - (LXXXV - LXXVI)
+= -VI                                                -LI - (-XLV * pow(-LXVII, -XXXVIII))
+= -LXVI                                              (-LXVII + sqrt(sqrt((pow(-LXXIX * -LXIII, -LXXXI + LXIX)))))
+= -XXVI                                              (-XXVI * pow(-XLIII, (-XL * (XXXII + XL))))
+= -LIII                                              ((-XXX + ((XXXV + -LVIII))))
+= I                                                  pow(-XCVI * (XXX), -II * ((II)))
+= -CXXVII                                            ((-LXXXIII + ((-XIX - XXV))))
+= -XXXI                                              -XXXI / pow(-XXI - -LXII, -XCVI)
+= I                                                  pow(-LXVII - XXIV, (-LXXXVII - LXXVIII))
+= I                                                  (pow(-LXX + (XLV * -XXV), (-LXXXIV)))
+= XL                                                 XLI - pow(LX, -XII)
+= CLVII                                              XLIX - (-XXXII - LXXVI)
+= I                                                  sqrt(pow(-X - (-XXXIV + sqrt(LXXXV + -XXXIV)), -LXXX))
+= LXXVIII                                            LXXVIII / (pow(sqrt(XLVII + (XLIV + LXII)), -LXXXVIII + -XXXV))
+= LXIII                                              LXIII / pow((XLVII - (-LXIX + sqrt(LXXV))), (((-XXVIII - XVII))))
+= LI                                                 pow(XLII + (IX), (((pow((-XL + sqrt(XVII)), -XCIX)))))
+= XXXIII                                             XXXIII / pow(LIV * -VIII, -LXXVIII * XXIII)
+= CM                                                 XXXVI * pow(XXV, pow(((((-XXX)))), (-LXXXVII + XLV)))
+= -MDXXII                                            -LXX - (-LXVI * -XXII)
+= -CCX                                               -XLV + (XXXIII * (LXXXI - LXXXVI))
+= -MMMMDCCLXXXVIII                                   LXXXIV * (-XI + (-XIII - (LXIX - XXXVI)))
+= -LXXII                                             (XXXIII + (-LXVII + -XXXVIII))
+= MCLVI                                              -XCVIII + (-VI - (LXX * (XI + -XXIX)))
+= LXXIX                                              -XXVI - ((-XLVIII + -LVII))

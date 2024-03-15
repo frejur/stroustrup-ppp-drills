@@ -117,15 +117,15 @@ calc::Result calc::operator/(const Result& a, const Result& b)
 }
 calc::Result calc::operator%(const Result& a, const Result& b)
 {
-	if (a.type == Result_type::Roman_numeral
-	    || b.type == Result_type::Roman_numeral) {
-		return {Result_type::Roman_numeral,
+	try {
+		return {a.type,
 		        help::narrow_cast<int>(
 		            help::narrow_cast<int>(a.as_floating_point())
 		            % help::narrow_cast<int>(b.as_floating_point()))};
+	} catch (...) {
+		calc_error(EC::Modulus_on_floating_point,
+		           "Cannot perform modulus on floating-point values");
 	}
-	calc_error(EC::Modulus_on_floating_point,
-	           "Cannot perform modulus on floating-point values");
 	return {};
 }
 calc::Result calc::operator*(const Result& a, int b)
@@ -1025,17 +1025,11 @@ calc::Result calc::term(Token_stream& ts, std::istream& istr)
 		}
 		case '%': // modulo
 		{
-			if (ts.version() == Calculator_version::Roman) {
-				Result i1 = primary(ts, istr);
-				if (i1 == 0)
-					calc_error(EC::Modulo_divide_by_zero, "% Divide by zero");
-				left = left % i1;
-				t = ts.get(istr);
-			} else {
-				calc_error(
-				    EC::Modulus_on_floating_point,
-				    "Modulus is not supported for floating-point values");
-			}
+			Result mod = primary(ts, istr);
+			if (mod == 0)
+				calc_error(EC::Modulo_divide_by_zero, "% Divide by zero");
+			left = left % mod;
+			t = ts.get(istr);
 			break;
 		}
 		case assign: // CH07E02, assignment not allowed as part of an expression

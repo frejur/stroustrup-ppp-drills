@@ -198,49 +198,55 @@ int tcal::get_indent_w(const std::vector<Test_case>& test_cases)
 	return indent_w;
 }
 
-void tcal::run_decimal_test()
+void tcal::run_calculator_tests(calc::Calculator_version version)
 {
-	std::cout << "Reading from '" << calc::file_path_test_cases_decimal()
-	          << "'..." << '\n';
+	std::string path_test_cases{(version == calc::Calculator_version::Decimal)
+	                                ? calc::file_path_test_cases_decimal()
+	                                : calc::file_path_test_cases_roman()};
+	std::cout << "Reading from '" << path_test_cases << "'..." << '\n';
 
-	std::vector<Test_case> test_cases{
-	    load_test_cases(calc::file_path_test_cases_decimal())};
+	std::vector<Test_case> test_cases{load_test_cases(path_test_cases)};
 
 	int indent_w_test{get_indent_w(test_cases)};
 
 	print_test_cases(std::cout, test_cases, indent_w_test);
 	std::cout << '\n';
 
-	std::cout << "Writing to '" << calc::file_path_test_in_decimal() << "'...";
-	save_decimal_test_input(test_cases);
+	std::string path_test_in{(version == calc::Calculator_version::Decimal)
+	                             ? calc::file_path_test_in_decimal()
+	                             : calc::file_path_test_in_roman()};
+	std::cout << "Writing to '" << path_test_in << "'...";
+	save_test_input(path_test_in, test_cases);
 	std::cout << " Done!" << '\n' << '\n';
 
+	std::string path_test_out{(version == calc::Calculator_version::Decimal)
+	                              ? calc::file_path_test_out_decimal()
+	                              : calc::file_path_test_out_roman()};
 	std::cout << "Creating a new Calculator session." << '\n'
-	          << "Reading from: " << '\'' << calc::file_path_test_in_decimal()
-	          << '\'' << '\n'
-	          << "Writing to:   " << '\'' << calc::file_path_test_out_decimal()
-	          << '\'' << '\n'
+	          << "Reading from: " << '\'' << path_test_in << '\'' << '\n'
+	          << "Writing to:   " << '\'' << path_test_out << '\'' << '\n'
 	          << "...";
-	load_evaluate_and_save_decimal_test_expressions();
+	load_evaluate_and_save_test_expressions(path_test_in, path_test_out);
 	std::cout << " Done!" << '\n' << '\n';
 
+	std::string path_test_merged{(version == calc::Calculator_version::Decimal)
+	                                 ? calc::file_path_test_merged_decimal()
+	                                 : calc::file_path_test_merged_roman()};
 	std::cout << "Merging in and out data into one file." << '\n'
-	          << "Reading from: " << '\'' << calc::file_path_test_in_decimal()
-	          << '\'' << '\n'
-	          << "And from:     " << '\'' << calc::file_path_test_out_decimal()
-	          << '\'' << '\n'
+	          << "Reading from: " << '\'' << path_test_in << '\'' << '\n'
+	          << "And from:     " << '\'' << path_test_out << '\'' << '\n'
 	          << "Writing to:   " << '\''
 	          << calc::file_path_test_merged_decimal() << '\'' << '\n'
 	          << "...";
-	merge_and_save_in_and_out_data();
+	merge_and_save_in_and_out_data(path_test_in,
+	                               path_test_out,
+	                               path_test_merged);
 	std::cout << " Done!" << '\n' << '\n';
 
 	std::cout << "Loading merged data as test cases." << '\n'
-	          << "Reading from: '" << calc::file_path_test_merged_decimal()
-	          << "'...";
+	          << "Reading from: '" << path_test_merged << "'...";
 
-	std::vector<Test_case> merged_data{
-	    load_test_cases(calc::file_path_test_merged_decimal())};
+	std::vector<Test_case> merged_data{load_test_cases(path_test_merged)};
 
 	std::cout << " Done!" << '\n';
 
@@ -253,16 +259,16 @@ void tcal::run_decimal_test()
 	help::keep_window_open("return to the main program");
 }
 
-void tcal::save_decimal_test_input(const std::vector<Test_case>& test_cases)
+void tcal::save_test_input(const std::string& file_path,
+                           const std::vector<Test_case>& test_cases)
 {
 	if (test_cases.size() == 0) {
 		throw std::runtime_error("No test cases found");
 	}
-	std::ofstream os{calc::file_path_test_in_decimal()};
+	std::ofstream os{file_path};
 
 	if (!os) {
-		throw std::runtime_error("Could not open file '"
-		                         + calc::file_path_test_in_decimal()
+		throw std::runtime_error("Could not open file '" + file_path
 		                         + "' for writing.");
 	}
 
@@ -273,14 +279,15 @@ void tcal::save_decimal_test_input(const std::vector<Test_case>& test_cases)
 	}
 }
 
-void tcal::load_evaluate_and_save_decimal_test_expressions()
+void tcal::load_evaluate_and_save_test_expressions(
+    const std::string& file_path_in, const std::string& file_path_out)
 {
 	calc::Token_stream ts{};
 	calc::session(ts,
 	              calc::Read_mode::Read_from_file,
 	              calc::Write_mode::Write_to_file,
-	              calc::file_path_test_in_decimal(),
-	              calc::file_path_test_out_decimal());
+	              file_path_in,
+	              file_path_out);
 }
 
 std::vector<std::string> tcal::file_to_strings(const std::string& file_path)
@@ -300,10 +307,12 @@ std::vector<std::string> tcal::file_to_strings(const std::string& file_path)
 	return strings;
 }
 
-void tcal::merge_and_save_in_and_out_data()
+void tcal::merge_and_save_in_and_out_data(
+    const std::string& file_path_expressions,
+    const std::string& file_path_results,
+    const std::string& file_path_out)
 {
-	std::vector<std::string> result_strings{
-	    file_to_strings(calc::file_path_test_out_decimal())};
+	std::vector<std::string> result_strings{file_to_strings(file_path_results)};
 
 	int max_len = 0;
 	for (std::string& s : result_strings) {
@@ -324,9 +333,9 @@ void tcal::merge_and_save_in_and_out_data()
 	}
 
 	std::vector<std::string> expr_strings{
-	    file_to_strings(calc::file_path_test_in_decimal())};
+	    file_to_strings(file_path_expressions)};
 
-	save_string_pairs_to_file(calc::file_path_test_merged_decimal(),
+	save_string_pairs_to_file(file_path_out,
 	                          result_strings,
 	                          expr_strings,
 	                          max_len);
@@ -377,7 +386,7 @@ void tcal::print_test_comparison(std::ostream& os,
 {
 	os << "Comparing the test cases with the merged data:" << '\n' << '\n';
 
-	std::string hdr_col_a{"Expected Outcome"};
+	std::string hdr_col_a{"Expected Outcome / Actual Outcome"};
 	std::string hdr_col_b{"Input"};
 	help::append_spaces(hdr_col_a, indent_w + 2);
 	std::string div;

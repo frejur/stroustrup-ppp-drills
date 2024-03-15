@@ -104,14 +104,19 @@ inline int output_str_len(const Test_case& t)
 
 int get_indent_w(const std::vector<Test_case>& test_cases);
 
-void run_decimal_test();
+void run_calculator_tests(
+    calc::Calculator_version version = calc::Calculator_version::Decimal);
 std::vector<Test_case> load_test_cases(const std::string& file_path);
 void print_test_cases(std::ostream& os,
                       std::vector<Test_case>& test_cases,
                       int indent_w);
-void save_decimal_test_input(const std::vector<Test_case>& test_cases);
-void load_evaluate_and_save_decimal_test_expressions();
-void merge_and_save_in_and_out_data();
+void save_test_input(const std::string& file_path,
+                     const std::vector<Test_case>& test_cases);
+void load_evaluate_and_save_test_expressions(const std::string& file_path_in,
+                                             const std::string& file_path_out);
+void merge_and_save_in_and_out_data(const std::string& file_path_expressions,
+                                    const std::string& file_path_results,
+                                    const std::string& file_path_out);
 std::vector<std::string> file_to_strings(const std::string& file_path);
 void save_string_pairs_to_file(const std::string& file_path,
                                const std::vector<std::string>& a,
