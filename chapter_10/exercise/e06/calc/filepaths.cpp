@@ -71,16 +71,6 @@ const std::string& calc::file_path_test_cases_roman()
 	static std::string f{"data/calc/test_cases_rom.txt"};
 	return f;
 }
-const std::string& calc::file_path_fuzz_cases_decimal()
-{
-	static std::string f{"data/calc/fuzz_cases_dec.txt"};
-	return f;
-}
-const std::string& calc::file_path_fuzz_cases_roman()
-{
-	static std::string f{"data/calc/fuzz_cases_rom.txt"};
-	return f;
-}
 const std::string& calc::file_path_test_merged_decimal()
 {
 	static std::string f{"data/calc/test_merged_dec.txt"};
@@ -89,15 +79,5 @@ const std::string& calc::file_path_test_merged_decimal()
 const std::string& calc::file_path_test_merged_roman()
 {
 	static std::string f{"data/calc/test_merged_rom.txt"};
-	return f;
-}
-const std::string& calc::file_path_fuzz_merged_decimal()
-{
-	static std::string f{"data/calc/fuzz_merged_dec.txt"};
-	return f;
-}
-const std::string& calc::file_path_fuzz_merged_roman()
-{
-	static std::string f{"data/calc/fuzz_merged_rom.txt"};
 	return f;
 }

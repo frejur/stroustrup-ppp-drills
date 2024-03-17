@@ -65,4 +65,4 @@ These types of testing complement each other and can improve the overall quality
 6. Use the functions that implement the commands for running a series of tests:
     6.1. Systematic testing, load in a file of predefined expressions, output the results to another file.
     6.2. Compare the results written to disk with another file of predefined expected outcomes.
-    6.3. Fuzz testing, load in a file of some scraped web data or similar, expect it to gracefully handle all errors, output the "logs" to disk.
+    6.3. Fuzz testing, load in a file of some scraped web data or similar, expect it to gracefully handle all errors, output the "logs" to disk. (Really 'barebones' at the moment)

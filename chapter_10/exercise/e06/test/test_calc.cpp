@@ -2,11 +2,35 @@
 #include "../calc/calc.h"
 #include "../help/help.h"
 
+void tcal::print_test_or_fuzz()
+{
+	std::cout
+	    << "Enter any key to proceed with regular testing, or enter 'f' fuzz "
+	       "testing"
+	    << '\n';
+}
+
+char tcal::get_selection()
+{
+	char select = 0;
+	std::cin.get(select);
+	if (select != '\n') {
+		help::clear_buffer(std::cin);
+	}
+	return select;
+}
+
 void tcal::eval_result(std::istream& is, Test_case& t)
 {
 	// TODO: Roman numerals
-	double val = 0;
-	is >> val;
+	double result_dec = 0;
+	romi::Roman_int result_rom;
+
+	if (t.type == Test_case_type::Result_decimal) {
+		is >> result_dec;
+	} else {
+		is >> result_rom;
+	}
 
 	if (!is) {
 		help::clear_buffer(is);
@@ -28,8 +52,13 @@ void tcal::eval_result(std::istream& is, Test_case& t)
 		return;
 	}
 
-	t.type = Test_case_type::Result;
-	t.result = {calc::Result_type::Floating_point_value, val};
+	if (t.type == Test_case_type::Result_decimal) {
+		t.type = Test_case_type::Result_decimal;
+		t.result = {calc::Result_type::Floating_point_value, result_dec};
+	} else {
+		t.type = Test_case_type::Result_roman;
+		t.result = {calc::Result_type::Roman_numeral, result_rom};
+	}
 	t.input = i;
 }
 
@@ -127,7 +156,8 @@ std::ostream& tcal::operator<<(std::ostream& os, const Test_case& t)
 	} else if (t.type == Test_case_type::Error) {
 		std::string c{help::int_to_string(static_cast<int>(t.error_code))};
 		output = "E_" + c + " " + t.error_str;
-	} else if (t.type == tcal::Test_case_type::Result) {
+	} else if (t.type == tcal::Test_case_type::Result_decimal
+	           || t.type == tcal::Test_case_type::Result_roman) {
 		output = "= " + t.result.as_string();
 	} else {
 		throw std::runtime_error("Invalid test case type");
@@ -137,7 +167,8 @@ std::ostream& tcal::operator<<(std::ostream& os, const Test_case& t)
 	return os;
 }
 
-std::vector<tcal::Test_case> tcal::load_test_cases(const std::string& file_path)
+std::vector<tcal::Test_case> tcal::load_test_cases(
+    const std::string& file_path, const calc::Calculator_version version)
 {
 	std::vector<Test_case> test_cases;
 	std::ifstream is{file_path};
@@ -150,6 +181,9 @@ std::vector<tcal::Test_case> tcal::load_test_cases(const std::string& file_path)
 	while (!is.fail()) {
 		char c = 0;
 		is >> c;
+		if (is.eof()) {
+			break;
+		}
 		if (c == '\n') {
 			continue;
 		}
@@ -159,11 +193,17 @@ std::vector<tcal::Test_case> tcal::load_test_cases(const std::string& file_path)
 		}
 		is.putback(c);
 		Test_case t{};
+		if (version == calc::Calculator_version::Decimal) {
+			t.type = Test_case_type::Result_decimal;
+		} else {
+			t.type = Test_case_type::Result_roman;
+		}
 		is >> t;
 		if (is.fail()) {
 			is.clear();
-			help::clear_buffer(is);
-			continue;
+			t = {Test_case_type::Error,
+			     help::feed_into_string_until_newline(is, true),
+			     calc::Error_code::Unknown};
 		}
 		test_cases.push_back(t);
 	}
@@ -197,15 +237,46 @@ int tcal::get_indent_w(const std::vector<Test_case>& test_cases)
 	}
 	return indent_w;
 }
-
 void tcal::run_calculator_tests(calc::Calculator_version version)
+{
+	print_test_or_fuzz();
+
+	char select = get_selection();
+	if (select != 'f') {
+		do_regular_tests(version);
+	} else {
+		do_fuzz_testing(version);
+	}
+
+	help::keep_window_open("return to the main program");
+}
+
+void tcal::do_fuzz_testing(calc::Calculator_version version)
+{
+	std::string path_fuzz_in{(version == calc::Calculator_version::Decimal)
+	                             ? calc::file_path_fuzz_in_decimal()
+	                             : calc::file_path_fuzz_in_roman()};
+	std::string path_fuzz_out{(version == calc::Calculator_version::Decimal)
+	                              ? calc::file_path_fuzz_out_decimal()
+	                              : calc::file_path_fuzz_out_roman()};
+	std::cout << "Creating a new Calculator session." << '\n'
+	          << "Reading from: " << '\'' << path_fuzz_in << '\'' << '\n'
+	          << "Writing to:   " << '\'' << path_fuzz_out << '\'' << '\n'
+	          << "...";
+	load_evaluate_and_save_test_expressions(path_fuzz_in,
+	                                        path_fuzz_out,
+	                                        version);
+	std::cout << " Done!" << '\n' << '\n';
+}
+
+void tcal::do_regular_tests(calc::Calculator_version version)
 {
 	std::string path_test_cases{(version == calc::Calculator_version::Decimal)
 	                                ? calc::file_path_test_cases_decimal()
 	                                : calc::file_path_test_cases_roman()};
 	std::cout << "Reading from '" << path_test_cases << "'..." << '\n';
 
-	std::vector<Test_case> test_cases{load_test_cases(path_test_cases)};
+	std::vector<Test_case> test_cases{load_test_cases(path_test_cases, version)};
 
 	int indent_w_test{get_indent_w(test_cases)};
 
@@ -226,7 +297,9 @@ void tcal::run_calculator_tests(calc::Calculator_version version)
 	          << "Reading from: " << '\'' << path_test_in << '\'' << '\n'
 	          << "Writing to:   " << '\'' << path_test_out << '\'' << '\n'
 	          << "...";
-	load_evaluate_and_save_test_expressions(path_test_in, path_test_out);
+	load_evaluate_and_save_test_expressions(path_test_in,
+	                                        path_test_out,
+	                                        version);
 	std::cout << " Done!" << '\n' << '\n';
 
 	std::string path_test_merged{(version == calc::Calculator_version::Decimal)
@@ -235,8 +308,7 @@ void tcal::run_calculator_tests(calc::Calculator_version version)
 	std::cout << "Merging in and out data into one file." << '\n'
 	          << "Reading from: " << '\'' << path_test_in << '\'' << '\n'
 	          << "And from:     " << '\'' << path_test_out << '\'' << '\n'
-	          << "Writing to:   " << '\''
-	          << calc::file_path_test_merged_decimal() << '\'' << '\n'
+	          << "Writing to:   " << '\'' << path_test_merged << '\'' << '\n'
 	          << "...";
 	merge_and_save_in_and_out_data(path_test_in,
 	                               path_test_out,
@@ -246,7 +318,8 @@ void tcal::run_calculator_tests(calc::Calculator_version version)
 	std::cout << "Loading merged data as test cases." << '\n'
 	          << "Reading from: '" << path_test_merged << "'...";
 
-	std::vector<Test_case> merged_data{load_test_cases(path_test_merged)};
+	std::vector<Test_case> merged_data{
+	    load_test_cases(path_test_merged, version)};
 
 	std::cout << " Done!" << '\n';
 
@@ -256,7 +329,6 @@ void tcal::run_calculator_tests(calc::Calculator_version version)
 	print_test_comparison(std::cout, test_cases, merged_data, indent_w_compare);
 
 	std::cout << '\n';
-	help::keep_window_open("return to the main program");
 }
 
 void tcal::save_test_input(const std::string& file_path,
@@ -280,9 +352,11 @@ void tcal::save_test_input(const std::string& file_path,
 }
 
 void tcal::load_evaluate_and_save_test_expressions(
-    const std::string& file_path_in, const std::string& file_path_out)
+    const std::string& file_path_in,
+    const std::string& file_path_out,
+    calc::Calculator_version version)
 {
-	calc::Token_stream ts{};
+	calc::Token_stream ts{version};
 	calc::session(ts,
 	              calc::Read_mode::Read_from_file,
 	              calc::Write_mode::Write_to_file,
@@ -363,7 +437,7 @@ void tcal::save_string_pairs_to_file(const std::string& file_path,
 	for (int i = 0; i < max_count; ++i) {
 		std::string result, expr;
 		if (i > (a.size() - 1)) {
-			result = "= 0";
+			result = "";
 		} else {
 			result = a[i];
 		}

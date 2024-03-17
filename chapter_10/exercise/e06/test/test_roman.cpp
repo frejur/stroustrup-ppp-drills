@@ -126,4 +126,5 @@ void trom::run_tests()
 		}
 		std::cout << t << '\n';
 	}
+	help::keep_window_open("return to the main program");
 }

@@ -146,14 +146,27 @@ inline char skipto_break_nonws(std::istream& istr)
 	return ch;
 }
 
-inline std::string feed_into_string_until_newline(std::istream& is)
+inline std::string feed_into_string_until_newline(std::istream& is,
+                                                  bool min_wspace = false)
 {
 	std::string s;
+	bool prev_was_wspace = false;
 	char ch = 0;
 	for (;;) {
 		is.get(ch);
 		if (!is || ch == '\n') {
 			break;
+		}
+		if (min_wspace) {
+			if (help::isspace(ch)) {
+				if (prev_was_wspace) {
+					continue;
+				}
+				ch = ' ';
+				prev_was_wspace = true;
+			} else {
+				prev_was_wspace = false;
+			}
 		}
 		s.push_back(ch);
 	}

@@ -53,6 +53,7 @@ inline const std::vector<std::string>& available_fn()
 //------------------------------------------------------------------------------
 
 enum class Error_code {
+	Unknown = 0,
 	// As to not mess up the established order used for testing,
 	// add any new error codes at the BOTTOM, AFTER the existing ones.
 	Hex_invalid = 1,
@@ -89,6 +90,7 @@ enum class Error_code {
 	File_path_expected,
 	Write_overflow,
 	Read_overflow,
+	Integer_overflow,
 
 	// Should normally not be able to be triggered by the user
 	Name_expected_in_redefinition,
@@ -112,6 +114,8 @@ enum class Error_code {
 
 inline bool error_code_is_valid(int i)
 {
+	bool test = (1 <= i && i < static_cast<int>(Error_code::COUNT));
+
 	return (1 <= i && i < static_cast<int>(Error_code::COUNT));
 }
 
@@ -154,16 +158,12 @@ const std::string& file_path_test_out_decimal();
 const std::string& file_path_test_out_roman();
 const std::string& file_path_test_cases_decimal();
 const std::string& file_path_test_cases_roman();
-const std::string& file_path_fuzz_cases_decimal();
-const std::string& file_path_fuzz_cases_roman();
 const std::string& file_path_test_merged_decimal();
 const std::string& file_path_test_merged_roman();
 const std::string& file_path_fuzz_in_decimal();
 const std::string& file_path_fuzz_in_roman();
 const std::string& file_path_fuzz_out_decimal();
 const std::string& file_path_fuzz_out_roman();
-const std::string& file_path_fuzz_merged_decimal();
-const std::string& file_path_fuzz_merged_roman();
 
 // Expression chaining limits
 constexpr int expression_char_limit{100};

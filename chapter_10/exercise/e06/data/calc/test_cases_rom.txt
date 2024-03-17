@@ -1,7 +1,7 @@
 # Testing exception handling
 E_1 Hex_invalid                                      0xFFq
 E_2 Hex_incomplete                                   0x
-E_3 Expression_too_long                              I ; I ; I ; I ; I ; I ; I ; I ; I ; I ; I
+E_3 Expression_too_long                              I ; I ; I ; I ; I ; I ; I ; I ; I ; I ; I ; I
 E_3 Expression_too_long                              I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I + I
 E_4 Token_bad                                        II&
 E_5 Primary_expected                                 ()
@@ -36,28 +36,29 @@ E_23 Modulo_divide_by_zero                           I % N
 # E_24 Modulus_on_floating_point                     3 % 2.5
 
 # Testing arithmetic expressions
+= I                                                  III % II
 = MMCDI                                              -XXV - (LIII + (XXXVII * -LXVII))
 = -XXXVII                                            -XXVIII - (LXXXV - LXXVI)
-= -VI                                                -LI - (-XLV * pow(-LXVII, -XXXVIII))
-= -LXVI                                              (-LXVII + sqrt(sqrt((pow(-LXXIX * -LXIII, -LXXXI + LXIX)))))
-= -XXVI                                              (-XXVI * pow(-XLIII, (-XL * (XXXII + XL))))
 = -LIII                                              ((-XXX + ((XXXV + -LVIII))))
-= I                                                  pow(-XCVI * (XXX), -II * ((II)))
 = -CXXVII                                            ((-LXXXIII + ((-XIX - XXV))))
-= -XXXI                                              -XXXI / pow(-XXI - -LXII, -XCVI)
-= I                                                  pow(-LXVII - XXIV, (-LXXXVII - LXXVIII))
-= I                                                  (pow(-LXX + (XLV * -XXV), (-LXXXIV)))
-= XL                                                 XLI - pow(LX, -XII)
 = CLVII                                              XLIX - (-XXXII - LXXVI)
-= I                                                  sqrt(pow(-X - (-XXXIV + sqrt(LXXXV + -XXXIV)), -LXXX))
-= LXXVIII                                            LXXVIII / (pow(sqrt(XLVII + (XLIV + LXII)), -LXXXVIII + -XXXV))
-= LXIII                                              LXIII / pow((XLVII - (-LXIX + sqrt(LXXV))), (((-XXVIII - XVII))))
-= LI                                                 pow(XLII + (IX), (((pow((-XL + sqrt(XVII)), -XCIX)))))
-= XXXIII                                             XXXIII / pow(LIV * -VIII, -LXXVIII * XXIII)
-= CM                                                 XXXVI * pow(XXV, pow(((((-XXX)))), (-LXXXVII + XLV)))
 = -MDXXII                                            -LXX - (-LXVI * -XXII)
 = -CCX                                               -XLV + (XXXIII * (LXXXI - LXXXVI))
 = -MMMMDCCLXXXVIII                                   LXXXIV * (-XI + (-XIII - (LXIX - XXXVI)))
 = -LXXII                                             (XXXIII + (-LXVII + -XXXVIII))
 = MCLVI                                              -XCVIII + (-VI - (LXX * (XI + -XXIX)))
 = LXXIX                                              -XXVI - ((-XLVIII + -LVII))
+= -I                                                 pow((-XLVIII / XLVIII), (XXXIX + -IV))
+= XCVIII                                             XXVII - (-LXXI + (pow((-XLII - (XLVII + -LXXXIX)), LXIII)))
+= MMDVI                                              -XCV + (pow((-LI), II))
+= LXX                                                -I + (LXXI / pow(-II - (XLVII), N))
+= -LXXVI                                             LXXIV + pow(-LXII + (-LXXXVIII), I)
+= -DXX                                               -L + (-L - pow(XLII * X, I))
+= -LXXXIII                                           LXXXIII + (-XCI + -LXXV)
+= -XXXV                                              -XVI + (XLIV - LXIII)
+= -LII                                               -XLIX - (-I + sqrt(XVI))
+= XXXVIII                                            (-XXXIII + (XLIV + XXVII))
+= -CV                                                XXIX - (LXXI + (LXIII))
+= -MMMMDCXX                                          XXXIII * (((-XCVI + -XLIV)))
+= -XLV                                               -LIX - (LXIX + -LXXXIII)
+= CCXLVIII                                           (V - (-XXVII * (-LIX + LXVIII)))

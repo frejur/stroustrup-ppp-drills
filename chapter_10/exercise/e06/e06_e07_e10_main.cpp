@@ -81,10 +81,10 @@ try {
 			calc::run(calc::Calculator_version::Roman);
 			break;
 		case e6_7_10::select_test_calc_decimal:
-			tcal::run_decimal_test();
+			tcal::run_calculator_tests(calc::Calculator_version::Decimal);
 			break;
 		case e6_7_10::select_test_calc_roman:
-			std::cout << "Selected e" << '\n';
+			tcal::run_calculator_tests(calc::Calculator_version::Roman);
 			break;
 		case '\n':
 			continue;
