@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-/* Chapter 10, Exercise 8. Join words, preserve order
+/* Chapter 10, Exercise 9. Join words, preserve order
  * 
  * Write a program that merges the whitespace-separated words of two files into
  * one. The exercise is worded vaguely, but the words are presumed to be
