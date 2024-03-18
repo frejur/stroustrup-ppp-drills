@@ -42,10 +42,10 @@ void e08::concat_files(const std::string& file_a,
 }
 
 int main()
-{
-	std::cout << "Press any key to concatenate '" << e08::file_path_start()
-	          << "' with '" << e08::file_path_end() << "'" << '\n';
-	std::cin.get();
+try {
+	std::cout << "Enter any character to concatenate '"
+	          << e08::file_path_start() << "' with '" << e08::file_path_end()
+	          << "'" << '\n';
 	char c = 0;
 	while (std::cin.get(c) && c != '\n') {
 		/* clear buffer */
@@ -61,4 +61,8 @@ int main()
 
 	std::cout << '\n' << "Press <ENTER> to exit" << '\n';
 	std::cin.get();
+} catch (const std::exception& e) {
+	std::cerr << "Error: " << e.what() << '\n';
+} catch (...) {
+	std::cerr << "Unknown error" << '\n';
 }
