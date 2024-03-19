@@ -14,37 +14,33 @@ set(T_TT01 "Try This 1")
 set(T_TT02 "Try This 2")
 set(T_TT03 "Try This 3")
 set(T_TT04 "Try This 4")
+set(E01 "Exercise 1")
 
-set(SELECTED_TARGET "Test" CACHE STRING "Selected target")
+set(SELECTED_TARGET "Test program" CACHE STRING "Selected target")
 set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
     ${T_TEST}
     ${T_TT01}
     ${T_TT02}
     ${T_TT03}
     ${T_TT04}
+    ${E01}
 )
 message("Building target: ${SELECTED_TARGET}")
 
-IF(${SELECTED_TARGET} MATCHES ${T_TEST})
+IF(${SELECTED_TARGET} STREQUAL ${T_TEST})
     add_executable(chapter_11
         util.h
         util.cpp
         main.cpp
     )
-ENDIF()
-
-IF(${SELECTED_TARGET} MATCHES ${T_TT01})
+ELSEIF(${SELECTED_TARGET} STREQUAL ${T_TT01})
     add_subdirectory(${CMAKE_SOURCE_DIR}/tt/tt01)
-ENDIF()
-
-IF(${SELECTED_TARGET} MATCHES ${T_TT02})
+ELSEIF(${SELECTED_TARGET} STREQUAL ${T_TT02})
     add_subdirectory(${CMAKE_SOURCE_DIR}/tt/tt02)
-ENDIF()
-
-IF(${SELECTED_TARGET} MATCHES ${T_TT03})
+ELSEIF(${SELECTED_TARGET} STREQUAL ${T_TT03})
     add_subdirectory(${CMAKE_SOURCE_DIR}/tt/tt03)
-ENDIF()
-
-IF(${SELECTED_TARGET} MATCHES ${T_TT04})
+ELSEIF(${SELECTED_TARGET} STREQUAL ${T_TT04})
     add_subdirectory(${CMAKE_SOURCE_DIR}/tt/tt04)
+ELSEIF(${SELECTED_TARGET} STREQUAL ${E01})
+    add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e01)
 ENDIF()
