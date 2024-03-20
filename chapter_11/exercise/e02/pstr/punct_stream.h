@@ -27,10 +27,9 @@ public:
 	};
 	bool eol() const { return (buf.eof() && src.good()); };
 
+private:
 	std::istream& src;
 	std::istringstream buf;
-
-private:
 	std::string ws_chars;
 	std::string ln_str;
 	bool sens;
