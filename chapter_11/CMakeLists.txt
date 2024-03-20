@@ -16,6 +16,7 @@ set(T_TT03 "Try This 3")
 set(T_TT04 "Try This 4")
 set(E01 "Exercise 1")
 set(E02 "Exercise 2")
+set(E03 "Exercise 3")
 
 set(SELECTED_TARGET "Test program" CACHE STRING "Selected target")
 set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
@@ -26,6 +27,7 @@ set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
     ${T_TT04}
     ${E01}
     ${E02}
+    ${E03}
 )
 message("Building target: ${SELECTED_TARGET}")
 
@@ -47,4 +49,6 @@ ELSEIF(${SELECTED_TARGET} STREQUAL ${E01})
     add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e01)
 ELSEIF(${SELECTED_TARGET} STREQUAL ${E02})
     add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e02)
+ELSEIF(${SELECTED_TARGET} STREQUAL ${E03})
+    add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e03)
 ENDIF()
