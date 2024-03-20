@@ -1,8 +1,6 @@
 #ifndef HELP_H
 #define HELP_H
 #include <iostream>
-#include <sstream>
-#include <stdexcept>
 #include <string>
 
 namespace help {
@@ -35,6 +33,16 @@ inline bool isalnum(char c)
 inline bool isupper(char c)
 {
 	return (isvalidch(c) && ::isupper(c));
+}
+
+inline std::string tolower(std::string s)
+{
+	for (char& c : s) {
+		if (help::isalpha(c)) {
+			c = ::tolower(c);
+		}
+	}
+	return s;
 }
 
 void clear_buffer(std::istream& is);
