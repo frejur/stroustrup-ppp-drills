@@ -1,0 +1,35 @@
+CLASSIFICATION
+
+                 H   e   l   l   o   ,       w   o   r   l   d  \n 
+               >---+---+---+---+---+---+---+---+---+---+---+---+---<
+   Whitespace: |   :   :   :   :   :   : X :   :   :   :   :   : X |
+       Letter: | X : X : X : X : X :   :   : X : X : X : X : X :   |
+   Digit(Dec): |   :   :   :   :   :   :   :   :   :   :   :   :   | 
+   Digit(Hex): |   : X :   :   :   :   :   :   :   :   : X :   :   |
+    Uppercase: |   :   :   :   :   :   :   :   :   :   :   :   :   |
+    Lowercase: | X : X : X : X : X :   :   : X : X : X : X : X :   |
+ Letter/digit: | X : X : X : X : X :   :   : X : X : X : X : X :   |
+   Control Ch: |   :   :   :   :   :   :   :   :   :   :   :   :   |
+  Punctuation: |   :   :   :   :   : X :   :   :   :   :   :   :   |
+    Printable: | X : X : X : X : X : X : X : X : X : X : X : X :   |
+Let/Dig/Punct: | X : X : X : X : X : X :   : X : X : X : X : X :   |
+               '---------------------------------------------------'
+
+OVERVIEW
+
+13 characters in total.
+
+  Punctuation: [:::] 1 ( 8% ) 
+   Whitespace: [::::::::] 2 ( 15% )
+    Lowercase: [::::::::::::::::::::::::::::::::::::::::::::::::] 10 ( 77% )
+
+DETAILED SUMMARY
+
+  Punctuation:  1
+   Whitespace:  2
+   Digit(Hex):  2
+    Lowercase: 10
+ Letter/digit: 10
+       Letter: 10
+Let/Dig/Punct: 11
+    Printable: 12
