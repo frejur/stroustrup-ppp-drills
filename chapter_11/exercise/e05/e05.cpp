@@ -1,5 +1,6 @@
 #include "e05.h"
 #include "../../lib/help.h"
+#include "chcl/chcl.h"
 
 /* Chapter 11, Exercise 5 and 14: Char classification
  * 
@@ -10,7 +11,7 @@
  * 
  * Exercise 14
  * A program that, according to the 'classification' described above,
- * sums up the amount of types of characters contained in a text file.
+ * sums up the amount of characters of each type contained in a text file.
  * 
  * Additions to the exercises described in the book:
  * - Present the results of both exercises according to the example contained
@@ -53,6 +54,27 @@ void e05::consume_leftover_endl()
 void e05::run_manual_input_mode()
 {
 	std::cout << "Manual mode" << '\n';
+
+	std::string ln_str;
+	std::stringstream ln_ss;
+	chcl::Char_class_stream ccstr{ln_ss};
+	while (std::cin) {
+		std::getline(std::cin, ln_str);
+		ln_ss.str(ln_str);
+
+		chcl::Cl_chars chars;
+		while (ccstr >> chars) {
+			// std::cout << chars << '\n';
+			chcl::print_classifications(std::cout, chars);
+			std::cout << '\n' << "OVERVIEW:" << '\n' << '\n';
+			chcl::print_overview(std::cout, chcl::get_cl_chars_count(chars));
+			std::cout << '\n' << "DETAILED SUMMARY:" << '\n' << '\n';
+			chcl::print_detailed_summary(std::cout,
+			                             chcl::get_cl_chars_count(chars));
+		}
+		ccstr.clear();
+	}
+
 	std::cout << '\n' << "Press <ENTER> to return to main loop" << '\n';
 	help::wait_for_enter();
 }
@@ -75,10 +97,15 @@ void e05::load_input_from_file(const std::string& file_path)
 
 	std::cout << '\n';
 
-	char c = 0;
-	while (ifs >> c) {
-		std::cout << c;
+	chcl::Char_class_stream ccstr{ifs};
+	chcl::Cl_chars chars;
+	while (ccstr >> chars) {
+		// chcl::print_classifications(std::cout, chars);
+		// std::cout << '\n' << "OVERVIEW:" << '\n' << '\n';
 	}
+	chcl::print_overview(std::cout, ccstr.get_count());
+	std::cout << '\n' << "DETAILED SUMMARY:" << '\n' << '\n';
+	chcl::print_detailed_summary(std::cout, ccstr.get_count());
 
 	std::cout << '\n' << "Press <ENTER> to return to the main loop" << '\n';
 	help::wait_for_enter();
