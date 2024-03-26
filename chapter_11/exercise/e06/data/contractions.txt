@@ -1,0 +1,37 @@
+# BE : I AM, YOU / WE / THEY ARE
+'m  -> am 
+'re -> are
+# Skipping He/She/It is because it could mean 'is' or 'has' depending on the context
+
+# WILL : I / YOU / WE / THEY / HE / SHE / IT WILL
+'ll -> will
+
+Gonna -> Going to
+Let's -> Let us  
+
+# HAVE
+'ve     -> have
+# Skipping He/She/It has because it could mean 'is' or 'has' depending on the context
+
+# <VERB> NOT (Note that this doesn't handle questions such as "Aren't I? -> Am I not?")
+Aren't    -> Are not    
+Can't     -> Cannot     
+Couldn't  -> Could not  
+Daren't   -> Dare not   
+Didn't    -> Did not    
+Don't     -> Do not     
+Doesn't   -> Does not   
+Hadn't    -> Had not    
+Hasn't    -> Has not    
+Haven't   -> Have not   
+Isn't     -> Is not     
+Mightn't  -> Might not  
+Mustn't   -> Must not   
+Needn't   -> Need not   
+Oughtn't  -> Ought not  
+Shan't    -> Shall not  
+Shouldn't -> Should not 
+Wasn't    -> Was not    
+Weren't   -> Were not   
+Won't     -> Will not   
+Wouldn't  -> Would not  
