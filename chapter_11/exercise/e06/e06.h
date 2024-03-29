@@ -1,9 +1,19 @@
 #ifndef E06_H
 #define E06_H
-#include <vector>
+#include "dstr/dstr.h"
 #include <string>
+#include <vector>
 
 namespace e06{
+
+// -----------------------------------------------------------------------------
+
+inline const std::string& quit_word()
+{
+	static const std::string q{"quit;"};
+	return q;
+}
+
 // -----------------------------------------------------------------------------
 
 inline const std::string& file_path_test_punct() {
@@ -28,7 +38,8 @@ inline const std::string& file_path_multi_page()
 
 enum class Command_ID {
 	Unknown = -1,
-	Test_punctuation = 0,
+	Manual_input,
+	Test_punctuation,
 	Test_contractions,
 	Generate_dictionary,
 	Quit
@@ -44,12 +55,13 @@ struct Command
 inline const std::vector<Command>& options()
 {
 	static const std::vector<Command>
-	    c{{Command_ID::Test_punctuation, 'a', "Test strip punctuation"},
+	    c{{Command_ID::Manual_input, 'a', "Manually enter words"},
+	      {Command_ID::Test_punctuation, 'b', "Test strip punctuation"},
 	      {Command_ID::Test_contractions,
-	       'b',
+	       'c',
 	       "Test convert contractions (Don't = Do not, etc.)"},
 	      {Command_ID::Generate_dictionary,
-	       'c',
+	       'd',
 	       "Generate dictionary from a multi-page file"},
 	      {Command_ID::Quit, 'q', "Quit"}};
 	return c;
@@ -59,6 +71,7 @@ inline const std::vector<Command>& options()
 
 void print_hello();
 void print_options();
+void print_input_help();
 
 // -----------------------------------------------------------------------------
 
@@ -66,9 +79,23 @@ Command_ID get_command(std::istream& is);
 
 // -----------------------------------------------------------------------------
 
-void run_test_punctuation();
-void run_test_contractions();
+void run_manual_input();
+void run_tests(const std::string& test_cases_file_path);
 void run_test_dictionary();
+
+// -----------------------------------------------------------------------------
+
+void add_contractions_from_file(dstr::Dict_stream& ds,
+                                const std::string& file_path);
+
+// -----------------------------------------------------------------------------
+struct Test_case
+{
+	std::string input;
+	std::string expected;
+};
+
+std::vector<Test_case> test_cases_from_file(const std::string& file_path);
 
 // -----------------------------------------------------------------------------
 

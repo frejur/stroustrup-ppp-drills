@@ -214,7 +214,7 @@ std::ostream& chcl::operator<<(std::ostream& os, Cl_chars cc)
 
 	if (cc.end_is_truncated) {
 		format_chars << "(...) ";
-		count_chars << "(...) ";
+		// NOT..) ";
 	}
 
 	os << format_chars.str() << '\n';

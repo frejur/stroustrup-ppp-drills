@@ -1,47 +1,47 @@
 The structure of this document. Each rule (guideline, suggestion) can have several parts:
 the structure of this document each rule guideline suggestion can have several parts
 
-The rule itself – e.g., no naked new
+The rule itself - e.g., no naked new
 the rule itself e g no naked new
 
-A rule reference number – e.g., C.7 (the 7th rule related to classes).
+A rule reference number - e.g., C.7 (the 7th rule related to classes).
 a rule reference number e g c 7 the 7th rule related to classes
- 
+
 Since the major sections are not inherently ordered, we use letters as the first part of a rule reference "number".
 since the major sections are not inherently ordered we use letters as the first part of a rule reference "number"
 
 We leave gaps in the numbering to minimize "disruption" when we add or remove rules.
-we leave gaps in the numbering to minimize "disruption when we add or remove rules
+we leave gaps in the numbering to minimize "disruption" when we add or remove rules
 
-Reasons (rationales) – because programmers find it hard to follow rules they don’t understand
-reasons rationales because programmers find it hard to follow rules they don't understand
+Reasons (rationales) - because programmers find it hard to follow rules they don't understand
+reasons rationales because programmers find it hard to follow rules they do not understand
 
-Examples – because rules are hard to understand in the abstract; can be positive or negative
+Examples - because rules are hard to understand in the abstract; can be positive or negative
 examples because rules are hard to understand in the abstract can be positive or negative
 
-Alternatives – for "don’t do this" rules
+Alternatives - for "don't do this" rules
 alternatives for "don't do this" rules
 
-Exceptions – we prefer simple general rules. However, many rules apply widely, but not universally, so exceptions must be listed
+Exceptions - we prefer simple general rules. However, many rules apply widely, but not universally, so exceptions must be listed
 exceptions we prefer simple general rules however many rules apply widely but not universally so exceptions must be listed
 
-Enforcement – ideas about how the rule might be checked "mechanically"
-enforcement idead about how the rule might be checked "mechanically"
+Enforcement - ideas about how the rule might be checked "mechanically"
+enforcement ideas about how the rule might be checked "mechanically"
 
-See also – references to related rules and/or further discussion (in this document or elsewhere)
+See also - references to related rules and/or further discussion (in this document or elsewhere)
 see also references to related rules and or further discussion in this document or elsewhere
 
-Notes (comments) – something that needs saying that doesn't fit the other classifications
-notes comments something that neeeds saying that doesn't fit the other classifications
+Notes (comments) - something that needs saying that doesn't fit the other classifications
+notes comments something that needs saying that does not fit the other classifications
 
-Discussion – references to more extensive rationale and/or examples placed outside the main lists of rules
+Discussion - references to more extensive rationale and/or examples placed outside the main lists of rules
 discussion references to more extensive rationale and or examples placed outside the main lists of rules
 
 Some rules are hard to check mechanically, but they all meet the minimal criteria that an expert programmer can spot many violations without too much trouble.
 some rules are hard to check mechanically but they all meet the minimal criteria that an expert programmer can spot many violations without too much trouble
 
 We hope that "mechanical" tools will improve with time to approximate what such an expert programmer notices.
-we hope that mechancial tools will improve with time to approximate what such an expert programmer notices
+we hope that "mechanical" tools will improve with time to approximate what such an expert programmer notices
 
 Also, we assume that the rules will be refined over time to make them more precise and checkable.
 also we assume that the rules will be refined over time to make them more precise and checkable
@@ -50,4 +50,4 @@ Leland says "You're going back to Missoula, Montana"!
 leland says "You're going back to Missoula, Montana"
 
 Then the day when the "Sadness" comes - then we ask: "Will this Sadness which makes me cry - will this Sadness that makes me cry my heart out - will it ever end?" The answer, of course, is yes. One day the "Sadness" will end.
-then the day when the "Sadness" comes then we ask "Will this Sadness which makes me cry - will this Sadness that makes me cry my heart out - will it ever end?" the answer, of course, is yes one day the "Sadness" will end
+then the day when the "Sadness" comes then we ask "Will this Sadness which makes me cry - will this Sadness that makes me cry my heart out - will it ever end?" the answer of course is yes one day the "Sadness" will end
