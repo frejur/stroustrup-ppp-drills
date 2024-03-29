@@ -102,6 +102,7 @@ void e06::run_manual_input()
 		}
 		std::cout << '\n';
 		ds.clear();
+		ds.reset_quote_mode();
 		++count;
 	}
 
@@ -156,6 +157,7 @@ void e06::run_tests(const std::string& test_cases_file_path)
 		          << '\n'
 		          << std::setw(10) << "Outcome:" << ' ' << final << '\n'
 		          << '\n';
+		ds.reset_quote_mode();
 		ds.clear();
 	}
 

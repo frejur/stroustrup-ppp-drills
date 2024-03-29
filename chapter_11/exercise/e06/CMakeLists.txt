@@ -6,6 +6,7 @@ add_executable(${T_THIS}
     e06.h e06.cpp
     ../../lib/help.h ../../lib/help.cpp
     dstr/dstr.h dstr/dstr.cpp
+    dict/dict.h dict/dict.cpp
 )
 
 file(COPY data DESTINATION .)

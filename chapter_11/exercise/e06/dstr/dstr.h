@@ -44,6 +44,7 @@ public:
 		buf.clear();
 		src.clear();
 	}
+	void reset_quote_mode() { quote_mode = false; };
 
 private:
 	void fill_buffer();
