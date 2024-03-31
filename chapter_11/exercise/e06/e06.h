@@ -36,6 +36,11 @@ inline const std::string& file_path_multi_page()
 
 // -----------------------------------------------------------------------------
 
+constexpr int word_padding{8};
+constexpr int max_width{80};
+
+// -----------------------------------------------------------------------------
+
 enum class Command_ID {
 	Unknown = -1,
 	Manual_input,

@@ -1,5 +1,6 @@
 #include "e06.h"
 #include "../../lib/help.h"
+#include "dict/dict.h"
 #include "dstr/dstr.h"
 #include <fstream>
 #include <iomanip>
@@ -176,7 +177,45 @@ void e06::run_tests(const std::string& test_cases_file_path)
 
 void e06::run_test_dictionary()
 {
-	std::cout << "Test dict" << '\n';
+	std::cout << "Opening text file for reading: '"
+	          << e06::file_path_multi_page() << "'...";
+
+	std::ifstream ifs{e06::file_path_multi_page()};
+	if (!ifs) {
+		throw std::runtime_error("Could not open file: "
+		                         + e06::file_path_multi_page());
+	}
+
+	ifs.exceptions(ifs.exceptions() | std::ios_base::badbit);
+
+	std::cout << " Done!" << '\n';
+
+	std::stringstream iss;
+	dstr::Dict_stream ds{ifs};
+
+	std::cout << "Loading contractions from: '" << e06::file_path_contractions()
+	          << "'...";
+
+	add_contractions_from_file(ds, e06::file_path_contractions());
+
+	std::cout << " Done!" << '\n';
+
+	std::cout << "Extracting words and putting them into Dictionary...";
+
+	dict::Dictionary d{{"\""}};
+	std::string w;
+	while (ds >> w) {
+		d.add_word(w);
+	}
+
+	std::cout << " Done!" << '\n';
+
+	dict::print_stats(d);
+
+	std::cout << '\n' << "Press any key to print out the words." << '\n';
+	help::wait_for_enter();
+
+	dict::print_words(d, max_width, word_padding);
 
 	std::cout << "Press <ENTER to return to the main loop." << '\n';
 	help::wait_for_enter();
