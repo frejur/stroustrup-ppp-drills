@@ -105,7 +105,7 @@ void save_numbers_in_cols(const std::string& file_in,
 		if (count % num_cols == num_cols - 1) {
 			ofs << '\n';
 			add_trailing_endl = false;
-		} else if (add_trailing_endl) {
+		} else if (!add_trailing_endl) {
 			add_trailing_endl = true;
 		}
 		++count;
