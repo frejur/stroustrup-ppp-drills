@@ -129,19 +129,132 @@ void save_rev_ch_copy(const std::string& file_in, const std::string& file_out)
 	}
 	iofs.close();
 }
+//------------------------------------------------------------------------------
+
+void save_rev_w_copy(const std::string& file_in, const std::string& file_out)
+{
+	std::ifstream ifs{file_in};
+	if (!ifs) {
+		throw std::runtime_error("Could not open '" + file_in + "' for reading");
+	}
+	ifs.exceptions(ifs.exceptions() | std::ios_base::badbit);
+
+	char c;
+	std::string chunk; // stores word / whitespace
+	std::vector<std::string> contents;
+	while (ifs.get(c), ifs) {
+		if (help::isspace(c) || help::iscntrl(c)) {
+			chunk = c;
+			while (ifs.get(c), ifs) {
+				if (!help::isspace(c) && !help::iscntrl(c)) {
+					ifs.putback(c);
+					break;
+				}
+				chunk.push_back(c);
+			}
+		} else {
+			ifs.putback(c);
+			ifs >> chunk;
+		}
+		contents.push_back(chunk);
+	}
+
+	if (contents.size() == 0) {
+		throw std::runtime_error("The file '" + file_in + "' is empty.");
+	}
+
+	std::ofstream ofs{file_out};
+	if (!ofs) {
+		throw std::runtime_error("Could not open '" + file_out
+		                         + "' for writing");
+	}
+	ofs.exceptions(ofs.exceptions() | std::ios_base::badbit);
+
+	for (int i = contents.size() - 1; i >= 0; --i) {
+		ofs << contents[i];
+	}
+}
+
+//------------------------------------------------------------------------------
+
+void compare_files(const std::string& file_a, const std::string& file_b)
+{
+	std::ifstream ifs_a{file_a};
+	if (!ifs_a) {
+		throw std::runtime_error("Could not open '" + file_a + "' for reading");
+	}
+	ifs_a.exceptions(ifs_a.exceptions() | std::ios_base::badbit);
+
+	std::ifstream ifs_b{file_b};
+	if (!ifs_b) {
+		throw std::runtime_error("Could not open '" + file_b + "' for reading");
+	}
+	ifs_b.exceptions(ifs_b.exceptions() | std::ios_base::badbit);
+
+	char c_a, c_b;
+	while (ifs_a.get(c_a), ifs_b.get(c_b), (ifs_a || ifs_b)) {
+		if (!ifs_a || !ifs_b) {
+			throw std::runtime_error("The stream for '"
+			                         + (!ifs_a ? file_a : file_b)
+			                         + "' ended prematurely.");
+		}
+		if (c_a != c_b) {
+			std::stringstream ss;
+			ss << "Read '" << c_a << "' from '" << file_a << "' but got '"
+			   << c_b << "' from '" << file_b << "'";
+			throw std::runtime_error("Read '" + ss.str());
+		}
+	}
+}
 
 //------------------------------------------------------------------------------
 
 void run_reverse_chars()
 {
-	std::cout << file_chars_original() << '\n';
+	std::cout << "Reversing order of '" << file_chars_original() << "', saving"
+	          << " copy to '" << file_chars_reversed() << "'...";
 	save_rev_ch_copy(file_chars_original(), file_chars_reversed());
+	std::cout << " DONE!" << '\n';
+
+	std::cout << "Reversing order of '" << file_chars_reversed() << "', saving"
+	          << " copy to '" << file_chars_reversed_copy() << "'...";
 	save_rev_ch_copy(file_chars_reversed(), file_chars_reversed_copy());
+	std::cout << " DONE!" << '\n';
+
+	std::cout << "Comparing contents of '" << file_chars_original()
+	          << "' with contents of '" << file_chars_reversed_copy() << "'...";
+	compare_files(file_chars_original(), file_chars_reversed_copy());
+	std::cout << " DONE!" << '\n';
+
+	std::cout << '\n'
+	          << "All clear!" << '\n'
+	          << '\n'
+	          << "Press <ENTER> to return to the main loop" << '\n';
+	help::wait_for_enter();
 }
 
 void run_reverse_words()
 {
-	std::cout << file_words_original() << '\n';
+	std::cout << "Reversing order of '" << file_words_original() << "', saving"
+	          << " copy to '" << file_words_reversed() << "'...";
+	save_rev_w_copy(file_words_original(), file_words_reversed());
+	std::cout << " DONE!" << '\n';
+
+	std::cout << "Reversing order of '" << file_words_reversed() << "', saving"
+	          << " copy to '" << file_words_reversed_copy() << "'...";
+	save_rev_w_copy(file_words_reversed(), file_words_reversed_copy());
+	std::cout << " DONE!" << '\n';
+
+	std::cout << "Comparing contents of '" << file_words_original()
+	          << "' with contents of '" << file_words_reversed_copy() << "'...";
+	compare_files(file_words_original(), file_words_reversed_copy());
+	std::cout << " DONE!" << '\n';
+
+	std::cout << '\n'
+	          << "All clear!" << '\n'
+	          << '\n'
+	          << "Press <ENTER> to return to the main loop" << '\n';
+	help::wait_for_enter();
 }
 
 //------------------------------------------------------------------------------
