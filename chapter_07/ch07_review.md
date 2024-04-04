@@ -36,7 +36,7 @@ Well laid out code is both easier to read and maintain.
 
 ### How do we handle % of floating-point numbers?
 The book presents two options:
-1. Supporting it through fmod() contained in __&ltcmath&gt__
+1. Supporting it through fmod() contained in __\<cmath>__
 2. Throwing an exception through the use of __narrow_cast__.
 
 ### What does __is_declared()__ do and how does it work?
