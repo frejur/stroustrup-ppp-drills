@@ -36,7 +36,7 @@ Well laid out code is both easier to read and maintain.
 
 ### How do we handle % of floating-point numbers?
 The book presents two options:
-1. Supporting it through fmod() contained in __<cmath>__
+1. Supporting it through fmod() contained in __&ltcmath&gt__
 2. Throwing an exception through the use of __narrow_cast__.
 
 ### What does __is_declared()__ do and how does it work?
@@ -44,7 +44,7 @@ It returns __true__ if the given variable already exists.
 It does so by looping through the member variable __var_table__, a vector of strings, and returning __true__ when a match is found, or __false__ if the end was reached an no match was found.
 
 ### The input representation for let is more than one character. How is it accepted as a single token in the modified code?
-When a letter is fed into the Token_stream, all letters (including the one just consdumed) until the next whitespace are consumed as a string.
+When a letter is fed into the Token_stream, all letters (including the one just consumed) until the next whitespace are consumed as a string.
 If that string is equal to __declkey__=='let', they are 'tokenized' and stored as a Token of type __let__.
 
 ### What are the rules for variable names in the calculator program?
@@ -85,10 +85,10 @@ To promote cohesiveness and improve legibility and navigation.
 (Breaks stuff)
 
 ### Why add comments?
-I don't mean to sound likea broken record, but: Explaining things that cannot be clearly and directly said in code.
+I don't mean to sound like a broken record, but: Explaining things that cannot be clearly and directly said in code.
 
 ### What should / should NOT be in commentst?
 Sadly, ASCII art is frowned upon.
 
 ### When do we consider a program finished?
-Never. But delivering according to specs is a good rule of thumb! "Until time/money runs out" is another possible answer.
+Never. But delivering according to specs is a good rule of thumb! "When time/money has run out" is another possible answer.
