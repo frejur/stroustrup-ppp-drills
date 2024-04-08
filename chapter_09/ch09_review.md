@@ -12,7 +12,7 @@
 There is no interface in place, this makes any interaction with the object tedious and error-prone. Also, exposing the internal representation of a class often leads to inadvertent modifications.
 
 ### Why the 'Date' type uses a constructor instead of the 'init_day()' function.
-A constructor is guaranteed run every time a new instance of 'Date' is created and can be used to ensure proper initialization.
+A constructor is guaranteed to run every time a new instance of 'Date' is created and can be used to ensure proper initialization.
 
 ### The definition of an 'invariant'. Provide examples.
 - A set of integral conditions or constraints that must be preserved throughout an object's lifetime for it to be valid.
