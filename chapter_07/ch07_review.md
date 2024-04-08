@@ -71,7 +71,7 @@ I think this varies a little depending on the programming language and coding st
 - When it facilitates testing and debugging.
 
 ### How to choose names for variables and functions? List reasons.
-#### Brief but not wordy.
+#### Descriptive but not wordy.
 - To convey the code's intention without needing to delve into its implementation details.
 - To reduce ambiguity, avoid unnecessary typing, and reduce width.
 
@@ -91,4 +91,4 @@ I don't mean to sound like a broken record, but: Explaining things that cannot b
 Sadly, ASCII art is frowned upon.
 
 ### When do we consider a program finished?
-Never. But delivering according to specs is a good rule of thumb! "When time/money has run out" is another possible answer.
+Never. But when the product has been delivered according to specs is a good rule of thumb! "When all time/money has been exhausted" is another possible answer.
