@@ -44,26 +44,44 @@ A set of rules that specify how to interpret the bytes contained in a file.
 The distinction between fail() and bad() is usually that bad() signals that the error cannot be be recovered from.
 
 ### How to resolve: The user typing an out-of-range value.
-Print an "error message", discard the value.
+Handle locally: Print an "error message", discard the value.
 
 ### How to resolve: Getting no value (end of file).
-Nothing to do (Print an "error message" if no values could be extracted at all).
+Abort by throwing an expection and hope that some other part of the program can cope.
 
 ### How to resolve: The user typing something of the wrong type.
-Print an "error message", keep discarding characters until a valid type can be extracted or eof() / bad().
+Handle locally: Print an "error message", keep discarding characters until a valid type can be extracted or eof() / bad().
 
 ### How input is usually harder than output.
+Generally speaking, input is very unpredictable and there is simply a lot more oppportunity for error. It usually requires extensive error checking and validation.
 
 ### How output is usually harder than input.
+The book doesn't really provide a clear answer to this question, at least not at this point. Here are some possible answers:
+- The task of presenting data in a user-friendly way can be very complex.
+- Coming up with an appropriate output format is not a trivial task, and as the program grows, any inherent limitations of the chosen format may have significant consequences.
+- While less frequent, output error can be hardware-related, which leaves the developer at the mercy of the output devices functioning as expected.
 
 ### The reason I/O is often separated from computation.
+I/O is essentially used to get data into a program and to get the results back out again.
+
+According to the principle of keeping logically distinct concerns separate, the intermediate computation step is best kept apart.
+
+This makes code code clearer, easier to maintain and debug, and enables code reuse (of only the parts of the code that are needed) through function calls.
 
 ### The two most common uses of 'istream.clear()'.
+```
+std::istream is;
+is.clear();                       // Open  (Set to good())
+is.clear(std::ios_base::failbit); // Close (Set to fail())
+/* The 'badbit' and 'eofbit' flags are usually not set manually */
+```
 
 ### Boilerplate function declaration for '<<' for user-defined-type 'X'.
+```
+std::ostream& operators<<(std::ostream& os, const X& obj);
+```
 
 ### Boilerplate function declaration for '>>' for user-defined-type 'X'.
-
-
-
-
+```
+std::istream& operators>>(std::istream& is, X& obj);
+```
