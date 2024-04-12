@@ -76,12 +76,12 @@ Please refer to Exercise 11 and the **RegularPolygon** class for implementation 
 
 ### How to draw text.
 ```
-Graph_lib::Text txt{{10, 01}, "Text goes here"}; // First parameter = Position
+Graph_lib::Text txt{{10, 10}, "Text goes here"}; // First parameter = Position
 ```
 
 ### How to display an image.
 ```
-Graph_lib::Image img{{10, 01}, "path_to_image.jpg"}; // First parameter = Position
+Graph_lib::Image img{{10, 10}, "path_to_image.jpg"}; // First parameter = Position
 ```
 
 ### Reasons a 'Window' object might fail to appear on screen.
