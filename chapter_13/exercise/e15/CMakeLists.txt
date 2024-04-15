@@ -15,8 +15,9 @@ add_executable(${T_THIS}
     ../../lib/Simple_window.h
     ../../lib/Debug_window.h
     e15.cpp
+    isoscelestriangle.h
+    isoscelestriangle.cpp
     righttriangle.h
-    righttriangle.cpp
     triangletiler.h
     triangletiler.cpp
 )

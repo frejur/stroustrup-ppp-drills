@@ -17,7 +17,7 @@ namespace GL = Graph_lib;
 
 void e15()
 {
-	constexpr bool ENABLE_DEBUG{ false };
+	constexpr bool ENABLE_DEBUG{true};
 
 	constexpr int win_w{ 640 };
 	constexpr int win_h{ 480 };
@@ -26,7 +26,7 @@ void e15()
 		ENABLE_DEBUG};
 
 	fl_color(0);
-	TRITI::TriangleTiler tiles{ {64, 64}, 540, 400, 20, 0 };
+	TRITI::TriangleTiler tiles{{64, 64}, 540, 400, 100, 0};
 	win.attach(tiles);
 
 	win.wait_for_button();
