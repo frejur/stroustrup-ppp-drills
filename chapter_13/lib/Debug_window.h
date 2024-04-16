@@ -57,10 +57,16 @@ private:
 class Debug_window : public Simple_window
 {
 public:
-	Debug_window(GL::Point xy, int w, int h, const string& title,
-		bool enable_debug=false)
-	:	Simple_window(xy, static_cast<int>(w + w*enable_debug), h, title),
-		m_debug_is_enabled( enable_debug ), m_fltk_buf(FLTK_buffer(*this))
+	Debug_window(GL::Point xy,
+	             int w,
+	             int h,
+	             const string& title,
+	             bool enable_debug = false,
+	             bool redraw_on_click = false)
+	    : Simple_window(xy, static_cast<int>(w + w * enable_debug), h, title)
+	    , m_debug_is_enabled(enable_debug)
+	    , clk_redraw(redraw_on_click)
+	    , m_fltk_buf(FLTK_buffer(*this))
 	{
 		if (!enable_debug) {
 			return;
@@ -77,10 +83,42 @@ public:
 		}
 		m_console->put(s);
 	}
+	bool click_has_been_registered() const { return !first_click; };
+	GL::Point click_position() const
+	{
+		return (first_click ? GL::Point{0, 0} : GL::Point{clk_x, clk_y});
+	};
+	void wait_for_click()
+	{
+		while (!mouse_clicked) {
+			Fl::wait();
+		}
+		mouse_clicked = false;
+		Fl::redraw();
+	};
+
 private:
 	const bool m_debug_is_enabled;
+	bool mouse_clicked = false;
+	bool first_click = true;
+	bool clk_redraw;
+	int clk_x;
+	int clk_y;
 	std::unique_ptr<Debug_console> m_console;
 	FLTK_buffer m_fltk_buf;
+	int handle(int e)
+	{
+		int r{Fl_Window::handle(e)};
+		if (m_debug_is_enabled && e == FL_RELEASE) {
+			mouse_clicked = true;
+			if (first_click) {
+				first_click = false;
+			}
+			clk_x = Fl::event_x();
+			clk_y = Fl::event_y();
+		}
+		return r;
+	}
 };
 
 
