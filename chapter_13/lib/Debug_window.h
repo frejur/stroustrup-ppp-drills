@@ -62,10 +62,10 @@ public:
 	             int h,
 	             const string& title,
 	             bool enable_debug = false,
-	             bool redraw_on_click = false)
+	             bool capture_mouse = false)
 	    : Simple_window(xy, static_cast<int>(w + w * enable_debug), h, title)
 	    , m_debug_is_enabled(enable_debug)
-	    , clk_redraw(redraw_on_click)
+	    , cap_m(capture_mouse)
 	    , m_fltk_buf(FLTK_buffer(*this))
 	{
 		if (!enable_debug) {
@@ -78,10 +78,9 @@ public:
 	}
 	using GL::Window::attach;
 	void const log(const std::string& s) {
-		if (!m_debug_is_enabled) {
-			return;
+		if (m_debug_is_enabled) {
+			m_console->put(s);
 		}
-		m_console->put(s);
 	}
 	bool click_has_been_registered() const { return !first_click; };
 	GL::Point click_position() const
@@ -101,7 +100,9 @@ private:
 	const bool m_debug_is_enabled;
 	bool mouse_clicked = false;
 	bool first_click = true;
-	bool clk_redraw;
+	bool cap_m;
+	int m_x = 0;
+	int m_y = 0;
 	int clk_x;
 	int clk_y;
 	std::unique_ptr<Debug_console> m_console;
@@ -109,13 +110,19 @@ private:
 	int handle(int e)
 	{
 		int r{Fl_Window::handle(e)};
-		if (m_debug_is_enabled && e == FL_RELEASE) {
-			mouse_clicked = true;
-			if (first_click) {
-				first_click = false;
+		if (cap_m) {
+			if (FL_MOVE) {
+				m_x = Fl::event_x();
+				m_y = Fl::event_y();
 			}
-			clk_x = Fl::event_x();
-			clk_y = Fl::event_y();
+			if (FL_RELEASE) {
+				mouse_clicked = true;
+				if (first_click) {
+					first_click = false;
+				}
+				clk_x = Fl::event_x();
+				clk_y = Fl::event_y();
+			}
 		}
 		return r;
 	}
