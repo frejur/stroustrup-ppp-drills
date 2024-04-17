@@ -96,6 +96,7 @@ public:
 		mouse_clicked = false;
 		Fl::redraw();
 	};
+	void force_click() { mouse_clicked = true; }
 
 private:
 	const bool m_debug_is_enabled;
