@@ -16,44 +16,24 @@
 
 namespace GL = Graph_lib;
 
-double dot(GL::Point a, GL::Point b)
+//------------------------------------------------------------------------------
+
+const std::string& info_click()
 {
-	return static_cast<double>(a.x * b.x + a.y * b.y);
+	static const std::string s{
+	    "Click anywhere to place the initial triangle tile"};
+	return s;
 }
 
-struct Bary_coords
+const std::string& info_drag()
 {
-	double v;
-	double w;
-	double u;
-};
-
-Bary_coords bary(GL::Point p, GL::Point a, GL::Point b, GL::Point c)
-{
-	GL::Point v0 = {b.x - a.x, b.y - a.y};
-	GL::Point v1 = {c.x - a.x, c.y - a.y};
-	GL::Point v2 = {p.x - a.x, p.y - a.y};
-
-	double d00 = dot(v0, v0);
-	double d01 = dot(v0, v1);
-	double d11 = dot(v1, v1);
-	double d20 = dot(v2, v0);
-	double d21 = dot(v2, v1);
-
-	double denom = d00 * d11 - d01 * d01;
-	if (denom == 0) {
-		return {0, 0, 0};
-	}
-
-	double v = (d11 * d20 - d01 * d21) / denom;
-	double w = (d00 * d21 - d01 * d20) / denom;
-	return {v, w, (1.0 - v - w)};
+	static const std::string s{
+	    "Move the cursor along the X-axis to rotate, move it along the Y-axis "
+	    "to scale. Click to confirm"};
+	return s;
 }
 
-bool is_inside_tri(const Bary_coords& c)
-{
-	return 0 <= c.v && c.v <= 1 && 0 <= c.w && c.w <= 1;
-}
+//------------------------------------------------------------------------------
 
 void e15()
 {
@@ -74,8 +54,11 @@ void e15()
 	const GL::Point o{64, 64};
 	const int t_w{540};
 	const int t_h{400};
-	TRITI::TriangleTiler tiles{o, t_w, t_h, 64, 47};
+	TRITI::TriangleTiler tiles{o, t_w, t_h, 64, 0};
 	win.attach(tiles);
+
+	GL::Text info{{64, 32}, info_click()};
+	win.attach(info);
 
 	while (true) {
 		if (win.click_has_been_registered()) {
@@ -91,10 +74,10 @@ void e15()
 				} else if (i == 3) {
 					corner.y += t_h;
 				}
-				Bary_coords b{bary(corner,
-				                   tiles.point(0),
-				                   tiles.point(1),
-				                   tiles.point(2))};
+				TRITI::Bary_coords b{TRITI::bary(corner,
+				                                 tiles.point(0),
+				                                 tiles.point(1),
+				                                 tiles.point(2))};
 				ss << "Corner " << i << ": "
 				   << (is_inside_tri(b) ? "IN" : "OUT") << ' ';
 			}
