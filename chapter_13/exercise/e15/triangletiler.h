@@ -46,6 +46,9 @@ public:
 	void move_to(GL::Point new_pos);
 	GL::Point point(int p) const;
 	void toggle_bounding_box() { show_bbox = !show_bbox; }
+	double rotation() const { return r; };
+	int side_length() const { return s; };
+	void clear() { tris.clear(); };
 
 private:
 	bool is_oob(const GL::Point p_0, const GL::Point p_1) const;

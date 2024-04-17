@@ -87,6 +87,7 @@ public:
 	{
 		return (first_click ? GL::Point{0, 0} : GL::Point{clk_x, clk_y});
 	};
+	GL::Point mouse_position() const { return {m_x, m_y}; };
 	void wait_for_click()
 	{
 		while (!mouse_clicked) {
@@ -111,11 +112,11 @@ private:
 	{
 		int r{Fl_Window::handle(e)};
 		if (cap_m) {
-			if (FL_MOVE) {
+			if (e == FL_MOVE) {
 				m_x = Fl::event_x();
 				m_y = Fl::event_y();
 			}
-			if (FL_RELEASE) {
+			if (e == FL_RELEASE) {
 				mouse_clicked = true;
 				if (first_click) {
 					first_click = false;
