@@ -37,7 +37,7 @@ const std::string& info_transform()
 // Interactively transforming the initial tile, hacky, but improves debugging.
 
 constexpr float refresh_rate{0.01};
-constexpr float refresh_time_out{10};
+constexpr float refresh_time_out{1};
 
 constexpr int default_min_side_len{10};
 constexpr int default_max_side_len{200};
@@ -141,7 +141,7 @@ private:
 	};
 };
 
-struct Tile_and_window
+struct Window_and_tile
 {
 	Debug_window& win;
 	Dynamic_tile& tile;
@@ -150,11 +150,13 @@ struct Tile_and_window
 static void transform_tile_cb(void* data)
 {
 	static float time = 0;
+	Window_and_tile* tw = static_cast<Window_and_tile*>(data);
 	time += refresh_rate;
-	Tile_and_window* tw = static_cast<Tile_and_window*>(data);
 	if (!tw->tile.is_transforming() || time >= refresh_time_out) {
-		tw->tile.disable_transform();
-		// TODO: Force click window to snap out of it
+		if (time >= refresh_time_out) {
+			tw->win.force_click();
+		}
+		time = 0;
 		Fl::remove_timeout(transform_tile_cb, data);
 	} else {
 		tw->tile.cue_transform(tw->win.mouse_position(),
@@ -164,7 +166,8 @@ static void transform_tile_cb(void* data)
 		Fl::repeat_timeout(refresh_rate, transform_tile_cb, data);
 	}
 }
-void hacky_redraw_tile(Tile_and_window& tw)
+
+void hacky_redraw_tile(Window_and_tile& tw)
 {
 	Fl::add_timeout(refresh_rate, transform_tile_cb, (void*) &tw);
 }
@@ -196,7 +199,7 @@ void e15()
 	Dynamic_tile dyn_t{Tile_type::Right_triangle, o, 64, 0};
 	win.attach(dyn_t);
 
-	Tile_and_window pass_to_callback{win, dyn_t};
+	Window_and_tile pass_to_callback{win, dyn_t};
 
 	GL::Text info{{64, 32}, info_click()};
 	win.attach(info);
@@ -206,7 +209,6 @@ void e15()
 			if (!dyn_t.is_transforming()) {
 				dyn_t.enable_transform();
 				hacky_redraw_tile(pass_to_callback);
-				dyn_t.enable_transform();
 				info.set_label(info_transform());
 				tiles.move_to(win.click_position());
 				std::stringstream ss;
@@ -227,6 +229,9 @@ void e15()
 					ss << "Corner " << i << ": "
 					   << (is_inside_tri(b) ? "IN" : "OUT") << ' ';
 				}
+				win.log("TRANSFORMING?: "
+				        + std::string(dyn_t.is_transforming() ? "TRUE" : "FALSE")
+				        + "\n");
 				// win.log(ss.str() + "\n");
 				// win.log("New pos: " + std::to_string(tiles.point(0).x) + ", "
 				//         + std::to_string(tiles.point(0).y) + "\n");
@@ -236,6 +241,7 @@ void e15()
 			}
 		}
 		win.wait_for_click();
+		win.log("CLICK!\n");
 	}
 }
 
