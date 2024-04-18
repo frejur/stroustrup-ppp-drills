@@ -93,10 +93,11 @@ public:
 		while (!mouse_clicked) {
 			Fl::wait();
 		}
+		log("DONE WAITING\n");
 		mouse_clicked = false;
 		Fl::redraw();
 	};
-	void force_click() { mouse_clicked = true; }
+	void force_click() { Fl::handle(FL_RELEASE, this); }
 
 private:
 	const bool m_debug_is_enabled;
