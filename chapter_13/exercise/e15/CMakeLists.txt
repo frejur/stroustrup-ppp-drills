@@ -20,6 +20,7 @@ add_executable(${T_THIS}
     righttriangle.h
     triangletiler.h
     triangletiler.cpp
+    dyntile.h dyntile.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)

@@ -1,15 +1,15 @@
-#include "../../lib/Graph.h"
 #include <exception>
 #include <iostream>
-#include <vector>
-#include <memory>
-#include "../../lib/Debug_window.h"
-#include "righttriangle.h"
-#include "triangletiler.h"
+#include <sstream>
+
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <math.h>
-#include <sstream>
+
+#include "../../lib/Debug_window.h"
+#include "../../lib/Graph.h"
+#include "dyntile.h"
+#include "triangletiler.h"
 
 // Exercise 15.
 // Use the RightTriangle class to tile the entire window with triangles.
@@ -39,112 +39,10 @@ const std::string& info_transform()
 constexpr float refresh_rate{0.01};
 constexpr float refresh_time_out{1};
 
-constexpr int default_min_side_len{10};
-constexpr int default_max_side_len{200};
-enum class Tile_type { Right_triangle, Regular_hexagon };
-
-class Dynamic_tile : public GL::Shape
-{
-public:
-	Dynamic_tile(Tile_type type,
-	             GL::Point origin,
-	             int side_len,
-	             float angle,
-	             int min_side_len = default_min_side_len,
-	             int max_side_len = default_max_side_len)
-	    : min_s(min_side_len)
-	    , max_s(max_side_len)
-	    , s(side_len)
-	    , a(angle)
-	    , o(origin)
-	    , new_s(side_len)
-	    , new_a(angle)
-	    , new_o(origin)
-	    , t(type)
-	{
-		if (!valid_min_max(min_side_len, max_side_len)) {
-			throw std::runtime_error("Invalid parameters");
-		}
-		cap_parms(side_len, angle);
-		tile = new_tile(type);
-		tile->set_color(GL::Color::black);
-	};
-	void draw_lines() const { tile->draw(); };
-	bool is_transforming() const { return is_xform; };
-	void cue_transform(GL::Point new_origin, int new_side_len, float new_angle)
-	// Register new transform values
-	{
-		if (!is_transforming()) {
-			return;
-		}
-		if (new_origin != o) {
-			o = new_origin;
-		}
-		cap_parms(new_s, new_a);
-		s = new_s;
-		a = new_a;
-	}
-	void apply_transform()
-	// Replace current tile with a newly transformed tile
-	{
-		if (s == new_s && a == new_a && o == new_o) {
-			return;
-		}
-		tile = new_tile(t);
-	};
-	void enable_transform() { is_xform = true; };
-	void disable_transform() { is_xform = false; };
-	GL::Point origin() const { return o; };
-	int side_length() const { return s; };
-	float angle() const { return a; };
-
-private:
-	bool is_xform = false;
-	const int min_s;
-	const int max_s;
-	int s;
-	float a;
-	GL::Point o;
-	int new_s;
-	float new_a;
-	GL::Point new_o;
-	Tile_type t;
-	bool valid_min_max(int min_side_len, int max_side_len) const
-	{
-		return !(min_side_len >= max_side_len || s < min_side_len
-		         || s > max_side_len);
-	}
-	void cap_parms(int side_len, float angle)
-	{
-		if (side_len < min_s) {
-			s = min_s;
-		} else if (side_len > max_s) {
-			s = max_s;
-		}
-		// TODO: Implement wrap-around
-		if (angle < 0) {
-			a = 0;
-		} else if (angle > 360) {
-			a = 360;
-		}
-	}
-	std::unique_ptr<GL::Closed_polyline> tile;
-	std::unique_ptr<GL::Closed_polyline> new_tile(Tile_type type)
-	{
-		if (type == Tile_type::Right_triangle) {
-			GL::Point in_end{static_cast<int>(std::round(o.x + cos(a) * s)),
-			                 static_cast<int>(std::round(o.y + sin(a) * s))};
-			return std::make_unique<RTRI::RightTriangle>(o, in_end);
-		} else {
-			throw std::runtime_error("Not implemented yet");
-		}
-	};
-};
-
 struct Window_and_tile
 {
 	Debug_window& win;
-	Dynamic_tile& tile;
+	dyntile::Dynamic_tile& tile;
 };
 
 static void transform_tile_cb(void* data)
@@ -196,7 +94,7 @@ void e15()
 	TRITI::TriangleTiler tiles{o, t_w, t_h, 64, 0};
 	win.attach(tiles);
 
-	Dynamic_tile dyn_t{Tile_type::Right_triangle, o, 64, 0};
+	dyntile::Dynamic_tile dyn_t{dyntile::Tile_type::Right_triangle, o, 64, 0};
 	win.attach(dyn_t);
 
 	Window_and_tile pass_to_callback{win, dyn_t};
