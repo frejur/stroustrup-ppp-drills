@@ -17,6 +17,10 @@ dyntile::Dynamic_tile::Dynamic_tile(dyntile::Tile_type type,
     , preview_s(side_len)
     , preview_a(angle)
     , preview_o(origin)
+    , c(default_color())
+    , bg(default_bg_color())
+    , preview_c(default_preview_color())
+    , preview_bg(default_preview_bg_color())
     , t(type)
 {
 	if (!valid_min_max(min_side_len, max_side_len)) {
@@ -67,14 +71,15 @@ void dyntile::Dynamic_tile::apply_transform(bool preview)
 // Replace current tile with a newly transformed tile
 {
 	if (preview && s == preview_s && a == preview_a && o == preview_o) {
-		tile->set_color(Graph_lib::Color::red);
 		return;
 	}
 	tile = new_tile(t);
 	if (preview) {
-		tile->set_color(Graph_lib::Color::red);
+		tile->set_color(preview_c);
+		tile->set_fill_color(preview_bg);
 	} else {
-		tile->set_color(Graph_lib::Color::black);
+		tile->set_color(c);
+		tile->set_fill_color(bg);
 		o = preview_o;
 		s = preview_s;
 		a = preview_a;

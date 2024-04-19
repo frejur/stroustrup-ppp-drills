@@ -37,7 +37,7 @@ const std::string& info_transform()
 // Interactively transforming the initial tile, hacky, but improves debugging.
 
 constexpr float refresh_rate{0.01};
-constexpr float refresh_time_out{1};
+constexpr float refresh_time_out{10};
 
 struct Window_and_tile
 /* The callback needs to access and modify:
@@ -69,9 +69,22 @@ static void transform_tile_cb(void* data)
 		Fl::remove_timeout(transform_tile_cb, data);
 	} else {
 		bool preview = true;
-		tw->tile.cue_transform(tw->win.mouse_position(),
-		                       tw->tile.side_length(),
-		                       tw->tile.angle());
+		GL::Point clk{tw->win.click_position()};
+		GL::Point m{tw->win.mouse_position()};
+		int x_dist = m.x - clk.x;
+		int y_dist = m.y - clk.y;
+
+		int side = sqrt(x_dist * x_dist + y_dist * y_dist);
+		float angle = atan2(static_cast<float>(y_dist),
+		                    static_cast<float>(x_dist))
+		              - (M_PI * 0.25);
+		angle = fmod(angle, 2 * M_PI);
+		if (angle < 0) {
+			angle += 2 * M_PI;
+		}
+		tw->win.log(std::to_string(angle) + ", ");
+
+		tw->tile.cue_transform(tw->win.click_position(), side, angle);
 		tw->win.log(".");
 		tw->tile.apply_transform(preview);
 		Fl::repeat_timeout(refresh_rate, transform_tile_cb, data);

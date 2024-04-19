@@ -7,6 +7,26 @@ namespace dyntile {
 
 constexpr int default_min_side_len{10};
 constexpr int default_max_side_len{200};
+inline const Graph_lib::Color& default_preview_color()
+{
+	static const Graph_lib::Color c{Graph_lib::Color::red};
+	return c;
+}
+inline const Graph_lib::Color& default_color()
+{
+	static const Graph_lib::Color c{Graph_lib::Color::black};
+	return c;
+}
+inline const Graph_lib::Color& default_preview_bg_color()
+{
+	static const Graph_lib::Color c{Graph_lib::Color::red};
+	return c;
+}
+inline const Graph_lib::Color& default_bg_color()
+{
+	static const Graph_lib::Color c{Graph_lib::Color::Transparency::invisible};
+	return c;
+}
 
 enum class Tile_type { Right_triangle, Regular_hexagon };
 
@@ -32,6 +52,8 @@ public:
 	Graph_lib::Point origin() const { return o; };
 	int side_length() const { return s; };
 	float angle() const { return a; };
+	int min_side_len() const { return min_s; };
+	int max_side_len() const { return max_s; };
 
 private:
 	bool init_pos;
@@ -47,6 +69,11 @@ private:
 	float preview_a;
 	Graph_lib::Point preview_o;
 
+	Graph_lib::Color c;
+	Graph_lib::Color bg;
+	Graph_lib::Color preview_c;
+	Graph_lib::Color preview_bg;
+
 	Tile_type t;
 	bool valid_min_max(int min_side_len, int max_side_len) const
 	{
@@ -55,7 +82,6 @@ private:
 	void cap_parms(int& side_len, float& angle);
 	std::unique_ptr<Graph_lib::Closed_polyline> tile;
 	std::unique_ptr<Graph_lib::Closed_polyline> new_tile(Tile_type type);
-	;
 };
 
 } // namespace dyntile
