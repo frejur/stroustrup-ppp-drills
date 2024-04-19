@@ -40,6 +40,10 @@ constexpr float refresh_rate{0.01};
 constexpr float refresh_time_out{1};
 
 struct Window_and_tile
+/* The callback needs to access and modify:
+ * - The window: The cursor / mouse
+ * - The tile: Transformation
+ */
 {
 	Debug_window& win;
 	dyntile::Dynamic_tile& tile;
@@ -52,17 +56,27 @@ static void transform_tile_cb(void* data)
 	time += refresh_rate;
 	if (!tw->tile.is_transforming() || time >= refresh_time_out) {
 		if (time >= refresh_time_out) {
+			tw->win.log("Tile is "
+			            + std::string(tw->tile.is_transforming()
+			                              ? "transforming"
+			                              : "NOT transforming")
+			            + "\n");
+			tw->tile.reset_transform();
+			tw->win.log("!");
 			tw->win.force_click();
 		}
 		time = 0;
 		Fl::remove_timeout(transform_tile_cb, data);
 	} else {
+		bool preview = true;
 		tw->tile.cue_transform(tw->win.mouse_position(),
 		                       tw->tile.side_length(),
 		                       tw->tile.angle());
-		tw->tile.apply_transform();
+		tw->win.log(".");
+		tw->tile.apply_transform(preview);
 		Fl::repeat_timeout(refresh_rate, transform_tile_cb, data);
 	}
+	tw->win.redraw();
 }
 
 void hacky_redraw_tile(Window_and_tile& tw)
@@ -124,16 +138,18 @@ void e15()
 					                                 tiles.point(0),
 					                                 tiles.point(1),
 					                                 tiles.point(2))};
-					ss << "Corner " << i << ": "
-					   << (is_inside_tri(b) ? "IN" : "OUT") << ' ';
+					// ss << "Corner " << i << ": "
+					//    << (is_inside_tri(b) ? "IN" : "OUT") << ' ';
 				}
-				win.log("TRANSFORMING?: "
-				        + std::string(dyn_t.is_transforming() ? "TRUE" : "FALSE")
-				        + "\n");
+				win.log(ss.str());
+				// win.log("TRANSFORMING?: "
+				//         + std::string(dyn_t.is_transforming() ? "TRUE" : "FALSE")
+				//         + "\n");
 				// win.log(ss.str() + "\n");
 				// win.log("New pos: " + std::to_string(tiles.point(0).x) + ", "
 				//         + std::to_string(tiles.point(0).y) + "\n");
 			} else {
+				dyn_t.apply_transform();
 				dyn_t.disable_transform();
 				info.set_label(info_click());
 			}

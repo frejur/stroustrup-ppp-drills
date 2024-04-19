@@ -5,9 +5,6 @@
 
 namespace dyntile {
 
-constexpr float refresh_rate{0.01};
-constexpr float refresh_time_out{1};
-
 constexpr int default_min_side_len{10};
 constexpr int default_max_side_len{200};
 
@@ -28,7 +25,8 @@ public:
 	void cue_transform(Graph_lib::Point new_origin,
 	                   int new_side_len,
 	                   float new_angle);
-	void apply_transform();
+	void reset_transform() { cue_transform(o, s, a); };
+	void apply_transform(bool preview = false);
 	void enable_transform() { is_xform = true; };
 	void disable_transform() { is_xform = false; };
 	Graph_lib::Point origin() const { return o; };
@@ -36,22 +34,25 @@ public:
 	float angle() const { return a; };
 
 private:
+	bool init_pos;
 	bool is_xform;
 	const int min_s;
 	const int max_s;
+
+	// Transform values
 	int s;
 	float a;
 	Graph_lib::Point o;
-	int new_s;
-	float new_a;
-	Graph_lib::Point new_o;
+	int preview_s;
+	float preview_a;
+	Graph_lib::Point preview_o;
+
 	Tile_type t;
 	bool valid_min_max(int min_side_len, int max_side_len) const
 	{
-		return !(min_side_len >= max_side_len || s < min_side_len
-		         || s > max_side_len);
+		return !(min_side_len >= max_side_len || s < min_side_len);
 	}
-	void cap_parms(int side_len, float angle);
+	void cap_parms(int& side_len, float& angle);
 	std::unique_ptr<Graph_lib::Closed_polyline> tile;
 	std::unique_ptr<Graph_lib::Closed_polyline> new_tile(Tile_type type);
 	;
