@@ -38,33 +38,49 @@ struct TriCoords
 	std::vector<GL::Point> points;
 };
 
+class Bbox : public GL::Shape
+{
+public:
+	Bbox(){};
+	Bbox(initializer_list<GL::Point> lst)
+	    : GL::Shape{lst}
+	{}
+	void set_point(int i, GL::Point pt) { Shape::set_point(i, pt); }
+
+private:
+	void add(GL::Point p) { Shape::add(p); }
+	void draw_lines() const;
+};
+
 class TriangleTiler : public GL::Shape
 {
 public:
 	TriangleTiler(GL::Point o, int w, int h, int tri_side, double rotation);
 	void draw_lines() const;
-	void move_to(GL::Point new_pos);
+	void update_transform(GL::Point new_pos, int new_side_len, float new_angle);
 	GL::Point point(int p) const;
 	void toggle_bounding_box() { show_bbox = !show_bbox; }
-	double rotation() const { return r; };
+	double angle() const { return a; };
 	int side_length() const { return s; };
 	void clear() { tris.clear(); };
+	void update_bounding_box() { new_bbox(); };
 
 private:
 	bool is_oob(const GL::Point p_0, const GL::Point p_1) const;
 	bool p_fits_bbox(const GL::Point p) const;
 	bool show_bbox = false;
+	void new_bbox();
 	TriCoords get_tri(const GL::Point p_0, const GL::Point p_1) const;
 	std::vector<GL::Point> get_oblique(const GL::Point p_0,
 	                                   const GL::Point p_1) const;
 	static constexpr int MAX_TRIS{ 500 };
 	std::vector<std::unique_ptr<GL::Closed_polyline>> tris;
 	GL::Rectangle bg;
-	GL::Rectangle bbox;
+	Bbox bbox;
 	GL::Point bbox_min;
 	GL::Point bbox_max;
 	int s;
-	double r;
+	double a;
 };
 
 } // namespace TRITI -----------------------------------------------------------

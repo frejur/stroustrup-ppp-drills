@@ -135,7 +135,6 @@ void e15()
 				dyn_t.enable_transform();
 				hacky_redraw_tile(pass_to_callback);
 				info.set_label(info_transform());
-				tiles.move_to(win.click_position());
 				std::stringstream ss;
 				for (int i = 0; i < 4; ++i) {
 					Point corner = o;
@@ -164,6 +163,9 @@ void e15()
 			} else {
 				dyn_t.apply_transform();
 				dyn_t.disable_transform();
+				tiles.update_transform(win.click_position(),
+				                       dyn_t.side_length(),
+				                       dyn_t.angle());
 				info.set_label(info_click());
 			}
 		}
