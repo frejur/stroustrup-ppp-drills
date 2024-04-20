@@ -5,8 +5,8 @@ TRITI::TriangleTiler::TriangleTiler(
     : GL::Shape()
     , bg(o, w, h)
     , bbox({o, {o.x + w, o.y}, {o.x + w, o.y + h}, {o.x, o.y + h}})
-    , bbox_min(o)
-    , bbox_max({o.x + w, o.y + h})
+    , bg_min(o)
+    , bg_max({o.x + w, o.y + h})
     , s(tri_side)
     , a(angle)
 {
@@ -58,12 +58,12 @@ Graph_lib::Point TRITI::TriangleTiler::point(int p) const
 
 void TRITI::TriangleTiler::new_bbox()
 {
-	GL::Point c = {(bbox_min.x + bbox_max.x) / 2, (bbox_min.y + bbox_max.y) / 2};
+	GL::Point c = {(bg_min.x + bg_max.x) / 2, (bg_min.y + bg_max.y) / 2};
 
-	std::vector<GL::Point> pts{{bbox_min.x, bbox_min.y},
-	                           {bbox_max.x, bbox_min.y},
-	                           {bbox_max.x, bbox_max.y},
-	                           {bbox_min.x, bbox_max.y}};
+	std::vector<GL::Point> pts{{bg_min.x, bg_min.y},
+	                           {bg_max.x, bg_min.y},
+	                           {bg_max.x, bg_max.y},
+	                           {bg_min.x, bg_max.y}};
 	GL::Point rot_bg_min;
 	GL::Point rot_bg_max;
 	bool first_iter = true;
@@ -125,20 +125,20 @@ void TRITI::TriangleTiler::new_bbox()
 // 	/*
 // 	 * Returns true if out of bounds
 // 	 */
-// 	if (p_0.x <= bbox_min.x) {
-// 		return (p_1.x <= bbox_min.x) || (p_1.x == p_0.x && p_1.y < p_0.y);
+// 	if (p_0.x <= bg_min.x) {
+// 		return (p_1.x <= bg_min.x) || (p_1.x == p_0.x && p_1.y < p_0.y);
 // 	}
-// 	// bool check_b = ((p_0.x == bbox_max.x && p_1.x > p_0.x)
-// 	//     || (p_0.y == bbox_min.y && p_1.y < p_0.y)
-// 	//     || (p_0.y == bbox_max.y && p_1.y > p_0.y)) {
+// 	// bool check_b = ((p_0.x == bg_max.x && p_1.x > p_0.x)
+// 	//     || (p_0.y == bg_min.y && p_1.y < p_0.y)
+// 	//     || (p_0.y == bg_max.y && p_1.y > p_0.y)) {
 // 	// 	return true;
 // 	// }
 // }
 
 // bool TRITI::TriangleTiler::p_fits_bbox(const Graph_lib::Point p) const
 // {
-// 	return (p.x >= bbox_min.x && p.x <= bbox_max.x)
-// 	       && (p.y >= bbox_min.y && p.y <= bbox_max.y);
+// 	return (p.x >= bg_min.x && p.x <= bg_max.x)
+// 	       && (p.y >= bg_min.y && p.y <= bg_max.y);
 // }
 
 // TRITI::TriCoords TRITI::TriangleTiler::get_tri(const Graph_lib::Point p_0,

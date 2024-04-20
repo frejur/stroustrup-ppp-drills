@@ -77,8 +77,8 @@ private:
 	std::vector<std::unique_ptr<GL::Closed_polyline>> tris;
 	GL::Rectangle bg;
 	Bbox bbox;
-	GL::Point bbox_min;
-	GL::Point bbox_max;
+	GL::Point bg_min;
+	GL::Point bg_max;
 	int s;
 	double a;
 };
