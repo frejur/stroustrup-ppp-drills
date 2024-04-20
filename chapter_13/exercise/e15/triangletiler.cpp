@@ -64,11 +64,57 @@ void TRITI::TriangleTiler::new_bbox()
 	                           {bbox_max.x, bbox_min.y},
 	                           {bbox_max.x, bbox_max.y},
 	                           {bbox_min.x, bbox_max.y}};
+	GL::Point rot_bg_min;
+	GL::Point rot_bg_max;
+	bool first_iter = true;
+	for (GL::Point& pt : pts) {
+		// Rotate bg area
+		float x = (pt.x - c.x);
+		float y = pt.y - c.y;
+		pt.x = c.x
+		       + static_cast<int>(((x * std::cos(a) - y * std::sin(a)) * 10 + 5)
+		                          / 10);
+		pt.y = c.y
+		       + static_cast<int>(((x * std::sin(a) + y * std::cos(a)) * 10 + 5)
+		                          / 10);
+		if (first_iter) {
+			rot_bg_min = {pt.x, pt.y};
+			rot_bg_max = rot_bg_min;
+			first_iter = false;
+			continue;
+		}
+
+		// Update bounds
+		if (pt.x < rot_bg_min.x) {
+			rot_bg_min.x = pt.x;
+		} else if (pt.x > rot_bg_max.x) {
+			rot_bg_max.x = pt.x;
+		}
+
+		if (pt.y < rot_bg_min.y) {
+			rot_bg_min.y = pt.y;
+		} else if (pt.y > rot_bg_max.y) {
+			rot_bg_max.y = pt.y;
+		}
+	}
+
+	// Padded bbox of rotated bg
+	int pad = 4;
+	pts = {{rot_bg_min.x - pad, rot_bg_min.y - pad},
+	       {rot_bg_max.x + pad, rot_bg_min.y - pad},
+	       {rot_bg_max.x + pad, rot_bg_max.y + pad},
+	       {rot_bg_min.x - pad, rot_bg_max.y + pad}};
+
 	for (int i = 0; i < pts.size(); ++i) {
+		// Rotate bbox of rotated bg
 		float x = (pts[i].x - c.x);
 		float y = pts[i].y - c.y;
-		pts[i].x = c.x + (x * std::cos(a) - y * std::sin(a));
-		pts[i].y = c.y + (x * std::sin(a) + y * std::cos(a));
+		pts[i].x = c.x
+		           + static_cast<int>(
+		               ((x * std::cos(a) - y * std::sin(a)) * 10 + 5) / 10);
+		pts[i].y = c.y
+		           + static_cast<int>(
+		               ((x * std::sin(a) + y * std::cos(a)) * 10 + 5) / 10);
 		bbox.set_point(i, pts[i]);
 	}
 }
