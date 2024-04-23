@@ -130,15 +130,24 @@ void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
 		top_l = tri_bnds[3];
 		break;
 	case 1:
-		// top_l = tri_bnds[0];
-		// top_l = tri_bnds[1];
 		top_l = tri_bnds[2];
-		// top_l = tri_bnds[3];
 		break;
 	case 2:
 		top_l = tri_bnds[2];
 		break;
 	case 3:
+		top_l = tri_bnds[0];
+		break;
+	case 4:
+		top_l = tri_bnds[0];
+		break;
+	case 5:
+		top_l = tri_bnds[1];
+		break;
+	case 6:
+		top_l = tri_bnds[1];
+		break;
+	case 7:
 	default:
 		top_l = tri_bnds[3];
 		break;
