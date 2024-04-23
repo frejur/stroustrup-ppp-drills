@@ -29,17 +29,125 @@ void TRITI::TriangleTiler::draw_lines() const
 	}
 }
 
+int TRITI::TriangleTiler::count_tris_until_oob(GL::Point point,
+                                               GL::Point offset,
+                                               const int max_count)
+{
+	int count = 0;
+	while (count < max_count && pt_inside_bbox(point)) {
+		point.x += offset.x;
+		point.y += offset.y;
+		GL::Point new_end{static_cast<int>(std::round(point.x + cos(a) * s)),
+		                  static_cast<int>(std::round(point.y + sin(a) * s))};
+		tris.push_back(std::make_unique<RTRI::RightTriangle>(point, new_end));
+		tris.back()->set_color(GL::Color::dark_green);
+		if (++count == max_count) {
+			throw std::runtime_error("Too many triangles in pattern");
+		}
+	}
+	return count;
+}
+
 void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
                                             int new_side_len,
                                             float new_angle)
 {
 	s = new_side_len;
 	a = new_angle;
+	tris.clear();
 	GL::Point in_end{static_cast<int>(std::round(new_pos.x + cos(a) * s)),
 	                 static_cast<int>(std::round(new_pos.y + sin(a) * s))};
-	tris.clear();
 	tris.push_back(std::make_unique<RTRI::RightTriangle>(new_pos, in_end));
+	RTRI::RightTriangle& og_tri = reinterpret_cast<RTRI::RightTriangle&>(
+	    *tris.back());
 	new_bbox();
+	// float h = s * sqrt(3.0) / 2;
+	// float inv_a = a + M_PI;
+	// inv_a = fmod(a, 2 * M_PI);
+	// if (inv_a < 0) {
+	// 	inv_a += 2 * M_PI;
+	// }
+	constexpr int max_count = 100;
+	int count = 0;
+	GL::Point test = new_pos;
+	GL::Point offs_a{tris.back()->point(1).x - new_pos.x,
+	                 tris.back()->point(1).y - new_pos.y};
+	GL::Point offs_b{tris.back()->point(2).x - new_pos.x,
+	                 tris.back()->point(2).y - new_pos.y};
+
+	int count_a = count_tris_until_oob(new_pos, offs_a);
+	int inv_count_a = count_tris_until_oob(new_pos, {-offs_a.x, -offs_a.y});
+	count_a = (count_a > 0) ? count_a - 1 : 0;
+
+	int count_b = count_tris_until_oob(new_pos, offs_b);
+	int inv_count_b = count_tris_until_oob(new_pos, {-offs_b.x, -offs_b.y});
+	count_b = (count_b > 0) ? count_b - 1 : 0;
+
+	std::vector<GL::Point>
+	    tri_bnds{{new_pos.x + count_a * offs_a.x + count_b * offs_b.x,
+	              new_pos.y + count_a * offs_a.y + count_b * offs_b.y},
+	             {new_pos.x + count_a * offs_a.x - inv_count_b * offs_b.x,
+	              new_pos.y + count_a * offs_a.y - inv_count_b * offs_b.y},
+	             {new_pos.x - inv_count_a * offs_a.x + count_b * offs_b.x,
+	              new_pos.y - inv_count_a * offs_a.y + count_b * offs_b.y},
+	             {new_pos.x - inv_count_a * offs_a.x - inv_count_b * offs_b.x,
+	              new_pos.y - inv_count_a * offs_a.y - inv_count_b * offs_b.y}};
+
+	int mid_x = static_cast<int>(0.5 * (bg_min.x + bg_max.x));
+	std::vector<GL::Point> left_pts{};
+	for (GL::Point& p : tri_bnds) {
+		if (p.x <= mid_x) {
+			left_pts.push_back(p);
+		}
+	}
+	tris.push_back(std::make_unique<GL::Closed_polyline>());
+	tris.back()->add(tri_bnds[0]);
+	tris.back()->add(tri_bnds[1]);
+	tris.back()->add(tri_bnds[2]);
+	tris.back()->add(tri_bnds[3]);
+	tris.back()->set_color(GL::Color::yellow);
+	tris.back()->set_style({GL::Line_style::solid, 2});
+
+	GL::Point top_left{};
+	for (int i = 0; i < left_pts.size(); ++i) {
+		if (i == 0) {
+			top_left = left_pts[i];
+			continue;
+		}
+		if (left_pts[i].y < top_left.y) {
+			top_left = left_pts[i];
+		}
+	}
+	GL::Point in_end2{static_cast<int>(std::round(top_left.x + cos(a) * s)),
+	                  static_cast<int>(std::round(top_left.y + sin(a) * s))};
+	tris.push_back(std::make_unique<RTRI::RightTriangle>(top_left, in_end2));
+	tris.back()->set_color(GL::Color::cyan);
+
+	GL::Point top_l{};
+	int sub_quadrant = static_cast<int>(new_angle / (M_PI * 0.25));
+	switch (sub_quadrant) {
+	case 0:
+		top_l = tri_bnds[3];
+		break;
+	case 1:
+		// top_l = tri_bnds[0];
+		// top_l = tri_bnds[1];
+		top_l = tri_bnds[2];
+		// top_l = tri_bnds[3];
+		break;
+	case 2:
+		top_l = tri_bnds[2];
+		break;
+	case 3:
+	default:
+		top_l = tri_bnds[3];
+		break;
+	}
+	GL::Point in_end3{static_cast<int>(std::round(top_l.x + cos(a) * s * 0.25)),
+	                  static_cast<int>(std::round(top_l.y + sin(a) * s * 0.25))};
+	tris.push_back(std::make_unique<RTRI::RightTriangle>(top_l, in_end3));
+	tris.back()->set_color(GL::Color::dark_yellow);
+	tris.back()->set_style({GL::Line_style::solid, 2});
 }
 
 Graph_lib::Point TRITI::TriangleTiler::point(int p) const
@@ -54,6 +162,19 @@ Graph_lib::Point TRITI::TriangleTiler::point(int p) const
 		}
 	}
 	throw std::runtime_error("No point with that index");
+}
+
+bool TRITI::TriangleTiler::pt_inside_bbox(Graph_lib::Point pt) const
+{
+	float w = pt_dist(bbox.point(0), bbox.point(1));
+	float h = pt_dist(bbox.point(0), bbox.point(3));
+	float a = w * h;
+
+	float sum_tri_a = tri_area(bbox.point(0), pt, bbox.point(3))
+	                  + tri_area(bbox.point(3), pt, bbox.point(2))
+	                  + tri_area(bbox.point(2), pt, bbox.point(1))
+	                  + tri_area(pt, bbox.point(1), bbox.point(0));
+	return sum_tri_a <= a;
 }
 
 void TRITI::TriangleTiler::new_bbox()
@@ -183,4 +304,24 @@ void TRITI::Bbox::draw_lines() const
 		        point(number_of_points() - 1).y,
 		        point(0).x,
 		        point(0).y);
+}
+
+float TRITI::pt_dist(Graph_lib::Point p0, Graph_lib::Point p1)
+{
+	float dx = p1.x - p0.x;
+	float dy = p1.y - p0.y;
+	return sqrt(dx * dx + dy * dy);
+}
+
+float TRITI::tri_area(Graph_lib::Point p0,
+                      Graph_lib::Point p1,
+                      Graph_lib::Point p2)
+{
+	float a = ((p1.x * p0.y - p0.x * p1.y) + (p2.x * p1.y - p1.x * p2.y)
+	           + (p0.x * p2.y - p2.x * p0.y))
+	          * 0.5;
+	if (a < 0) {
+		a *= -1;
+	}
+	return a;
 }

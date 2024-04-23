@@ -36,7 +36,7 @@ const std::string& info_transform()
 //------------------------------------------------------------------------------
 // Interactively transforming the initial tile, hacky, but improves debugging.
 
-constexpr float refresh_rate{0.01};
+constexpr float refresh_rate{0.1};
 constexpr float refresh_time_out{10};
 
 struct Window_and_tile
@@ -56,13 +56,7 @@ static void transform_tile_cb(void* data)
 	time += refresh_rate;
 	if (!tw->tile.is_transforming() || time >= refresh_time_out) {
 		if (time >= refresh_time_out) {
-			tw->win.log("Tile is "
-			            + std::string(tw->tile.is_transforming()
-			                              ? "transforming"
-			                              : "NOT transforming")
-			            + "\n");
 			tw->tile.reset_transform();
-			tw->win.log("!");
 			tw->win.force_click();
 		}
 		time = 0;
@@ -82,10 +76,8 @@ static void transform_tile_cb(void* data)
 		if (angle < 0) {
 			angle += 2 * M_PI;
 		}
-		tw->win.log(std::to_string(angle) + ", ");
 
 		tw->tile.cue_transform(tw->win.click_position(), side, angle);
-		tw->win.log(".");
 		tw->tile.apply_transform(preview);
 		Fl::repeat_timeout(refresh_rate, transform_tile_cb, data);
 	}
@@ -115,9 +107,9 @@ void e15()
 	                 ENABLE_CLICK};
 
 	fl_color(0);
-	const GL::Point o{64, 64};
-	const int t_w{540};
-	const int t_h{400};
+	const GL::Point o{200, 200};
+	const int t_w{300};
+	const int t_h{200};
 	TRITI::TriangleTiler tiles{o, t_w, t_h, 64, 0};
 	win.attach(tiles);
 
@@ -150,27 +142,24 @@ void e15()
 					                                 tiles.point(0),
 					                                 tiles.point(1),
 					                                 tiles.point(2))};
-					// ss << "Corner " << i << ": "
-					//    << (is_inside_tri(b) ? "IN" : "OUT") << ' ';
 				}
-				win.log(ss.str());
-				// win.log("TRANSFORMING?: "
-				//         + std::string(dyn_t.is_transforming() ? "TRUE" : "FALSE")
-				//         + "\n");
-				// win.log(ss.str() + "\n");
-				// win.log("New pos: " + std::to_string(tiles.point(0).x) + ", "
-				//         + std::to_string(tiles.point(0).y) + "\n");
 			} else {
 				dyn_t.apply_transform();
 				dyn_t.disable_transform();
-				tiles.update_transform(win.click_position(),
+				tiles.update_transform(dyn_t.origin(),
 				                       dyn_t.side_length(),
 				                       dyn_t.angle());
+				// win.log("Top left tile: "
+				//         + std::to_string(tiles.top_left_tile().x) + ", "
+				//         + std::to_string(tiles.top_left_tile().y) + "\n");
+				win.log("Angle: " + std::to_string(tiles.angle()) + "\n");
+				int sub_quadrant = static_cast<int>(tiles.angle()
+				                                    / (M_PI * 0.25));
+				win.log("Sub-Quadrant: " + std::to_string(sub_quadrant) + "\n");
 				info.set_label(info_click());
 			}
 		}
 		win.wait_for_click();
-		win.log("CLICK!\n");
 	}
 }
 

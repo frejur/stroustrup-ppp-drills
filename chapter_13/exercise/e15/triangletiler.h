@@ -64,12 +64,17 @@ public:
 	int side_length() const { return s; };
 	void clear() { tris.clear(); };
 	void update_bounding_box() { new_bbox(); };
+	GL::Point top_left_tile() const { return tl; };
 
 private:
+	bool pt_inside_bbox(GL::Point pt) const;
 	bool is_oob(const GL::Point p_0, const GL::Point p_1) const;
 	bool p_fits_bbox(const GL::Point p) const;
 	bool show_bbox = false;
 	void new_bbox();
+	int count_tris_until_oob(GL::Point point,
+	                         GL::Point offset,
+	                         const int max_count = 250);
 	TriCoords get_tri(const GL::Point p_0, const GL::Point p_1) const;
 	std::vector<GL::Point> get_oblique(const GL::Point p_0,
 	                                   const GL::Point p_1) const;
@@ -79,9 +84,13 @@ private:
 	Bbox bbox;
 	GL::Point bg_min;
 	GL::Point bg_max;
+	GL::Point tl;
 	int s;
 	double a;
 };
+
+float pt_dist(GL::Point p0, GL::Point p1);
+float tri_area(GL::Point p0, GL::Point p1, GL::Point p2);
 
 } // namespace TRITI -----------------------------------------------------------
 #endif // TRIANGLETILER_H
