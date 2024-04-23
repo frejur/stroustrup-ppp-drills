@@ -34,6 +34,13 @@ public:
 		Fl_Multiline_Output& con{ reference_to<Fl_Multiline_Output>(pw) };
 		con.value((con.value() + s).c_str());
 	}
+
+	void clear()
+	{
+		Fl_Multiline_Output& con{reference_to<Fl_Multiline_Output>(pw)};
+		con.value("");
+	}
+
 private:
 	bool const m_console_is_empty() {
 		return reference_to<Fl_Multiline_Output>(pw).size() == 0;
@@ -80,6 +87,12 @@ public:
 	void const log(const std::string& s) {
 		if (m_debug_is_enabled) {
 			m_console->put(s);
+		}
+	}
+	void clear_logs()
+	{
+		if (m_debug_is_enabled) {
+			m_console->clear();
 		}
 	}
 	bool click_has_been_registered() const { return !first_click; };
