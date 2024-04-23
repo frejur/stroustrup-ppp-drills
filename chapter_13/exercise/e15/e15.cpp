@@ -121,6 +121,7 @@ void e15()
 	GL::Text info{{64, 32}, info_click()};
 	win.attach(info);
 
+	int count_logged = 0;
 	while (true) {
 		if (win.click_has_been_registered()) {
 			if (!dyn_t.is_transforming()) {
@@ -152,10 +153,17 @@ void e15()
 				// win.log("Top left tile: "
 				//         + std::to_string(tiles.top_left_tile().x) + ", "
 				//         + std::to_string(tiles.top_left_tile().y) + "\n");
+
+				if (count_logged > 4) {
+					win.clear_logs();
+					count_logged = 0;
+				}
 				win.log("Angle: " + std::to_string(tiles.angle()) + "\n");
 				int sub_quadrant = static_cast<int>(tiles.angle()
 				                                    / (M_PI * 0.25));
 				win.log("Sub-Quadrant: " + std::to_string(sub_quadrant) + "\n");
+				++count_logged;
+
 				info.set_label(info_click());
 			}
 		}
