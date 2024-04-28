@@ -70,18 +70,31 @@ class Bbox : public Graph_lib::Shape
 {
 public:
 	Bbox(Graph_lib::Point origin, int width, int height, float angle = 0);
+	void reset_transform();
 	void rotate(float angle) { update(angle); };
 	Coord_sys::Bounds bounds() const;
 	void new_from_bounds();
+	int horizontal_distance_to_min() const { return half_w_neg; };
+	int horizontal_distance_to_max() const { return half_w_pos; };
+	int vertical_distance_to_min() const { return half_h_neg; };
+	int vertical_distance_to_max() const { return half_h_pos; };
 
 private:
 	bool init;
+	int init_w;
+	int init_h;
+	float init_a;
+
 	int half_w_neg;
 	int half_w_pos;
 	int half_h_neg;
 	int half_h_pos;
+
 	float a;
+
+	Graph_lib::Point o;
 	Graph_lib::Point c;
+
 	void set_point(int i, Graph_lib::Point pt) { Shape::set_point(i, pt); }
 	void add(Graph_lib::Point p) { Shape::add(p); }
 	void draw_lines() const;
@@ -89,10 +102,14 @@ private:
 	void update(int width, int height, float angle);
 	void upd_width(int w);
 	void upd_height(int h);
+	void set_center(Graph_lib::Point origin);
 	void upd_pts();
 	void rot_coords(
 	    int& x1, int& x2, int& x3, int& x4, int& y1, int& y2, int& y3, int& y4);
 };
+
+Coord_sys::Bounds rotated_bounds(const Bbox& bb,
+                                 const Coord_sys::Coordinate_system& cs);
 
 class TriangleTiler : public Graph_lib::Shape
 {
@@ -110,6 +127,21 @@ public:
 	void clear() { tris.clear(); };
 	void update_bounding_box() { new_bbox(); };
 	Graph_lib::Point top_left_tile() const { return tl; };
+	int debug_bbox_width() const
+	{
+		return tiles_bbox.horizontal_distance_to_max()
+		       + tiles_bbox.horizontal_distance_to_min();
+	};
+	int debug_bbox_height() const
+	{
+		return tiles_bbox.vertical_distance_to_max()
+		       + tiles_bbox.vertical_distance_to_min();
+	};
+	Coord_sys::Bounds debug_rotates_bounds() const
+	{
+		return rotated_bounds(tiles_bbox, tiles_cs);
+	}
+	std::vector<Graph_lib::Point> debug_draw_tiles_bbox_grid();
 
 private:
 	bool pt_inside_bbox(Graph_lib::Point pt, const Bbox& bbox) const;

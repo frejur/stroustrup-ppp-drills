@@ -164,6 +164,21 @@ void e15()
 				win.log("Sub-Quadrant: " + std::to_string(sub_quadrant) + "\n");
 				++count_logged;
 
+				// win.log("Rotated Bbox Dim. "
+				//         + std::to_string(tiles.debug_bbox_width()) + " x "
+				//         + std::to_string(tiles.debug_bbox_height()) + "\n");
+
+				win.log(
+				    "Tiles bbox bounds: "
+				    + std::to_string(tiles.debug_rotates_bounds().min.x) + ", "
+				    + std::to_string(tiles.debug_rotates_bounds().min.y) + " | "
+				    + std::to_string(tiles.debug_rotates_bounds().max.x) + ", "
+				    + std::to_string(tiles.debug_rotates_bounds().max.y) + "\n");
+				std::vector<Graph_lib::Point> dp{
+				    tiles.debug_draw_tiles_bbox_grid()};
+				win.log("Origin: " + std::to_string(dp[0].x) + ", "
+				        + std::to_string(dp[0].y) + "\n");
+
 				info.set_label(info_click());
 			}
 		}

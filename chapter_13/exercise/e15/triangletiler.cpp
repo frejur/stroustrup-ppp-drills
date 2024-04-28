@@ -2,18 +2,26 @@
 
 TRITI::Bbox::Bbox(Graph_lib::Point origin, int width, int height, float angle)
     : init(false)
-    , a(0)
+    , o(origin)
 {
 	if (width < 1 || height < 1) {
 		throw std::runtime_error("Invalid width or height");
 	}
 
-	c = {origin.x + static_cast<int>(width * 0.5),
-	     origin.y + static_cast<int>(width * 0.5)};
-
 	update(width, height, angle);
 
+	init_w = width;
+	init_h = height;
+	init_a = a;
 	init = true;
+}
+
+void TRITI::Bbox::reset_transform()
+{
+	if (!init) {
+		return;
+	}
+	update(init_w, init_h, init_a);
 }
 void TRITI::Bbox::update(float angle)
 {
@@ -25,6 +33,9 @@ void TRITI::Bbox::update(int width, int height, float angle)
 	a = angle;
 	upd_width(width);
 	upd_height(height);
+	if (!init) {
+		set_center(o);
+	}
 	upd_pts();
 }
 
@@ -38,6 +49,11 @@ void TRITI::Bbox::upd_height(int h)
 {
 	half_h_neg = static_cast<int>(h * 0.5);
 	half_h_pos = h - half_h_neg;
+}
+
+void TRITI::Bbox::set_center(Graph_lib::Point origin)
+{
+	c = {origin.x + half_w_neg, origin.y + half_h_neg};
 }
 
 void TRITI::Bbox::upd_pts()
@@ -80,27 +96,8 @@ void TRITI::Bbox::rot_coords(
 
 Coord_sys::Bounds TRITI::Bbox::bounds() const
 {
-	Coord_sys::Bounds bnds;
-	for (int i = 0; i < 4; ++i) {
-		Graph_lib::Point pt = point(i);
-		if (i == 0) {
-			bnds = {pt, pt};
-			continue;
-		}
-		if (pt.x < bnds.min.x) {
-			bnds.min.x = pt.x;
-		}
-		if (pt.x > bnds.max.x) {
-			bnds.max.x = pt.x;
-		}
-		if (pt.y < bnds.min.y) {
-			bnds.min.y = pt.y;
-		}
-		if (pt.y > bnds.max.y) {
-			bnds.max.y = pt.y;
-		}
-	}
-	return bnds;
+	return Coord_sys::bounds_from_points(
+	    {point(0), point(1), point(2), point(3)});
 }
 
 void TRITI::Bbox::new_from_bounds()
@@ -115,16 +112,17 @@ TRITI::TriangleTiler::TriangleTiler(
     Graph_lib::Point o, int w, int h, int tri_side, double angle)
     : Graph_lib::Shape()
     , c{o.x + static_cast<int>((w * 5 + 5) / 10),
-        o.y + static_cast<int>((w * 5 + 5) / 10)}
+        o.y + static_cast<int>((h * 5 + 5) / 10)}
     , bg_bnds{o, {o.x + w, o.y + h}}
     , bg{o, w, h}
     , tiles_cs{c}
     , tiles_bnds{bg_bnds}
-    , tiles_bbox{c, w, h}
+    , tiles_bbox{o, w, h}
     , s(tri_side)
     , a(angle)
 {
 	bg.set_color(Graph_lib::Color::black);
+	tiles_bbox.set_color(Graph_lib::Color::yellow);
 
 	// Add first tile
 	Graph_lib::Point in_end{static_cast<int>(std::round(o.x + cos(a) * s)),
@@ -136,6 +134,7 @@ TRITI::TriangleTiler::TriangleTiler(
 void TRITI::TriangleTiler::draw_lines() const
 {
 	bg.draw();
+	tiles_bbox.draw();
 	for (const auto& t : tris) {
 		t->draw();
 	}
@@ -146,7 +145,8 @@ int TRITI::TriangleTiler::count_tris_until_oob(Graph_lib::Point point,
                                                const int max_count)
 {
 	int count = 0;
-	while (count < max_count && pt_inside_bbox(point, tiles_bbox)) {
+	Coord_sys::Bounds bnds{rotated_bounds(tiles_bbox, tiles_cs)};
+	while (count < max_count && Coord_sys::is_inside(point, bnds, tiles_cs)) {
 		point.x += offset.x;
 		point.y += offset.y;
 		Graph_lib::Point new_end{static_cast<int>(
@@ -196,6 +196,7 @@ void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
                                             int new_side_len,
                                             float new_angle)
 {
+	tiles_cs.set_rotation(new_angle);
 	s = new_side_len;
 	a = new_angle;
 	tris.clear();
@@ -207,14 +208,6 @@ void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
 	    *tris.back());
 	new_bbox();
 
-	// float h = s * sqrt(3.0) / 2;
-	// float inv_a = a + M_PI;
-	// inv_a = fmod(a, 2 * M_PI);
-	// if (inv_a < 0) {
-	// 	inv_a += 2 * M_PI;
-	// }
-	constexpr int max_count = 100;
-	int count = 0;
 	Graph_lib::Point test = new_pos;
 	Graph_lib::Point offs_a{tris.back()->point(1).x - new_pos.x,
 	                        tris.back()->point(1).y - new_pos.y};
@@ -375,6 +368,37 @@ Graph_lib::Point TRITI::TriangleTiler::point(int p) const
 	throw std::runtime_error("No point with that index");
 }
 
+std::vector<Graph_lib::Point> TRITI::TriangleTiler::debug_draw_tiles_bbox_grid()
+{
+	std::vector<Graph_lib::Point> pts;
+	int bbw = tiles_bbox.horizontal_distance_to_min()
+	          + tiles_bbox.horizontal_distance_to_max();
+	int bbh = tiles_bbox.vertical_distance_to_min()
+	          + tiles_bbox.vertical_distance_to_max();
+	Graph_lib::Point pt = tiles_cs.to_screen({0, 0});
+	tris.push_back(std::make_unique<Graph_lib::Closed_polyline>());
+	tris.back()->add(pt);
+	tris.back()->add({pt.x + 5, pt.y});
+	tris.back()->add({pt.x + 5, pt.y + 5});
+	tris.back()->add({pt.x, pt.y + 5});
+	tris.back()->set_color(Graph_lib::Color::red);
+	for (int x = 0; x < bbw; x += 20)
+		for (int y = 0; y < bbh; y += 20) {
+			pt = tiles_cs.to_screen(
+			    {-tiles_bbox.horizontal_distance_to_max() + x,
+			     -tiles_bbox.vertical_distance_to_max() + y});
+			tris.push_back(std::make_unique<Graph_lib::Closed_polyline>());
+			tris.back()->add(pt);
+			tris.back()->add({pt.x + 10, pt.y});
+			tris.back()->add({pt.x + 10, pt.y + 10});
+			tris.back()->add({pt.x, pt.y + 10});
+			tris.back()->set_color(Graph_lib::Color::dark_red);
+			pts.push_back(pt);
+		}
+
+	return pts;
+}
+
 bool TRITI::TriangleTiler::pt_inside_bbox(Graph_lib::Point pt,
                                           const TRITI::Bbox& bbox) const
 {
@@ -391,6 +415,7 @@ bool TRITI::TriangleTiler::pt_inside_bbox(Graph_lib::Point pt,
 
 void TRITI::TriangleTiler::new_bbox()
 {
+	tiles_bbox.reset_transform();
 	tiles_bbox.rotate(a);
 	tiles_bbox.new_from_bounds();
 	tiles_bbox.rotate(a);
@@ -432,4 +457,13 @@ void TRITI::Bbox::draw_lines() const
 		        point(number_of_points() - 1).y,
 		        point(0).x,
 		        point(0).y);
+}
+
+Coord_sys::Bounds TRITI::rotated_bounds(const Bbox& bb,
+                                        const Coord_sys::Coordinate_system& cs)
+{
+	return Coord_sys::bounds_from_points({cs.to_local(bb.point(0)),
+	                                      cs.to_local(bb.point(1)),
+	                                      cs.to_local(bb.point(2)),
+	                                      cs.to_local(bb.point(3))});
 }
