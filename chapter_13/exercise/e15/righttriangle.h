@@ -12,8 +12,8 @@ namespace GL = Graph_lib;
 
 class RightTriangle : public ITRI::IsoscelesTriangle {
 public:
-	RightTriangle(GL::Point origin, GL::Point end_opposite)
-	: ITRI::IsoscelesTriangle(origin, end_opposite, M_PI * 0.5) {};
+	RightTriangle(GL::Point origin, GL::Point end_opposite, bool invert = false)
+	    : ITRI::IsoscelesTriangle(origin, end_opposite, M_PI * 0.5, invert){};
 };
 
 

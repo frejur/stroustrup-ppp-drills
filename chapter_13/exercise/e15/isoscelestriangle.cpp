@@ -10,21 +10,27 @@ ITRI::IsoscelesTriangle::IsoscelesTriangle(GL::Point origin,
                                            bool invert)
     : GL::Closed_polyline()
 {
-	add(origin);
-	add(end_opposite);
-	double side_len {
-		sqrt(
-			pow(std::abs(end_opposite.y - origin.y), 2) +
-			pow(std::abs(end_opposite.x - origin.x), 2)
-		)
-		};
-	double new_angle{std::atan2((double) end_opposite.y - origin.y,
-	                            (double) end_opposite.x - origin.x)
-	                 + angle};
+	// add(origin);
+	// add(end_opposite);
+	GL::Point offset{end_opposite.x - origin.x, end_opposite.y - origin.y};
+	double side_len{
+	    sqrt(pow(std::abs(offset.y), 2) + pow(std::abs(offset.x), 2))};
 	float sign{invert ? -1.0f : 1.0f};
-	add({static_cast<int>(
-	         std::round(origin.x + cos(new_angle) * sign * side_len)),
-	     static_cast<int>(
-	         std::round(origin.y + sin(new_angle) * sign * side_len))});
+	double new_angle{std::atan2((double) offset.y, (double) offset.x) + angle};
+
+	GL::Point apex{static_cast<int>(
+	                   std::round(origin.x + cos(new_angle) * side_len)),
+	               static_cast<int>(
+	                   std::round(origin.y + sin(new_angle) * side_len))};
+	if (invert) {
+		// add(origin);
+		add({apex.x + offset.x, apex.y + offset.y});
+		add(apex);
+		add(end_opposite);
+	} else {
+		add(origin);
+		add(end_opposite);
+		add(apex);
+	}
 }
 
