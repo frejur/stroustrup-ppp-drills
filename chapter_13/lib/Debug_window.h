@@ -103,10 +103,9 @@ public:
 	GL::Point mouse_position() const { return {m_x, m_y}; };
 	void wait_for_click()
 	{
-		while (!mouse_clicked) {
+		while (shown() && !mouse_clicked) {
 			Fl::wait();
 		}
-		log("DONE WAITING\n");
 		mouse_clicked = false;
 		Fl::redraw();
 	};
