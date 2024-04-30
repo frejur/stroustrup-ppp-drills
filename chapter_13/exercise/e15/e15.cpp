@@ -53,6 +53,10 @@ static void transform_tile_cb(void* data)
 {
 	static float time = 0;
 	Window_and_tile* tw = static_cast<Window_and_tile*>(data);
+	if (!tw->win.shown()) {
+		Fl::remove_timeout(transform_tile_cb, data);
+		return;
+	}
 	time += refresh_rate;
 	if (!tw->tile.is_transforming() || time >= refresh_time_out) {
 		if (time >= refresh_time_out) {
@@ -122,7 +126,7 @@ void e15()
 	win.attach(info);
 
 	int count_logged = 0;
-	while (true) {
+	while (win.shown()) {
 		if (win.click_has_been_registered()) {
 			if (!dyn_t.is_transforming()) {
 				dyn_t.enable_transform();
