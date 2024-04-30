@@ -63,6 +63,15 @@ struct TriCoords
 	TriType type = TriType::ZeroArea;
 	std::vector<Graph_lib::Point> points;
 };
+//------------------------------------------------------------------------------
+
+inline Graph_lib::Point triangle_end_point(Graph_lib::Point pt,
+                                           float angle,
+                                           int side_len)
+{
+	return {static_cast<int>(std::round(pt.x + cos(angle) * side_len)),
+	        static_cast<int>(std::round(pt.y + sin(angle) * side_len))};
+}
 
 //------------------------------------------------------------------------------
 
@@ -116,7 +125,10 @@ class TriangleTiler : public Graph_lib::Shape
 public:
 	TriangleTiler(
 	    Graph_lib::Point o, int w, int h, int tri_side, double rotation);
+	void pause_drawing() { draw_active = false; };
+	void resume_drawing() { draw_active = true; };
 	void draw_lines() const;
+
 	void update_transform(Graph_lib::Point new_pos,
 	                      int new_side_len,
 	                      float new_angle);
@@ -144,6 +156,8 @@ public:
 	std::vector<Graph_lib::Point> debug_draw_tiles_bbox_grid();
 
 private:
+	bool draw_active;
+
 	bool pt_inside_bbox(Graph_lib::Point pt, const Bbox& bbox) const;
 	bool is_oob(const Graph_lib::Point p_0, const Graph_lib::Point p_1) const;
 	bool p_fits_bbox(const Graph_lib::Point p) const;

@@ -111,6 +111,7 @@ void TRITI::Bbox::new_from_bounds()
 TRITI::TriangleTiler::TriangleTiler(
     Graph_lib::Point o, int w, int h, int tri_side, double angle)
     : Graph_lib::Shape()
+    , draw_active(true)
     , c{o.x + static_cast<int>((w * 5 + 5) / 10),
         o.y + static_cast<int>((h * 5 + 5) / 10)}
     , bg_bnds{o, {o.x + w, o.y + h}}
@@ -125,15 +126,20 @@ TRITI::TriangleTiler::TriangleTiler(
 	tiles_bbox.set_color(Graph_lib::Color::yellow);
 
 	// Add first tile
-	Graph_lib::Point in_end{static_cast<int>(std::round(o.x + cos(a) * s)),
-	                        static_cast<int>(std::round(o.y + sin(a) * s))};
-	tris.push_back(std::make_unique<RTRI::RightTriangle>(o, in_end));
+	tris.push_back(
+	    std::make_unique<RTRI::RightTriangle>(o,
+	                                          TRITI::triangle_end_point(o,
+	                                                                    a,
+	                                                                    s)));
 	tris.back()->set_color(Graph_lib::Color::blue);
 }
 
 void TRITI::TriangleTiler::draw_lines() const
 {
 	bg.draw();
+	if (!draw_active) {
+		return;
+	}
 	tiles_bbox.draw();
 	for (const auto& t : tris) {
 		t->draw();
@@ -145,16 +151,18 @@ int TRITI::TriangleTiler::count_tris_until_oob(Graph_lib::Point point,
                                                const int max_count)
 {
 	int count = 0;
-	Coord_sys::Bounds bnds{rotated_bounds(tiles_bbox, tiles_cs)};
-	while (count < max_count && Coord_sys::is_inside(point, bnds, tiles_cs)) {
-		point.x += offset.x;
-		point.y += offset.y;
-		Graph_lib::Point new_end{static_cast<int>(
-		                             std::round(point.x + cos(a) * s)),
-		                         static_cast<int>(
-		                             std::round(point.y + sin(a) * s))};
-		tris.push_back(std::make_unique<RTRI::RightTriangle>(point, new_end));
-		tris.back()->set_color(Graph_lib::Color::dark_green);
+	Graph_lib::Point rot_pt{tiles_cs.to_local(point)};
+	Graph_lib::Point rot_offset_pt{
+	    tiles_cs.to_local({point.x + offset.x, point.y + offset.y})};
+	Graph_lib::Point rot_offset{rot_offset_pt.x - rot_pt.x,
+	                            rot_offset_pt.y - rot_pt.y};
+	Coord_sys::Bounds rot_bnds{rotated_bounds(tiles_bbox, tiles_cs)};
+	while (count < max_count && Coord_sys::is_inside(rot_pt, rot_bnds)) {
+		rot_pt.x += rot_offset.x;
+		rot_pt.y += rot_offset.y;
+		tris.push_back(std::make_unique<RTRI::RightTriangle>(
+		    rot_pt, TRITI::triangle_end_point(rot_pt, a, s)));
+		tris.back()->set_color(Graph_lib::Color::dark_red);
 		if (++count == max_count) {
 			throw std::runtime_error("Too many triangles in pattern");
 		}
