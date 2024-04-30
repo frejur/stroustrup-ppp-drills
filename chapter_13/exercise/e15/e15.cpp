@@ -129,6 +129,7 @@ void e15()
 	while (win.shown()) {
 		if (win.click_has_been_registered()) {
 			if (!dyn_t.is_transforming()) {
+				tiles.pause_drawing();
 				dyn_t.enable_transform();
 				hacky_redraw_tile(pass_to_callback);
 				info.set_label(info_transform());
@@ -149,6 +150,7 @@ void e15()
 					                                 tiles.point(2))};
 				}
 			} else {
+				tiles.resume_drawing();
 				dyn_t.apply_transform();
 				dyn_t.disable_transform();
 				tiles.update_transform(dyn_t.origin(),
