@@ -78,8 +78,12 @@ inline bool is_inside(Graph_lib::Point p,
 
 inline Bounds bounds_from_points(const std::vector<Graph_lib::Point>& pts)
 {
-	Coord_sys::Bounds bnds;
-	for (int i = 0; i < 4; ++i) {
+	if (pts.size() == 0) {
+		throw std::runtime_error(
+		    "Cannot calculate bounds, vector<Point> is empty");
+	}
+	Coord_sys::Bounds bnds{};
+	for (int i = 0; i < pts.size(); ++i) {
 		Graph_lib::Point pt = pts[i];
 		if (i == 0) {
 			bnds = {pt, pt};

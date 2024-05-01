@@ -208,5 +208,18 @@ Top_left_tile top_left_tile_attributes(float angle,
                                        int inv_count_b,
                                        Graph_lib::Point offs_b);
 
+inline Coord_sys::Bounds bounds(const RTRI::RightTriangle& tri)
+{
+	if (tri.number_of_points() == 0) {
+		throw std::runtime_error(
+		    "Cannot calculate bounds for a triangle containing no points");
+	}
+	std::vector<Graph_lib::Point> pts;
+	for (int i = 0; i < tri.number_of_points(); ++i) {
+		pts.push_back(tri.point(i));
+	}
+	return Coord_sys::bounds_from_points(pts);
+}
+
 } // namespace TRITI -----------------------------------------------------------
 #endif // TRIANGLETILER_H
