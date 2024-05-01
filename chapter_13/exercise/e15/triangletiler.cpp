@@ -160,9 +160,6 @@ int TRITI::TriangleTiler::count_tris_until_oob(Graph_lib::Point point,
 	while (count < max_count && Coord_sys::is_inside(rot_pt, rot_bnds)) {
 		rot_pt.x += rot_offset.x;
 		rot_pt.y += rot_offset.y;
-		tris.push_back(std::make_unique<RTRI::RightTriangle>(
-		    rot_pt, TRITI::triangle_end_point(rot_pt, a, s)));
-		tris.back()->set_color(Graph_lib::Color::dark_red);
 		if (++count == max_count) {
 			throw std::runtime_error("Too many triangles in pattern");
 		}
@@ -208,15 +205,13 @@ void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
 	s = new_side_len;
 	a = new_angle;
 	tris.clear();
-	Graph_lib::Point in_end{static_cast<int>(std::round(new_pos.x + cos(a) * s)),
-	                        static_cast<int>(
-	                            std::round(new_pos.y + sin(a) * s))};
-	tris.push_back(std::make_unique<RTRI::RightTriangle>(new_pos, in_end));
-	RTRI::RightTriangle& og_tri = reinterpret_cast<RTRI::RightTriangle&>(
-	    *tris.back());
+	tris.push_back(
+	    std::make_unique<RTRI::RightTriangle>(new_pos,
+	                                          TRITI::triangle_end_point(new_pos,
+	                                                                    a,
+	                                                                    s)));
 	new_bbox();
 
-	Graph_lib::Point test = new_pos;
 	Graph_lib::Point offs_a{tris.back()->point(1).x - new_pos.x,
 	                        tris.back()->point(1).y - new_pos.y};
 	Graph_lib::Point offs_b{tris.back()->point(2).x - new_pos.x,
@@ -252,7 +247,7 @@ void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
 	tris.back()->add(tri_bnds[1]);
 	tris.back()->add(tri_bnds[2]);
 	tris.back()->add(tri_bnds[3]);
-	tris.back()->set_color(Graph_lib::Color::yellow);
+	tris.back()->set_color(Graph_lib::Color::dark_yellow);
 	tris.back()->set_style({Graph_lib::Line_style::solid, 2});
 
 	Graph_lib::Point top_left{};
@@ -265,100 +260,40 @@ void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
 			top_left = left_pts[i];
 		}
 	}
-	Graph_lib::Point in_end2{static_cast<int>(
-	                             std::round(top_left.x + cos(a) * s)),
-	                         static_cast<int>(
-	                             std::round(top_left.y + sin(a) * s))};
-	tris.push_back(std::make_unique<RTRI::RightTriangle>(top_left, in_end2));
+	tris.push_back(std::make_unique<RTRI::RightTriangle>(
+	    top_left, TRITI::triangle_end_point(top_left, a, s)));
 	tris.back()->set_color(Graph_lib::Color::cyan);
 
-	bool inv_tile = false;
-	bool inv_dir = false;
-	int sign_a = 1;
-	int sign_b = 1;
-	Graph_lib::Point top_l{};
-	int sub_quadrant = static_cast<int>(new_angle / (M_PI * 0.25));
-	switch (sub_quadrant) {
-	case 0:
-		top_l = tri_bnds[3];
-		inv_tile = false;
-		inv_dir = false;
-		sign_a = 1;
-		sign_b = 1;
-		break;
-	case 1:
-		top_l = tri_bnds[2];
-		inv_tile = true;
-		inv_dir = true;
-		sign_a = 1;
-		sign_b = -1;
-		break;
-	case 2:
-		top_l = tri_bnds[2];
-		inv_tile = true;
-		inv_dir = true;
-		sign_a = 1;
-		sign_b = -1;
-		break;
-	case 3:
-		top_l = tri_bnds[0];
-		inv_tile = true;
-		inv_dir = false;
-		sign_a = -1;
-		sign_b = -1;
-		break;
-	case 4:
-		top_l = tri_bnds[0];
-		inv_tile = true;
-		inv_dir = false;
-		sign_a = -1;
-		sign_b = -1;
-		break;
-	case 5:
-		top_l = tri_bnds[1];
-		inv_tile = false;
-		inv_dir = true;
-		sign_a = -1;
-		sign_b = 1;
-		break;
-	case 6:
-		top_l = tri_bnds[1];
-		inv_tile = false;
-		inv_dir = true;
-		sign_a = -1;
-		sign_b = 1;
-		break;
-	case 7:
-	default:
-		top_l = tri_bnds[3];
-		inv_tile = false;
-		inv_dir = false;
-		sign_a = 1;
-		sign_b = 1;
-		break;
-	}
-	Graph_lib::Point in_end3{static_cast<int>(std::round(top_l.x + cos(a) * s)),
-	                         static_cast<int>(std::round(top_l.y + sin(a) * s))};
+	Top_left_tile top_l_tri{top_left_tile_attributes(new_angle,
+	                                                 new_pos,
+	                                                 count_a,
+	                                                 inv_count_a,
+	                                                 offs_a,
+	                                                 count_b,
+	                                                 inv_count_b,
+	                                                 offs_b)};
+	Graph_lib::Point top_l_tri_end_pt{
+	    TRITI::triangle_end_point(top_l_tri.pos, a, s)};
 	tris.push_back(
-	    std::make_unique<RTRI::RightTriangle>(top_l, in_end3, inv_tile));
+	    std::make_unique<RTRI::RightTriangle>(top_l_tri.pos, top_l_tri_end_pt));
 	tris.back()->set_color(Graph_lib::Color::dark_yellow);
 	tris.back()->set_style({Graph_lib::Line_style::solid, 2});
-	if (!inv_dir) {
-		add_tiles(top_l,
-		          in_end3,
+	if (!top_l_tri.inv_dir) {
+		add_tiles(top_l_tri.pos,
+		          top_l_tri_end_pt,
 		          count_a + inv_count_a + 1,
-		          {offs_a.x * sign_a, offs_a.y * sign_a},
+		          {offs_a.x * top_l_tri.sign_a, offs_a.y * top_l_tri.sign_a},
 		          count_b + inv_count_b + 1,
-		          {offs_b.x * sign_b, offs_b.y * sign_b},
-		          inv_tile);
+		          {offs_b.x * top_l_tri.sign_b, offs_b.y * top_l_tri.sign_b},
+		          top_l_tri.inv_tile);
 	} else {
-		add_tiles(top_l,
-		          in_end3,
+		add_tiles(top_l_tri.pos,
+		          top_l_tri_end_pt,
 		          count_b + inv_count_b + 1,
-		          {offs_b.x * sign_b, offs_b.y * sign_b},
+		          {offs_b.x * top_l_tri.sign_b, offs_b.y * top_l_tri.sign_b},
 		          count_a + inv_count_a + 1,
-		          {offs_a.x * sign_a, offs_a.y * sign_a},
-		          inv_tile);
+		          {offs_a.x * top_l_tri.sign_a, offs_a.y * top_l_tri.sign_a},
+		          top_l_tri.inv_tile);
 	}
 }
 
@@ -373,7 +308,7 @@ Graph_lib::Point TRITI::TriangleTiler::point(int p) const
 			++count;
 		}
 	}
-	throw std::runtime_error("No point with that index");
+	throw std::runtime_error("No point carries that index");
 }
 
 std::vector<Graph_lib::Point> TRITI::TriangleTiler::debug_draw_tiles_bbox_grid()
@@ -456,6 +391,8 @@ TRITI::Bary_coords TRITI::bary(Graph_lib::Point p,
 	return {v, w, (1.0 - v - w)};
 }
 
+//------------------------------------------------------------------------------
+
 void TRITI::Bbox::draw_lines() const
 {
 	Shape::draw_lines();
@@ -467,6 +404,8 @@ void TRITI::Bbox::draw_lines() const
 		        point(0).y);
 }
 
+//------------------------------------------------------------------------------
+
 Coord_sys::Bounds TRITI::rotated_bounds(const Bbox& bb,
                                         const Coord_sys::Coordinate_system& cs)
 {
@@ -474,4 +413,58 @@ Coord_sys::Bounds TRITI::rotated_bounds(const Bbox& bb,
 	                                      cs.to_local(bb.point(1)),
 	                                      cs.to_local(bb.point(2)),
 	                                      cs.to_local(bb.point(3))});
+}
+
+//------------------------------------------------------------------------------
+
+TRITI::Top_left_tile TRITI::top_left_tile_attributes(float angle,
+                                                     Graph_lib::Point init_pt,
+                                                     int count_a,
+                                                     int inv_count_a,
+                                                     Graph_lib::Point offs_a,
+                                                     int count_b,
+                                                     int inv_count_b,
+                                                     Graph_lib::Point offs_b)
+{
+	if (angle < 0 || angle > M_PI * 2) {
+		throw std::runtime_error("Invalid angle");
+	}
+
+	int sub_quadrant = static_cast<int>(angle / (M_PI * 0.25));
+	switch (sub_quadrant) {
+	case 0:
+	case 7:
+		return {false,
+		        false,
+		        1,
+		        1,
+		        {init_pt.x - inv_count_a * offs_a.x - inv_count_b * offs_b.x,
+		         init_pt.y - inv_count_a * offs_a.y - inv_count_b * offs_b.y}};
+	case 1:
+	case 2:
+		return {true,
+		        true,
+		        1,
+		        -1,
+		        {init_pt.x - inv_count_a * offs_a.x + count_b * offs_b.x,
+		         init_pt.y - inv_count_a * offs_a.y + count_b * offs_b.y}};
+	case 3:
+	case 4:
+		return {true,
+		        false,
+		        -1,
+		        -1,
+		        {init_pt.x + count_a * offs_a.x + count_b * offs_b.x,
+		         init_pt.y + count_a * offs_a.y + count_b * offs_b.y}};
+	case 5:
+	case 6:
+		return {true,
+		        false,
+		        -1,
+		        1,
+		        {init_pt.x + count_a * offs_a.x - inv_count_b * offs_b.x,
+		         init_pt.y + count_a * offs_a.y - inv_count_b * offs_b.y}};
+	default:
+		throw std::runtime_error("Invalid angle");
+	}
 }

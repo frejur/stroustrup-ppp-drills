@@ -190,5 +190,23 @@ private:
 	double a;
 };
 
+struct Top_left_tile
+{
+	bool inv_tile;
+	bool inv_dir;
+	int sign_a;
+	int sign_b;
+	Graph_lib::Point pos;
+};
+
+Top_left_tile top_left_tile_attributes(float angle,
+                                       Graph_lib::Point init_pt,
+                                       int count_a,
+                                       int inv_count_a,
+                                       Graph_lib::Point offs_a,
+                                       int count_b,
+                                       int inv_count_b,
+                                       Graph_lib::Point offs_b);
+
 } // namespace TRITI -----------------------------------------------------------
 #endif // TRIANGLETILER_H
