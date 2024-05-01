@@ -320,24 +320,36 @@ std::vector<Graph_lib::Point> TRITI::TriangleTiler::debug_draw_tiles_bbox_grid()
 	          + tiles_bbox.vertical_distance_to_max();
 	Graph_lib::Point pt = tiles_cs.to_screen({0, 0});
 	tris.push_back(std::make_unique<Graph_lib::Closed_polyline>());
-	tris.back()->add(pt);
-	tris.back()->add({pt.x + 5, pt.y});
-	tris.back()->add({pt.x + 5, pt.y + 5});
-	tris.back()->add({pt.x, pt.y + 5});
+	tris.back()->add({pt.x - 1, pt.y - 1});
+	tris.back()->add({pt.x + 1, pt.y - 1});
+	tris.back()->add({pt.x + 1, pt.y + 1});
+	tris.back()->add({pt.x - 1, pt.y + 1});
 	tris.back()->set_color(Graph_lib::Color::red);
-	for (int x = 0; x < bbw; x += 20)
-		for (int y = 0; y < bbh; y += 20) {
+	bool done_with_x = false;
+	bool done_with_y = false;
+	for (int x = 0; !done_with_x && x < bbw + 20 - 1; x += 20) {
+		done_with_y = false;
+		if (x > bbw) {
+			x = bbw;
+			done_with_x = true;
+		}
+		for (int y = 0; !done_with_y && y < bbh + 20 - 1; y += 20) {
+			if (y > bbh) {
+				y = bbh;
+				done_with_y = true;
+			}
 			pt = tiles_cs.to_screen(
 			    {-tiles_bbox.horizontal_distance_to_max() + x,
 			     -tiles_bbox.vertical_distance_to_max() + y});
 			tris.push_back(std::make_unique<Graph_lib::Closed_polyline>());
-			tris.back()->add(pt);
-			tris.back()->add({pt.x + 10, pt.y});
-			tris.back()->add({pt.x + 10, pt.y + 10});
-			tris.back()->add({pt.x, pt.y + 10});
+			tris.back()->add({pt.x - 1, pt.y - 1});
+			tris.back()->add({pt.x + 1, pt.y - 1});
+			tris.back()->add({pt.x + 1, pt.y + 1});
+			tris.back()->add({pt.x - 1, pt.y + 1});
 			tris.back()->set_color(Graph_lib::Color::dark_red);
 			pts.push_back(pt);
 		}
+	}
 
 	return pts;
 }
