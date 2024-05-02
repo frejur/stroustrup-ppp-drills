@@ -200,7 +200,7 @@ Top_left_tile top_left_tile_attributes(float angle,
 
 Coord_sys::Bounds bounds(const RTRI::RightTriangle& tri);
 
-bool tri_is_inside(const Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds);
+bool tri_is_inside(Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds);
 
 } // namespace TRITI -----------------------------------------------------------
 #endif // TRIANGLETILER_H
