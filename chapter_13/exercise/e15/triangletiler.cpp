@@ -175,24 +175,56 @@ void TRITI::TriangleTiler::add_tiles(const Graph_lib::Point point_0,
                                      const Graph_lib::Point offset_b,
                                      const bool inv_tile)
 {
-	Graph_lib::Point pt_0 = point_0;
-	Graph_lib::Point pt_1 = point_1;
+	RTRI::RightTriangle tri_cursor{point_0, point_1, inv_tile};
+	RTRI::RightTriangle tri_cursor_inv{point_0, point_1, !inv_tile};
+	Coord_sys::Bounds tri_bbox{bounds(tri_cursor)};
+	Coord_sys::Bounds tri_bbox_inv{bounds(tri_cursor_inv)};
+	Coord_sys::Bounds tri_bbox_combo{
+	    Coord_sys::merged_bounds(tri_bbox, tri_bbox_inv)};
 	for (int a = 0; a < count_a; ++a) {
-		pt_0.x = point_0.x + offset_a.x * a;
-		pt_0.y = point_0.y + offset_a.y * a;
-		pt_1.x = point_1.x + offset_a.x * a;
-		pt_1.y = point_1.y + offset_a.y * a;
+		if (a > 0) {
+			// reset for each 'column'
+			int offs_x = point_0.x
+			             - (inv_tile ? tri_cursor_inv.point(0).x
+			                         : tri_cursor.point(0).x);
+			int offs_y = point_0.y
+			             - (inv_tile ? tri_cursor_inv.point(0).y
+			                         : tri_cursor.point(0).y);
+			tri_cursor.move(offs_x, offs_y);
+			tri_cursor_inv.move(offs_x, offs_y);
+
+			tri_cursor.move(offset_a.x * a, offset_a.y * a);
+			tri_cursor_inv.move(offset_a.x * a, offset_a.y * a);
+		}
 		for (int b = 0; b < count_b; ++b) {
 			if (b > 0) {
-				pt_0.x += offset_b.x;
-				pt_0.y += offset_b.y;
-				pt_1.x += offset_b.x;
-				pt_1.y += offset_b.y;
+				tri_cursor.move(offset_b.x, offset_b.y);
+				tri_cursor_inv.move(offset_b.x, offset_b.y);
 			}
-			tris.push_back(
-			    std::make_unique<RTRI::RightTriangle>(pt_0, pt_1, inv_tile));
-			tris.push_back(
-			    std::make_unique<RTRI::RightTriangle>(pt_0, pt_1, !inv_tile));
+			tri_bbox = bounds(tri_cursor);
+			tri_bbox_inv = bounds(tri_cursor_inv);
+			tri_bbox_combo = Coord_sys::merged_bounds(tri_bbox, tri_bbox_inv);
+			if (!Coord_sys::are_overlapping(tri_bbox_combo, bg_bnds)) {
+				// continue;
+			}
+			tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+			    initializer_list<Graph_lib::Point>{tri_cursor.point(0),
+			                                       tri_cursor.point(1),
+			                                       tri_cursor.point(2)}));
+			tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+			    initializer_list<Graph_lib::Point>{tri_cursor_inv.point(0),
+			                                       tri_cursor_inv.point(1),
+			                                       tri_cursor_inv.point(2)}));
+			tris.back()->set_color(Graph_lib::Color::cyan);
+
+			// tris.push_back(
+			//     std::make_unique<RTRI::RightTriangle>(tri_cursor.point(0),
+			//                                           tri_cursor.point(1),
+			//                                           inv_tile));
+			// tris.push_back(
+			//     std::make_unique<RTRI::RightTriangle>(tri_cursor.point(0),
+			//                                           tri_cursor.point(1),
+			//                                           !inv_tile));
 		}
 	}
 }
