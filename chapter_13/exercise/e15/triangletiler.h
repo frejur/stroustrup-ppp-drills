@@ -54,15 +54,6 @@ inline float tri_area(Graph_lib::Point p0,
 	return a;
 }
 
-inline bool bbox_encompasses_bbox(Graph_lib::Point min_a);
-
-enum class TriType { ZeroArea, RightTriangle, ObliqueTriangle };
-
-struct TriCoords
-{
-	TriType type = TriType::ZeroArea;
-	std::vector<Graph_lib::Point> points;
-};
 //------------------------------------------------------------------------------
 
 inline Graph_lib::Point triangle_end_point(Graph_lib::Point pt,
@@ -173,8 +164,7 @@ private:
 	               const int count_b,
 	               const Graph_lib::Point offset_b,
 	               const bool invert_first = false);
-	TriCoords get_tri(const Graph_lib::Point p_0,
-	                  const Graph_lib::Point p_1) const;
+
 	std::vector<Graph_lib::Point> get_oblique(const Graph_lib::Point p_0,
 	                                          const Graph_lib::Point p_1) const;
 	static constexpr int MAX_TRIS{ 500 };
@@ -208,18 +198,9 @@ Top_left_tile top_left_tile_attributes(float angle,
                                        int inv_count_b,
                                        Graph_lib::Point offs_b);
 
-inline Coord_sys::Bounds bounds(const RTRI::RightTriangle& tri)
-{
-	if (tri.number_of_points() == 0) {
-		throw std::runtime_error(
-		    "Cannot calculate bounds for a triangle containing no points");
-	}
-	std::vector<Graph_lib::Point> pts;
-	for (int i = 0; i < tri.number_of_points(); ++i) {
-		pts.push_back(tri.point(i));
-	}
-	return Coord_sys::bounds_from_points(pts);
-}
+Coord_sys::Bounds bounds(const RTRI::RightTriangle& tri);
+
+bool tri_is_inside(const Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds);
 
 } // namespace TRITI -----------------------------------------------------------
 #endif // TRIANGLETILER_H

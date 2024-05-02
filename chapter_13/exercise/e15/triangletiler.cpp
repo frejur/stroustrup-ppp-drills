@@ -136,7 +136,6 @@ TRITI::TriangleTiler::TriangleTiler(
 
 void TRITI::TriangleTiler::draw_lines() const
 {
-	bg.draw();
 	if (!draw_active) {
 		return;
 	}
@@ -144,6 +143,7 @@ void TRITI::TriangleTiler::draw_lines() const
 	for (const auto& t : tris) {
 		t->draw();
 	}
+	bg.draw();
 }
 
 int TRITI::TriangleTiler::count_tris_until_oob(Graph_lib::Point point,
@@ -207,16 +207,22 @@ void TRITI::TriangleTiler::add_tiles(const Graph_lib::Point point_0,
 			if (!Coord_sys::are_overlapping(tri_bbox_combo, bg_bnds)) {
 				continue;
 			}
-			tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-			    initializer_list<Graph_lib::Point>{tri_cursor.point(0),
-			                                       tri_cursor.point(1),
-			                                       tri_cursor.point(2)}));
-			tris.back()->set_fill_color(Graph_lib::Color::dark_green);
-			tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-			    initializer_list<Graph_lib::Point>{tri_cursor_inv.point(0),
-			                                       tri_cursor_inv.point(1),
-			                                       tri_cursor_inv.point(2)}));
-			tris.back()->set_fill_color(Graph_lib::Color::yellow);
+
+			if (tri_is_inside(tri_cursor, bg_bnds)) {
+				tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+				    initializer_list<Graph_lib::Point>{tri_cursor.point(0),
+				                                       tri_cursor.point(1),
+				                                       tri_cursor.point(2)}));
+				tris.back()->set_fill_color(Graph_lib::Color(25));
+			}
+			if (tri_is_inside(tri_cursor_inv, bg_bnds)) {
+				tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+				    initializer_list<Graph_lib::Point>{tri_cursor_inv.point(0),
+				                                       tri_cursor_inv.point(1),
+				                                       tri_cursor_inv.point(
+				                                           2)}));
+				tris.back()->set_fill_color(Graph_lib::Color(20));
+			}
 
 			// tris.push_back(
 			//     std::make_unique<RTRI::RightTriangle>(tri_cursor.point(0),
@@ -512,4 +518,41 @@ TRITI::Top_left_tile TRITI::top_left_tile_attributes(float angle,
 	default:
 		throw std::runtime_error("Invalid angle");
 	}
+}
+
+Coord_sys::Bounds TRITI::bounds(const RTRI::RightTriangle& tri)
+{
+	if (tri.number_of_points() == 0) {
+		throw std::runtime_error(
+		    "Cannot calculate bounds for a triangle containing no points");
+	}
+	std::vector<Graph_lib::Point> pts;
+	for (int i = 0; i < tri.number_of_points(); ++i) {
+		pts.push_back(tri.point(i));
+	}
+	return Coord_sys::bounds_from_points(pts);
+}
+
+bool TRITI::tri_is_inside(const Graph_lib::Closed_polyline& p,
+                          Coord_sys::Bounds bnds)
+{
+	if (p.number_of_points() != 3) {
+		throw std::runtime_error("Not a triangle");
+	}
+	for (int i = 0; i < p.number_of_points(); ++i) {
+		if (Coord_sys::is_inside(p.point(i), bnds)) {
+			return true;
+		}
+	}
+
+	if (is_inside_tri(bary(bnds.min, p.point(0), p.point(1), p.point(2)))
+	    || is_inside_tri(bary(bnds.max, p.point(0), p.point(1), p.point(2)))
+	    || is_inside_tri(
+	        bary({bnds.min.x, bnds.max.y}, p.point(0), p.point(1), p.point(2)))
+	    || is_inside_tri(
+	        bary({bnds.max.x, bnds.min.y}, p.point(0), p.point(1), p.point(2)))) {
+		return true;
+	}
+
+	return false;
 }
