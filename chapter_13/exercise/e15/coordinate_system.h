@@ -76,6 +76,19 @@ inline bool is_inside(Graph_lib::Point p,
 	return is_inside(cs.to_local(p), bounds);
 }
 
+inline bool is_inside(Bounds bnds_a, Bounds bnds_b)
+{
+	return (is_inside(bnds_a.min, bnds_b)
+	        || is_inside(Graph_lib::Point{bnds_a.min.x + bnds_a.max.y}, bnds_b)
+	        || is_inside(Graph_lib::Point{bnds_a.max.x + bnds_a.min.y}, bnds_b)
+	        || is_inside(bnds_a.max, bnds_b));
+}
+
+inline bool are_overlapping(Bounds bnds_a, Bounds bnds_b)
+{
+	return (is_inside(bnds_a, bnds_b) || is_inside(bnds_b, bnds_a));
+}
+
 inline Bounds bounds_from_points(const std::vector<Graph_lib::Point>& pts)
 {
 	if (pts.size() == 0) {
