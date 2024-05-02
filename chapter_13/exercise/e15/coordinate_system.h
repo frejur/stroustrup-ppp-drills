@@ -79,8 +79,8 @@ inline bool is_inside(Graph_lib::Point p,
 inline bool is_inside(Bounds bnds_a, Bounds bnds_b)
 {
 	return (is_inside(bnds_a.min, bnds_b)
-	        || is_inside(Graph_lib::Point{bnds_a.min.x + bnds_a.max.y}, bnds_b)
-	        || is_inside(Graph_lib::Point{bnds_a.max.x + bnds_a.min.y}, bnds_b)
+	        || is_inside(Graph_lib::Point{bnds_a.min.x, bnds_a.max.y}, bnds_b)
+	        || is_inside(Graph_lib::Point{bnds_a.max.x, bnds_a.min.y}, bnds_b)
 	        || is_inside(bnds_a.max, bnds_b));
 }
 
@@ -116,6 +116,11 @@ inline Bounds bounds_from_points(const std::vector<Graph_lib::Point>& pts)
 		}
 	}
 	return bnds;
+}
+
+inline Bounds merged_bounds(Bounds bnds_a, Bounds bnds_b)
+{
+	return bounds_from_points({bnds_a.min, bnds_a.max, bnds_b.min, bnds_b.max});
 }
 
 } // namespace Coord_sys
