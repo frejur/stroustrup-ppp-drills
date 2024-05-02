@@ -10,8 +10,6 @@ ITRI::IsoscelesTriangle::IsoscelesTriangle(GL::Point origin,
                                            bool invert)
     : GL::Closed_polyline()
 {
-	// add(origin);
-	// add(end_opposite);
 	GL::Point offset{end_opposite.x - origin.x, end_opposite.y - origin.y};
 	double side_len{
 	    sqrt(pow(std::abs(offset.y), 2) + pow(std::abs(offset.x), 2))};
