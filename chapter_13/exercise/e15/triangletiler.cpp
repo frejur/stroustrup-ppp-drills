@@ -205,17 +205,18 @@ void TRITI::TriangleTiler::add_tiles(const Graph_lib::Point point_0,
 			tri_bbox_inv = bounds(tri_cursor_inv);
 			tri_bbox_combo = Coord_sys::merged_bounds(tri_bbox, tri_bbox_inv);
 			if (!Coord_sys::are_overlapping(tri_bbox_combo, bg_bnds)) {
-				// continue;
+				continue;
 			}
 			tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
 			    initializer_list<Graph_lib::Point>{tri_cursor.point(0),
 			                                       tri_cursor.point(1),
 			                                       tri_cursor.point(2)}));
+			tris.back()->set_fill_color(Graph_lib::Color::dark_green);
 			tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
 			    initializer_list<Graph_lib::Point>{tri_cursor_inv.point(0),
 			                                       tri_cursor_inv.point(1),
 			                                       tri_cursor_inv.point(2)}));
-			tris.back()->set_color(Graph_lib::Color::cyan);
+			tris.back()->set_fill_color(Graph_lib::Color::yellow);
 
 			// tris.push_back(
 			//     std::make_unique<RTRI::RightTriangle>(tri_cursor.point(0),
