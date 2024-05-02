@@ -223,15 +223,6 @@ void TRITI::TriangleTiler::add_tiles(const Graph_lib::Point point_0,
 				                                           2)}));
 				tris.back()->set_fill_color(Graph_lib::Color(20));
 			}
-
-			// tris.push_back(
-			//     std::make_unique<RTRI::RightTriangle>(tri_cursor.point(0),
-			//                                           tri_cursor.point(1),
-			//                                           inv_tile));
-			// tris.push_back(
-			//     std::make_unique<RTRI::RightTriangle>(tri_cursor.point(0),
-			//                                           tri_cursor.point(1),
-			//                                           !inv_tile));
 		}
 	}
 }
