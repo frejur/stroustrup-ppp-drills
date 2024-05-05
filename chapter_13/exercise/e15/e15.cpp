@@ -28,8 +28,7 @@ const std::string& info_click()
 const std::string& info_transform()
 {
 	static const std::string s{
-	    "Move the cursor along the X-axis to rotate, along the Y-axis "
-	    "to scale. Click to confirm"};
+	    "Move the cursor to transform the triangle. Click to confirm"};
 	return s;
 }
 
