@@ -22,6 +22,7 @@ add_executable(${T_THIS}
     triangletiler.cpp
     dyntile.h dyntile.cpp
     coordinate_system.h
+    inters.h
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
