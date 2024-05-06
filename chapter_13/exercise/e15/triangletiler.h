@@ -10,49 +10,8 @@
 
 namespace TRITI { //------------------------------------------------------------
 
-struct Bary_coords
-{
-	double v;
-	double w;
-	double u;
-};
-
-Bary_coords bary(Graph_lib::Point p,
-                 Graph_lib::Point a,
-                 Graph_lib::Point b,
-                 Graph_lib::Point c);
-
-inline bool is_inside_tri(const Bary_coords& c)
-{
-	return 0 <= c.v && c.v <= 1 && 0 <= c.w && c.w <= 1;
-}
-
-//------------------------------------------------------------------------------
-
-inline double dot(Graph_lib::Point a, Graph_lib::Point b)
-{
-	return static_cast<double>(a.x * b.x + a.y * b.y);
-}
-
-inline float pt_dist(Graph_lib::Point p0, Graph_lib::Point p1)
-{
-	float dx = p1.x - p0.x;
-	float dy = p1.y - p0.y;
-	return sqrt(dx * dx + dy * dy);
-}
-
-inline float tri_area(Graph_lib::Point p0,
-                      Graph_lib::Point p1,
-                      Graph_lib::Point p2)
-{
-	float a = ((p1.x * p0.y - p0.x * p1.y) + (p2.x * p1.y - p1.x * p2.y)
-	           + (p0.x * p2.y - p2.x * p0.y))
-	          * 0.5;
-	if (a < 0) {
-		a *= -1;
-	}
-	return a;
-}
+constexpr int bounds_lower_limit{-9999};
+constexpr int bounds_upper_limit{9999};
 
 //------------------------------------------------------------------------------
 
@@ -201,6 +160,46 @@ Top_left_tile top_left_tile_attributes(float angle,
 Coord_sys::Bounds bounds(const RTRI::RightTriangle& tri);
 
 bool tri_is_inside(Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds);
+
+inline std::vector<Graph_lib::Point> points_v(
+    const Graph_lib::Closed_polyline& poly)
+{
+	std::vector<Graph_lib::Point> pts;
+	for (int i = 0; i < poly.number_of_points(); ++i) {
+		pts.push_back(poly.point(i));
+	}
+	return pts;
+}
+
+inline std::vector<Graph_lib::Point> points_v(const Graph_lib::Rectangle& rec)
+{
+	return {rec.point(0),
+	        {rec.point(0).x + rec.width(), rec.point(0).y},
+	        {rec.point(0).x + rec.width(), rec.point(0).y + rec.height()},
+	        {rec.point(0).x, rec.point(0).y + rec.height()}};
+}
+
+inline std::vector<Graph_lib::Point> points_v(const Coord_sys::Bounds& bnds)
+{
+	return {bnds.min,
+	        {bnds.max.x, bnds.min.y},
+	        {bnds.max.x, bnds.max.y},
+	        bnds.max};
+}
+
+// Returns -1 if equal, 0 if X is greater, 1 if Y is greater.
+inline int axis_w_gr_magnitude(Graph_lib::Point pt)
+{
+	int abs_x = pt.x < 0 ? pt.x * -1 : pt.x;
+	int abs_y = pt.y < 0 ? pt.y * -1 : pt.y;
+	if (abs_x == abs_y) {
+		return -1;
+	}
+	if (abs_x > abs_y) {
+		return 0;
+	}
+	return 1;
+}
 
 } // namespace TRITI -----------------------------------------------------------
 #endif // TRIANGLETILER_H

@@ -1,4 +1,5 @@
 #include "triangletiler.h"
+#include "inters.h"
 
 TRITI::Bbox::Bbox(Graph_lib::Point origin, int width, int height, float angle)
     : init(false)
@@ -157,13 +158,26 @@ int TRITI::TriangleTiler::count_tris_until_oob(Graph_lib::Point point,
 	Graph_lib::Point rot_offset{rot_offset_pt.x - rot_pt.x,
 	                            rot_offset_pt.y - rot_pt.y};
 	Coord_sys::Bounds rot_bnds{rotated_bounds(tiles_bbox, tiles_cs)};
-	while (count < max_count && Coord_sys::is_inside(rot_pt, rot_bnds)) {
+
+	// Determine and disregard the inactive axis
+	int gr_axis{axis_w_gr_magnitude(rot_offset)};
+	if (gr_axis == -1) {
+		throw std::runtime_error("Invalid offset vector");
+	} else if (gr_axis == 0) {
+		rot_bnds.min.y = bounds_lower_limit;
+		rot_bnds.max.y = bounds_upper_limit;
+	} else {
+		rot_bnds.min.x = bounds_lower_limit;
+		rot_bnds.max.x = bounds_upper_limit;
+	}
+
+	do {
 		rot_pt.x += rot_offset.x;
 		rot_pt.y += rot_offset.y;
 		if (++count == max_count) {
 			throw std::runtime_error("Too many triangles in pattern");
 		}
-	}
+	} while (count < max_count && Coord_sys::is_inside(rot_pt, rot_bnds));
 	return count;
 }
 
@@ -242,6 +256,7 @@ void TRITI::TriangleTiler::add_tiles(const Graph_lib::Point point_0,
 				                                       tri_cursor_inv.point(1),
 				                                       tri_cursor_inv.point(
 				                                           2)}));
+				tris.back()->set_color(Graph_lib::Color::yellow);
 				tris.back()->set_fill_color(tri_cursor_inv.fill_color());
 				// tris.back()->set_fill_color(Graph_lib::Color(20));
 			}
@@ -269,52 +284,14 @@ void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
 	Graph_lib::Point offs_b{tris.back()->point(2).x - new_pos.x,
 	                        tris.back()->point(2).y - new_pos.y};
 
+	if (!tri_is_inside(*tris.back(), bg_bnds)) {
+		return;
+	}
 	int count_a = count_tris_until_oob(new_pos, offs_a);
 	int inv_count_a = count_tris_until_oob(new_pos, {-offs_a.x, -offs_a.y});
-	count_a = (count_a > 0) ? count_a - 1 : 0;
 
 	int count_b = count_tris_until_oob(new_pos, offs_b);
 	int inv_count_b = count_tris_until_oob(new_pos, {-offs_b.x, -offs_b.y});
-	count_b = (count_b > 0) ? count_b - 1 : 0;
-
-	std::vector<Graph_lib::Point>
-	    tri_bnds{{new_pos.x + count_a * offs_a.x + count_b * offs_b.x,
-	              new_pos.y + count_a * offs_a.y + count_b * offs_b.y},
-	             {new_pos.x + count_a * offs_a.x - inv_count_b * offs_b.x,
-	              new_pos.y + count_a * offs_a.y - inv_count_b * offs_b.y},
-	             {new_pos.x - inv_count_a * offs_a.x + count_b * offs_b.x,
-	              new_pos.y - inv_count_a * offs_a.y + count_b * offs_b.y},
-	             {new_pos.x - inv_count_a * offs_a.x - inv_count_b * offs_b.x,
-	              new_pos.y - inv_count_a * offs_a.y - inv_count_b * offs_b.y}};
-
-	int mid_x = c.x;
-	std::vector<Graph_lib::Point> left_pts{};
-	for (Graph_lib::Point& p : tri_bnds) {
-		if (p.x <= mid_x) {
-			left_pts.push_back(p);
-		}
-	}
-	tris.push_back(std::make_unique<Graph_lib::Closed_polyline>());
-	tris.back()->add(tri_bnds[0]);
-	tris.back()->add(tri_bnds[1]);
-	tris.back()->add(tri_bnds[2]);
-	tris.back()->add(tri_bnds[3]);
-	tris.back()->set_color(Graph_lib::Color::dark_yellow);
-	tris.back()->set_style({Graph_lib::Line_style::solid, 2});
-
-	Graph_lib::Point top_left{};
-	for (int i = 0; i < left_pts.size(); ++i) {
-		if (i == 0) {
-			top_left = left_pts[i];
-			continue;
-		}
-		if (left_pts[i].y < top_left.y) {
-			top_left = left_pts[i];
-		}
-	}
-	tris.push_back(std::make_unique<RTRI::RightTriangle>(
-	    top_left, TRITI::triangle_end_point(top_left, a, s)));
-	tris.back()->set_color(Graph_lib::Color::cyan);
 
 	Top_left_tile top_l_tri{top_left_tile_attributes(new_angle,
 	                                                 new_pos,
@@ -409,14 +386,14 @@ std::vector<Graph_lib::Point> TRITI::TriangleTiler::debug_draw_tiles_bbox_grid()
 bool TRITI::TriangleTiler::pt_inside_bbox(Graph_lib::Point pt,
                                           const TRITI::Bbox& bbox) const
 {
-	float w = pt_dist(bbox.point(0), bbox.point(1));
-	float h = pt_dist(bbox.point(0), bbox.point(3));
+	float w = inters::pt_dist(bbox.point(0), bbox.point(1));
+	float h = inters::pt_dist(bbox.point(0), bbox.point(3));
 	float a = w * h;
 
-	float sum_tri_a = tri_area(bbox.point(0), pt, bbox.point(3))
-	                  + tri_area(bbox.point(3), pt, bbox.point(2))
-	                  + tri_area(bbox.point(2), pt, bbox.point(1))
-	                  + tri_area(pt, bbox.point(1), bbox.point(0));
+	float sum_tri_a = inters::tri_area(bbox.point(0), pt, bbox.point(3))
+	                  + inters::tri_area(bbox.point(3), pt, bbox.point(2))
+	                  + inters::tri_area(bbox.point(2), pt, bbox.point(1))
+	                  + inters::tri_area(pt, bbox.point(1), bbox.point(0));
 	return sum_tri_a <= a;
 }
 
@@ -426,33 +403,6 @@ void TRITI::TriangleTiler::new_bbox()
 	tiles_bbox.rotate(a);
 	tiles_bbox.new_from_bounds();
 	tiles_bbox.rotate(a);
-}
-
-//------------------------------------------------------------------------------
-
-TRITI::Bary_coords TRITI::bary(Graph_lib::Point p,
-                               Graph_lib::Point a,
-                               Graph_lib::Point b,
-                               Graph_lib::Point c)
-{
-	Graph_lib::Point v0 = {b.x - a.x, b.y - a.y};
-	Graph_lib::Point v1 = {c.x - a.x, c.y - a.y};
-	Graph_lib::Point v2 = {p.x - a.x, p.y - a.y};
-
-	double d00 = dot(v0, v0);
-	double d01 = dot(v0, v1);
-	double d11 = dot(v1, v1);
-	double d20 = dot(v2, v0);
-	double d21 = dot(v2, v1);
-
-	double denom = d00 * d11 - d01 * d01;
-	if (denom == 0) {
-		return {-1, -1, -1};
-	}
-
-	double v = (d11 * d20 - d01 * d21) / denom;
-	double w = (d00 * d21 - d01 * d20) / denom;
-	return {v, w, (1.0 - v - w)};
 }
 
 //------------------------------------------------------------------------------
@@ -558,22 +508,33 @@ bool TRITI::tri_is_inside(Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds)
 		}
 	}
 
-	if (is_inside_tri(bary(bnds.min, p.point(0), p.point(1), p.point(2)))) {
+	if (is_inside_tri(
+	        inters::bary(bnds.min, p.point(0), p.point(1), p.point(2)))) {
 		p.set_fill_color(Graph_lib::Color::green);
 		return true;
 	}
-	if (is_inside_tri(bary(bnds.max, p.point(0), p.point(1), p.point(2)))) {
+	if (is_inside_tri(
+	        inters::bary(bnds.max, p.point(0), p.point(1), p.point(2)))) {
 		p.set_fill_color(Graph_lib::Color::blue);
 		return true;
 	}
-	if (is_inside_tri(
-	        bary({bnds.min.x, bnds.max.y}, p.point(0), p.point(1), p.point(2)))) {
+	if (is_inside_tri(inters::bary({bnds.min.x, bnds.max.y},
+	                               p.point(0),
+	                               p.point(1),
+	                               p.point(2)))) {
 		p.set_fill_color(Graph_lib::Color::yellow);
 		return true;
 	}
-	if (is_inside_tri(
-	        bary({bnds.max.x, bnds.min.y}, p.point(0), p.point(1), p.point(2)))) {
+	if (is_inside_tri(inters::bary({bnds.max.x, bnds.min.y},
+	                               p.point(0),
+	                               p.point(1),
+	                               p.point(2)))) {
 		p.set_fill_color(Graph_lib::Color::white);
+		return true;
+	}
+
+	if (inters::lines_intersect(points_v(p), points_v(bnds))) {
+		p.set_fill_color(Graph_lib::Color::magenta);
 		return true;
 	}
 	// if (is_inside_tri(bary(bnds.min, p.point(0), p.point(1), p.point(2)))

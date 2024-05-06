@@ -9,6 +9,7 @@
 #include "../../lib/Debug_window.h"
 #include "../../lib/Graph.h"
 #include "dyntile.h"
+#include "inters.h"
 #include "triangletiler.h"
 
 // Exercise 15.
@@ -143,10 +144,10 @@ void e15()
 					} else if (i == 3) {
 						corner.y += t_h;
 					}
-					TRITI::Bary_coords b{TRITI::bary(corner,
-					                                 tiles.point(0),
-					                                 tiles.point(1),
-					                                 tiles.point(2))};
+					inters::Bary_coords b{inters::bary(corner,
+					                                   tiles.point(0),
+					                                   tiles.point(1),
+					                                   tiles.point(2))};
 				}
 			} else {
 				tiles.resume_drawing();
