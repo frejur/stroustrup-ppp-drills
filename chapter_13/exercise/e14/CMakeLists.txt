@@ -15,9 +15,9 @@ add_executable(${T_THIS}
     ../../lib/Simple_window.h
     ../../lib/Debug_window.h
     e14.cpp
-    isoscelestriangle.h
-    isoscelestriangle.cpp
-    righttriangle.h
+    ../share/geo/isoscelestriangle.h
+    ../share/geo/isoscelestriangle.cpp
+    ../share/geo/righttriangle.h
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
