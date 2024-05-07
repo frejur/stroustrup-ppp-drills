@@ -225,20 +225,8 @@ void TRITI::TriangleTiler::add_tiles(const Graph_lib::Point point_0,
 			                                       tri_bbox_combo.max,
 			                                       {tri_bbox_combo.min.x,
 			                                        tri_bbox_combo.max.y}}));
-			tris.back()->set_color(Graph_lib::Color::dark_cyan);
 
 			if (!Coord_sys::are_overlapping(tri_bbox_combo, bg_bnds)) {
-				tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-				    initializer_list<Graph_lib::Point>{tri_cursor.point(0),
-				                                       tri_cursor.point(1),
-				                                       tri_cursor.point(2)}));
-				tris.back()->set_fill_color(Graph_lib::Color::dark_yellow);
-				tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-				    initializer_list<Graph_lib::Point>{tri_cursor_inv.point(0),
-				                                       tri_cursor_inv.point(1),
-				                                       tri_cursor_inv.point(
-				                                           2)}));
-				tris.back()->set_fill_color(Graph_lib::Color::dark_green);
 				continue;
 			}
 
@@ -247,8 +235,7 @@ void TRITI::TriangleTiler::add_tiles(const Graph_lib::Point point_0,
 				    initializer_list<Graph_lib::Point>{tri_cursor.point(0),
 				                                       tri_cursor.point(1),
 				                                       tri_cursor.point(2)}));
-				tris.back()->set_fill_color(tri_cursor.fill_color());
-				// tris.back()->set_fill_color(Graph_lib::Color(25));
+				tris.back()->set_fill_color(Graph_lib::Color(25));
 			}
 			if (tri_is_inside(tri_cursor_inv, bg_bnds)) {
 				tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
@@ -256,9 +243,7 @@ void TRITI::TriangleTiler::add_tiles(const Graph_lib::Point point_0,
 				                                       tri_cursor_inv.point(1),
 				                                       tri_cursor_inv.point(
 				                                           2)}));
-				tris.back()->set_color(Graph_lib::Color::yellow);
-				tris.back()->set_fill_color(tri_cursor_inv.fill_color());
-				// tris.back()->set_fill_color(Graph_lib::Color(20));
+				tris.back()->set_fill_color(Graph_lib::Color(20));
 			}
 		}
 	}
@@ -508,28 +493,18 @@ bool TRITI::tri_is_inside(Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds)
 		}
 	}
 
-	if (is_inside_tri(
-	        inters::bary(bnds.min, p.point(0), p.point(1), p.point(2)))) {
+	if (is_inside_tri(inters::bary(bnds.min, p.point(0), p.point(1), p.point(2)))
+	    || is_inside_tri(
+	        inters::bary(bnds.max, p.point(0), p.point(1), p.point(2)))
+	    || is_inside_tri(inters::bary({bnds.min.x, bnds.max.y},
+	                                  p.point(0),
+	                                  p.point(1),
+	                                  p.point(2)))
+	    || is_inside_tri(inters::bary({bnds.max.x, bnds.min.y},
+	                                  p.point(0),
+	                                  p.point(1),
+	                                  p.point(2)))) {
 		p.set_fill_color(Graph_lib::Color::green);
-		return true;
-	}
-	if (is_inside_tri(
-	        inters::bary(bnds.max, p.point(0), p.point(1), p.point(2)))) {
-		p.set_fill_color(Graph_lib::Color::blue);
-		return true;
-	}
-	if (is_inside_tri(inters::bary({bnds.min.x, bnds.max.y},
-	                               p.point(0),
-	                               p.point(1),
-	                               p.point(2)))) {
-		p.set_fill_color(Graph_lib::Color::yellow);
-		return true;
-	}
-	if (is_inside_tri(inters::bary({bnds.max.x, bnds.min.y},
-	                               p.point(0),
-	                               p.point(1),
-	                               p.point(2)))) {
-		p.set_fill_color(Graph_lib::Color::white);
 		return true;
 	}
 
@@ -537,15 +512,5 @@ bool TRITI::tri_is_inside(Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds)
 		p.set_fill_color(Graph_lib::Color::magenta);
 		return true;
 	}
-	// if (is_inside_tri(bary(bnds.min, p.point(0), p.point(1), p.point(2)))
-	//     || is_inside_tri(bary(bnds.max, p.point(0), p.point(1), p.point(2)))
-	//     || is_inside_tri(
-	//         bary({bnds.min.x, bnds.max.y}, p.point(0), p.point(1), p.point(2)))
-	//     || is_inside_tri(
-	//         bary({bnds.max.x, bnds.min.y}, p.point(0), p.point(1), p.point(2)))) {
-	// 	p.set_fill_color(Graph_lib::Color::green);
-	// 	return true;
-	// }
-
 	return false;
 }
