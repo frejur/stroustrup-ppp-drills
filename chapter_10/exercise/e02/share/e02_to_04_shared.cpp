@@ -1,6 +1,7 @@
 #include "e02_to_04_shared.h"
 #include "../lib/helpers.h"
 #include <fstream>
+#include <algorithm>
 
 double share::conv_temp(double t, Temperature_unit in, Temperature_unit out)
 {
@@ -317,7 +318,7 @@ std::vector<share::Reading> share::generate_readings(int min_count,
 	int num_readings{help::randint(min_count, max_count)};
 	std::vector<share::Reading> readings{
 	    std::vector<share::Reading>(num_readings,
-	                                {0, 0, share::Temperature_unit::Not_a_unit})};
+                                    {0, 0, share::Temperature_unit::Not_a_unit})};
 	for (Reading& r : readings) {
 		r.hour = help::randint(0, 23);
 		r.temperature = help::randint(static_cast<int>(min_temp * scale_f),

@@ -22,9 +22,10 @@ constexpr char symbol_reading_end{')'};
 
 struct Reading
 {
-	double temperature{ 0 };
-	int hour{ 0 };
-	Temperature_unit unit = Temperature_unit::Not_a_unit;
+    Reading(double t = 0, int h = 0, Temperature_unit u=Temperature_unit::Not_a_unit) : temperature(t), hour(h), unit(u) {};
+    double temperature;
+    int hour;
+    Temperature_unit unit;
 };
 
 std::vector<double> temps_v_from_readings(
