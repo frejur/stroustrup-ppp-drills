@@ -2,8 +2,8 @@
 #define TRIANGLETILER_H
 
 #include "../../lib/Graph.h"
-#include "../share/geo/righttriangle.h"
 #include "coordinate_system.h"
+#include "righttriangle.h"
 #include <cmath>
 #include <memory>
 #include <vector>

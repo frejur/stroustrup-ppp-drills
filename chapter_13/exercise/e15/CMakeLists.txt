@@ -15,9 +15,9 @@ add_executable(${T_THIS}
     ../../lib/Simple_window.h
     ../../lib/Debug_window.h
     e15.cpp
-    isoscelestriangle.h
-    isoscelestriangle.cpp
-    righttriangle.h
+    ../share/geo/isoscelestriangle.h
+    ../share/geo/isoscelestriangle.cpp
+    ../share/geo/righttriangle.h
     triangletiler.h
     triangletiler.cpp
     dyntile.h dyntile.cpp
