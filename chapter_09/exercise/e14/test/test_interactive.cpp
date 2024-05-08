@@ -394,7 +394,7 @@ Parser_Action get_action(const std::string& input) {
 			a.buffer = input;
 		}
 	} catch (...) {
-		throw std::exception("Invalid input");
+        throw std::runtime_error("Invalid input");
 	}
 	return a;
 }
