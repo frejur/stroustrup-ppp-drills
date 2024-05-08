@@ -74,7 +74,6 @@ void print(const std::string& label, const vector<int>& int_v) {
 
 // assumes max > min
 int randnum(int min, int max) {;
-	seed_randint(time(NULL)); // good enough
 	return min + randint(max - min);
 }
 
@@ -165,7 +164,8 @@ int get_max(bool& should_continue, const vector<int>& v) {
 int main()
 try
 {
-	std::cout
+    seed_randint(time(NULL)); // good enough
+    std::cout
 		<< "The greatest number (The max value of a given vector)"
 		<< '\n';
 
