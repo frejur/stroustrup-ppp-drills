@@ -190,8 +190,8 @@ struct Rectangle : Shape {
     Rectangle(Point x, Point y);
     void draw_lines() const;
 
-    int height() const { return h; }
-    int width() const { return w; }
+	int height() const { return h; }
+	int width() const { return w; }
 private:
     int h;    // height
     int w;    // width

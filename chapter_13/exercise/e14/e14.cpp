@@ -1,10 +1,10 @@
+#include "../../lib/Debug_window.h"
 #include "../../lib/Graph.h"
+#include "../share/geo/righttriangle.h"
 #include <exception>
 #include <iostream>
-#include <vector>
 #include <memory>
-#include "../../lib/Debug_window.h"
-#include "righttriangle.h"
+#include <vector>
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <cmath>

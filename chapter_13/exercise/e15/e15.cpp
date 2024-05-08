@@ -9,6 +9,7 @@
 #include "../../lib/Debug_window.h"
 #include "../../lib/Graph.h"
 #include "dyntile.h"
+#include "inters.h"
 #include "triangletiler.h"
 
 // Exercise 15.
@@ -28,8 +29,7 @@ const std::string& info_click()
 const std::string& info_transform()
 {
 	static const std::string s{
-	    "Move the cursor along the X-axis to rotate, along the Y-axis "
-	    "to scale. Click to confirm"};
+	    "Move the cursor to transform the triangle. Click to confirm"};
 	return s;
 }
 
@@ -53,6 +53,10 @@ static void transform_tile_cb(void* data)
 {
 	static float time = 0;
 	Window_and_tile* tw = static_cast<Window_and_tile*>(data);
+	if (!tw->win.shown()) {
+		Fl::remove_timeout(transform_tile_cb, data);
+		return;
+	}
 	time += refresh_rate;
 	if (!tw->tile.is_transforming() || time >= refresh_time_out) {
 		if (time >= refresh_time_out) {
@@ -122,9 +126,10 @@ void e15()
 	win.attach(info);
 
 	int count_logged = 0;
-	while (true) {
+	while (win.shown()) {
 		if (win.click_has_been_registered()) {
 			if (!dyn_t.is_transforming()) {
+				tiles.pause_drawing();
 				dyn_t.enable_transform();
 				hacky_redraw_tile(pass_to_callback);
 				info.set_label(info_transform());
@@ -139,12 +144,13 @@ void e15()
 					} else if (i == 3) {
 						corner.y += t_h;
 					}
-					TRITI::Bary_coords b{TRITI::bary(corner,
-					                                 tiles.point(0),
-					                                 tiles.point(1),
-					                                 tiles.point(2))};
+					inters::Bary_coords b{inters::bary(corner,
+					                                   tiles.point(0),
+					                                   tiles.point(1),
+					                                   tiles.point(2))};
 				}
 			} else {
+				tiles.resume_drawing();
 				dyn_t.apply_transform();
 				dyn_t.disable_transform();
 				tiles.update_transform(dyn_t.origin(),
