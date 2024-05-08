@@ -147,8 +147,8 @@ bool should_exit(std::string exit_key_word) {
 	if (s == exit_key_word) {
 		return true;
 	}
-	for (char c : s) {
-		std::cin.putback(c);
+    for (int i = s.size() - 1; i >= 0; --i) {
+        std::cin.putback(s[i]);
 	}
 	return false;
 }
@@ -177,13 +177,14 @@ try {
 	static const std::string TXT_ASK_P_C { "Please enter 'p' or 'c'." };
 
 	Result result{};
-	int a{}, b{};
+    int a{};
+    int b{};
 	std::cout << TXT_ASK_A_B << '\n';
 	bool gracefully_exiting { false };
 	while (
 		!gracefully_exiting
 		&& !(gracefully_exiting = should_exit(QUIT))
-		&& std::cin >> a >> b
+        && std::cin >> a >> b
 	) {
 		std::cout << '\n'
 			<< "Would you like to calculate the number of permutations" << '\n'
