@@ -17,7 +17,7 @@ void XRT::Exchange_rate::update(long double xrate) {
 	long double fract_as_double{
 		(whole_temp == 0) ? xrate * sign : xrate * sign - whole_temp
 	};
-	int exp_temp{ MLH::get_exp(fract_as_double) };
+    int exp_temp{ static_cast<int>(MLH::get_exp(fract_as_double)) };
 	long exp_f{(exp_temp == 0) ? 1 : static_cast<long>(MLH::exp_f(-exp_temp))};
 
 	long long fract_temp{ 0 };
@@ -95,7 +95,7 @@ void XRT::Exchange_rate::flip_currencies() {
 			: xrate - whole_temp * precision_scale_f
 	};
 
-	int count_d_unit{ MLH::get_exp(combined_scale_f) };
+    int count_d_unit{ static_cast<int>(MLH::get_exp(combined_scale_f)) };
 	int count_d_fract{ MLH::count_d(fract_temp ) };
 	int exp_temp{ count_d_fract - count_d_unit };
 
