@@ -5,7 +5,7 @@
 
 namespace Money_lib_helpers { // -----------------------------------------------
 
-constexpr long get_exp(long double num) {
+inline const long get_exp(long double num) {
 	long exp{ 0 };
 	if (num == 0) {
 		return exp;
@@ -27,7 +27,7 @@ constexpr long get_exp(long double num) {
 	return exp;
 };
 
-constexpr int count_d(long long num) {
+inline const int count_d(long long num) {
 	if (num == 0) {
 		return 1;
 	}
@@ -40,7 +40,7 @@ constexpr int count_d(long long num) {
     return c;
 }
 
-constexpr long double exp_f(int e) {
+inline const long double exp_f(int e) {
 	if (e == 0) {
 		return 1;
 	}
@@ -57,7 +57,7 @@ constexpr long double exp_f(int e) {
 	return f;
 }
 
-constexpr long long factor_until_overflow(long long n) {
+inline const long long factor_until_overflow(long long n) {
 	long long accumulator = 1;
 
 	// Keep multiplying until overflow
@@ -71,7 +71,7 @@ constexpr long long factor_until_overflow(long long n) {
 	return accumulator;
 }
 
-constexpr long decimal_to_cents(double amt_as_dbl, bool allow_infoloss=false) {
+inline const long decimal_to_cents(double amt_as_dbl, bool allow_infoloss=false) {
 	amt_as_dbl *= 100;
 	long amt_as_long{ static_cast<long>(amt_as_dbl) };
 
