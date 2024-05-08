@@ -80,6 +80,10 @@ void wait_for_enter();
 
 // from stdlibfacilities.h -----------------------------------------------------
 
+inline void error(const std::string& s) {
+    throw std::runtime_error(s);
+}
+
 template<class R, class A>
 R narrow_cast(const A& a)
 {
