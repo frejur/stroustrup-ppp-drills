@@ -424,7 +424,6 @@ void swap(int& a, int& b) {
 
 // assumes max > min
 int randnum(int min, int max) {;
-	seed_randint(time(NULL)); // good enough
 	return min + randint(max - min);
 }
 
@@ -556,7 +555,8 @@ int main()
 try
 {
 
-	const std::string text { SNARK::txt + RADIO::txt + NJALL::txt };
+    seed_randint(time(NULL)); // good enough
+    const std::string text { SNARK::txt + RADIO::txt + NJALL::txt };
 
 	bool should_continue{ true }; // passed by ref, false will trigger exit
 	while (should_continue) {
