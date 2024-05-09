@@ -1,7 +1,7 @@
 #ifndef RIGHTTRIANGLE_H
 #define RIGHTTRIANGLE_H
 #include <cmath>
-#include "../../lib/Graph.h"
+#include "../../../lib/Graph.h"
 #include "isoscelestriangle.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
