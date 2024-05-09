@@ -23,7 +23,7 @@ void Simple_window::wait_for_button()
 // this allows graphics without control inversion
 {
     // Simpler handler
-    while (!button_pushed) 
+    while (shown() && !button_pushed)
 	    Fl::wait();
     button_pushed = false;
     Fl::redraw();
