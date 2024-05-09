@@ -5,7 +5,7 @@
 #include "./GUI.h"
 #include <memory>
 #include <cmath>
-#include <Fl/Fl_Multiline_Output.H>
+#include <FL/Fl_Multiline_Output.H>
 #include <string>
 #include <iostream>
 
