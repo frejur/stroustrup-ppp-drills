@@ -25,7 +25,7 @@ vector<int> getSuperXY (
     vector<int> xy {0, 0};
     m = { max(0.01, m) };
     n = { max(0.01, n) };
-    step = { min(max(0, step), 1.0) };
+    step = { min(max(0.0, step), 1.0) };
 
     t = { M_PI * 2.0 * step };
 
