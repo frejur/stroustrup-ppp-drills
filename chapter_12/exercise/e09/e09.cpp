@@ -17,7 +17,7 @@ int main()
 
         // Label
         Text label { { 100, 365 }, txt };
-        label.set_font(Font::screen_bold);
+        label.set_font(Graph_lib::Font::screen_bold);
         label.set_font_size(18);
         label.set_color(Color::black);
         win.attach(label);
