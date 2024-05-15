@@ -1,5 +1,5 @@
 #include "triangletiler.h"
-#include "inters.h"
+#include "../share/help/inters.h"
 
 TRITI::Bbox::Bbox(Graph_lib::Point origin, int width, int height, float angle)
     : init(false)

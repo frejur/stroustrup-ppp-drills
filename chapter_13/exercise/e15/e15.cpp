@@ -8,8 +8,8 @@
 
 #include "../../lib/Debug_window.h"
 #include "../../lib/Graph.h"
-#include "dyntile.h"
-#include "inters.h"
+#include "../share/tiler/dyntile.h"
+#include "../share/help/inters.h"
 #include "triangletiler.h"
 
 // Exercise 15.

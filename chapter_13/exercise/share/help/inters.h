@@ -1,7 +1,7 @@
 #ifndef INTERS_H
 #define INTERS_H
 
-#include "../../lib/Graph.h"
+#include "../../../lib/Graph.h"
 
 namespace inters {
 

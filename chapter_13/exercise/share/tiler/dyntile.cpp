@@ -1,5 +1,5 @@
 #include "dyntile.h"
-#include "righttriangle.h"
+#include "../geo/righttriangle.h"
 
 dyntile::Dynamic_tile::Dynamic_tile(dyntile::Tile_type type,
                                     Graph_lib::Point origin,

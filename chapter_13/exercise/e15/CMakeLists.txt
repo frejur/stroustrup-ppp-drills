@@ -14,15 +14,17 @@ add_executable(${T_THIS}
     ../../lib/Simple_window.cpp
     ../../lib/Simple_window.h
     ../../lib/Debug_window.h
-    e15.cpp
     ../share/geo/isoscelestriangle.h
     ../share/geo/isoscelestriangle.cpp
     ../share/geo/righttriangle.h
+    ../share/help/coordinate_system.h
+    ../share/help/inters.h
     triangletiler.h
     triangletiler.cpp
-    dyntile.h dyntile.cpp
-    coordinate_system.h
-    inters.h
+    ../share/tiler/dyntile.h
+    ../share/tiler/dyntile.cpp
+
+    e15.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)

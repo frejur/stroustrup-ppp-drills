@@ -1,6 +1,6 @@
 #ifndef DYNTILE_H
 #define DYNTILE_H
-#include "../../lib/Graph.h"
+#include "../../../lib/Graph.h"
 #include <memory>
 
 namespace dyntile {

@@ -1,7 +1,7 @@
 #ifndef COORDINATE_SYSTEM_H
 #define COORDINATE_SYSTEM_H
 
-#include "../../lib/Graph.h"
+#include "../../../lib/Graph.h"
 #include <cmath>
 #define _USE_MATH_DEFINES
 
