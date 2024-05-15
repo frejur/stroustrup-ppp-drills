@@ -19,12 +19,14 @@ add_executable(${T_THIS}
     ../share/geo/righttriangle.h
     ../share/help/coordinate_system.h
     ../share/help/inters.h
-    triangletiler.h
-    triangletiler.cpp
     ../share/tiler/dyntile.h
     ../share/tiler/dyntile.cpp
+    ../share/tiler/tiler.h
+    ../share/tiler/tiler.cpp
 
     e15.cpp
+    triangletiler.h
+    triangletiler.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)

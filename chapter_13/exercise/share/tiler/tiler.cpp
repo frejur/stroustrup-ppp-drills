@@ -1,7 +1,7 @@
-#include "triangletiler.h"
-#include "inters.h"
+#include "tiler.h"
+#include "../help/inters.h"
 
-TRITI::Bbox::Bbox(Graph_lib::Point origin, int width, int height, float angle)
+Tile_lib::Bbox::Bbox(Graph_lib::Point origin, int width, int height, float angle)
     : init(false)
     , o(origin)
 {
@@ -17,19 +17,19 @@ TRITI::Bbox::Bbox(Graph_lib::Point origin, int width, int height, float angle)
 	init = true;
 }
 
-void TRITI::Bbox::reset_transform()
+void Tile_lib::Bbox::reset_transform()
 {
 	if (!init) {
 		return;
 	}
 	update(init_w, init_h, init_a);
 }
-void TRITI::Bbox::update(float angle)
+void Tile_lib::Bbox::update(float angle)
 {
 	a = angle;
 	upd_pts();
 }
-void TRITI::Bbox::update(int width, int height, float angle)
+void Tile_lib::Bbox::update(int width, int height, float angle)
 {
 	a = angle;
 	upd_width(width);
@@ -40,24 +40,24 @@ void TRITI::Bbox::update(int width, int height, float angle)
 	upd_pts();
 }
 
-void TRITI::Bbox::upd_width(int w)
+void Tile_lib::Bbox::upd_width(int w)
 {
 	half_w_neg = static_cast<int>(w * 0.5);
 	half_w_pos = w - half_w_neg;
 }
 
-void TRITI::Bbox::upd_height(int h)
+void Tile_lib::Bbox::upd_height(int h)
 {
 	half_h_neg = static_cast<int>(h * 0.5);
 	half_h_pos = h - half_h_neg;
 }
 
-void TRITI::Bbox::set_center(Graph_lib::Point origin)
+void Tile_lib::Bbox::set_center(Graph_lib::Point origin)
 {
 	c = {origin.x + half_w_neg, origin.y + half_h_neg};
 }
 
-void TRITI::Bbox::upd_pts()
+void Tile_lib::Bbox::upd_pts()
 {
 	int x1, x2, x3, x4;
 	int y1, y2, y3, y4;
@@ -76,7 +76,7 @@ void TRITI::Bbox::upd_pts()
 	}
 }
 
-void TRITI::Bbox::rot_coords(
+void Tile_lib::Bbox::rot_coords(
     int& x1, int& x2, int& x3, int& x4, int& y1, int& y2, int& y3, int& y4)
 {
 	float cos_angle = std::cos(a);
@@ -95,13 +95,13 @@ void TRITI::Bbox::rot_coords(
 	y4 = round(half_w_pos * sin_angle - half_h_neg * cos_angle) + c.y;
 }
 
-Coord_sys::Bounds TRITI::Bbox::bounds() const
+Coord_sys::Bounds Tile_lib::Bbox::bounds() const
 {
 	return Coord_sys::bounds_from_points(
 	    {point(0), point(1), point(2), point(3)});
 }
 
-void TRITI::Bbox::new_from_bounds()
+void Tile_lib::Bbox::new_from_bounds()
 {
 	Coord_sys::Bounds bnds{bounds()};
 	int width = bnds.max.x - bnds.min.x;
@@ -109,7 +109,7 @@ void TRITI::Bbox::new_from_bounds()
 	update(width, height, 0);
 }
 
-TRITI::TriangleTiler::TriangleTiler(
+Tile_lib::Tiler::Tiler(
     Graph_lib::Point o, int w, int h, int tri_side, double angle)
     : Graph_lib::Shape()
     , draw_active(true)
@@ -129,13 +129,13 @@ TRITI::TriangleTiler::TriangleTiler(
 	// Add first tile
 	tris.push_back(
 	    std::make_unique<RTRI::RightTriangle>(o,
-	                                          TRITI::triangle_end_point(o,
+                                              Tile_lib::triangle_end_point(o,
 	                                                                    a,
 	                                                                    s)));
 	tris.back()->set_color(Graph_lib::Color::blue);
 }
 
-void TRITI::TriangleTiler::draw_lines() const
+void Tile_lib::Tiler::draw_lines() const
 {
 	if (!draw_active) {
 		return;
@@ -147,7 +147,7 @@ void TRITI::TriangleTiler::draw_lines() const
 	bg.draw();
 }
 
-int TRITI::TriangleTiler::count_tris_until_oob(Graph_lib::Point point,
+int Tile_lib::Tiler::count_tris_until_oob(Graph_lib::Point point,
                                                Graph_lib::Point offset,
                                                const int max_count)
 {
@@ -181,7 +181,7 @@ int TRITI::TriangleTiler::count_tris_until_oob(Graph_lib::Point point,
 	return count;
 }
 
-void TRITI::TriangleTiler::add_tiles(const Graph_lib::Point point_0,
+void Tile_lib::Tiler::add_tiles(const Graph_lib::Point point_0,
                                      const Graph_lib::Point point_1,
                                      const int count_a,
                                      const Graph_lib::Point offset_a,
@@ -249,7 +249,7 @@ void TRITI::TriangleTiler::add_tiles(const Graph_lib::Point point_0,
 	}
 }
 
-void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
+void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
                                             int new_side_len,
                                             float new_angle)
 {
@@ -259,7 +259,7 @@ void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
 	tris.clear();
 	tris.push_back(
 	    std::make_unique<RTRI::RightTriangle>(new_pos,
-	                                          TRITI::triangle_end_point(new_pos,
+                                              Tile_lib::triangle_end_point(new_pos,
 	                                                                    a,
 	                                                                    s)));
 	new_bbox();
@@ -287,7 +287,7 @@ void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
 	                                                 inv_count_b,
 	                                                 offs_b)};
 	Graph_lib::Point top_l_tri_end_pt{
-	    TRITI::triangle_end_point(top_l_tri.pos, a, s)};
+        Tile_lib::triangle_end_point(top_l_tri.pos, a, s)};
 	tris.push_back(
 	    std::make_unique<RTRI::RightTriangle>(top_l_tri.pos, top_l_tri_end_pt));
 	tris.back()->set_color(Graph_lib::Color::dark_yellow);
@@ -311,7 +311,7 @@ void TRITI::TriangleTiler::update_transform(Graph_lib::Point new_pos,
 	}
 }
 
-Graph_lib::Point TRITI::TriangleTiler::point(int p) const
+Graph_lib::Point Tile_lib::Tiler::point(int p) const
 {
 	int count = 0;
 	for (const auto& t : tris) {
@@ -325,7 +325,7 @@ Graph_lib::Point TRITI::TriangleTiler::point(int p) const
 	throw std::runtime_error("No point carries that index");
 }
 
-std::vector<Graph_lib::Point> TRITI::TriangleTiler::debug_draw_tiles_bbox_grid()
+std::vector<Graph_lib::Point> Tile_lib::Tiler::debug_draw_tiles_bbox_grid()
 {
 	std::vector<Graph_lib::Point> pts;
 	int bbw = tiles_bbox.horizontal_distance_to_min()
@@ -368,8 +368,8 @@ std::vector<Graph_lib::Point> TRITI::TriangleTiler::debug_draw_tiles_bbox_grid()
 	return pts;
 }
 
-bool TRITI::TriangleTiler::pt_inside_bbox(Graph_lib::Point pt,
-                                          const TRITI::Bbox& bbox) const
+bool Tile_lib::Tiler::pt_inside_bbox(Graph_lib::Point pt,
+                                          const Tile_lib::Bbox& bbox) const
 {
 	float w = inters::pt_dist(bbox.point(0), bbox.point(1));
 	float h = inters::pt_dist(bbox.point(0), bbox.point(3));
@@ -382,7 +382,7 @@ bool TRITI::TriangleTiler::pt_inside_bbox(Graph_lib::Point pt,
 	return sum_tri_a <= a;
 }
 
-void TRITI::TriangleTiler::new_bbox()
+void Tile_lib::Tiler::new_bbox()
 {
 	tiles_bbox.reset_transform();
 	tiles_bbox.rotate(a);
@@ -392,7 +392,7 @@ void TRITI::TriangleTiler::new_bbox()
 
 //------------------------------------------------------------------------------
 
-void TRITI::Bbox::draw_lines() const
+void Tile_lib::Bbox::draw_lines() const
 {
 	Shape::draw_lines();
 	// then draw closing line:
@@ -405,7 +405,7 @@ void TRITI::Bbox::draw_lines() const
 
 //------------------------------------------------------------------------------
 
-Coord_sys::Bounds TRITI::rotated_bounds(const Bbox& bb,
+Coord_sys::Bounds Tile_lib::rotated_bounds(const Bbox& bb,
                                         const Coord_sys::Coordinate_system& cs)
 {
 	return Coord_sys::bounds_from_points({cs.to_local(bb.point(0)),
@@ -416,7 +416,7 @@ Coord_sys::Bounds TRITI::rotated_bounds(const Bbox& bb,
 
 //------------------------------------------------------------------------------
 
-TRITI::Top_left_tile TRITI::top_left_tile_attributes(float angle,
+Tile_lib::Top_left_tile Tile_lib::top_left_tile_attributes(float angle,
                                                      Graph_lib::Point init_pt,
                                                      int count_a,
                                                      int inv_count_a,
@@ -468,7 +468,7 @@ TRITI::Top_left_tile TRITI::top_left_tile_attributes(float angle,
 	}
 }
 
-Coord_sys::Bounds TRITI::bounds(const RTRI::RightTriangle& tri)
+Coord_sys::Bounds Tile_lib::bounds(const RTRI::RightTriangle& tri)
 {
 	if (tri.number_of_points() == 0) {
 		throw std::runtime_error(
@@ -481,7 +481,7 @@ Coord_sys::Bounds TRITI::bounds(const RTRI::RightTriangle& tri)
 	return Coord_sys::bounds_from_points(pts);
 }
 
-bool TRITI::tri_is_inside(Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds)
+bool Tile_lib::tri_is_inside(Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds)
 {
 	if (p.number_of_points() != 3) {
 		throw std::runtime_error("Not a triangle");

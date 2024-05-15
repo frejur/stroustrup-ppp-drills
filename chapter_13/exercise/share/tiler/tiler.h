@@ -1,14 +1,14 @@
-#ifndef TRIANGLETILER_H
-#define TRIANGLETILER_H
+#ifndef TILER_H
+#define TILER_H
 
-#include "../../lib/Graph.h"
-#include "coordinate_system.h"
-#include "righttriangle.h"
+#include "../../../lib/Graph.h"
+#include "../help/coordinate_system.h"
+#include "../geo/righttriangle.h"
 #include <cmath>
 #include <memory>
 #include <vector>
 
-namespace TRITI { //------------------------------------------------------------
+namespace Tile_lib { //------------------------------------------------------------
 
 constexpr int bounds_lower_limit{-9999};
 constexpr int bounds_upper_limit{9999};
@@ -19,8 +19,8 @@ inline Graph_lib::Point triangle_end_point(Graph_lib::Point pt,
                                            float angle,
                                            int side_len)
 {
-	return {static_cast<int>(std::round(pt.x + cos(angle) * side_len)),
-	        static_cast<int>(std::round(pt.y + sin(angle) * side_len))};
+    return {static_cast<int>(std::round(pt.x + cos(angle) * side_len)),
+            static_cast<int>(std::round(pt.y + sin(angle) * side_len))};
 }
 
 //------------------------------------------------------------------------------
@@ -70,10 +70,10 @@ private:
 Coord_sys::Bounds rotated_bounds(const Bbox& bb,
                                  const Coord_sys::Coordinate_system& cs);
 
-class TriangleTiler : public Graph_lib::Shape
+class Tiler : public Graph_lib::Shape
 {
 public:
-	TriangleTiler(
+    Tiler(
 	    Graph_lib::Point o, int w, int h, int tri_side, double rotation);
 	void pause_drawing() { draw_active = false; };
 	void resume_drawing() { draw_active = true; };
@@ -201,5 +201,5 @@ inline int axis_w_gr_magnitude(Graph_lib::Point pt)
 	return 1;
 }
 
-} // namespace TRITI -----------------------------------------------------------
-#endif // TRIANGLETILER_H
+} // namespace Tile_lib -----------------------------------------------------------
+#endif // TILER_H
