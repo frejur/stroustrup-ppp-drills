@@ -102,3 +102,50 @@ void dyntile::Dynamic_tile::cap_parms(int& side_len, float& angle)
 		angle = 360;
 	}
 }
+
+//------------------------------------------------------------------------------
+
+static void dyntile::transform_tile_cb(void* data)
+{
+    static float time = 0;
+    Window_and_tile* tw = static_cast<Window_and_tile*>(data);
+    if (!tw->win.shown()) {
+        Fl::remove_timeout(transform_tile_cb, data);
+        return;
+    }
+    time += refresh_rate;
+    if (!tw->tile.is_transforming() || time >= refresh_time_out) {
+        if (time >= refresh_time_out) {
+            tw->tile.reset_transform();
+            tw->win.force_click();
+        }
+        time = 0;
+        Fl::remove_timeout(transform_tile_cb, data);
+    } else {
+        bool preview = true;
+        GL::Point clk{tw->win.click_position()};
+        GL::Point m{tw->win.mouse_position()};
+        int x_dist = m.x - clk.x;
+        int y_dist = m.y - clk.y;
+
+        int side = sqrt(x_dist * x_dist + y_dist * y_dist);
+        float angle = atan2(static_cast<float>(y_dist),
+                            static_cast<float>(x_dist))
+                      - (M_PI * 0.25);
+        angle = fmod(angle, 2 * M_PI);
+        if (angle < 0) {
+            angle += 2 * M_PI;
+        }
+
+        tw->tile.cue_transform(tw->win.click_position(), side, angle);
+        tw->tile.apply_transform(preview);
+        Fl::repeat_timeout(refresh_rate, transform_tile_cb, data);
+    }
+    tw->win.redraw();
+}
+
+void dyntile::hacky_redraw_tile(Window_and_tile& tw)
+{
+    Fl::add_timeout(refresh_rate, transform_tile_cb, (void*) &tw);
+}
+

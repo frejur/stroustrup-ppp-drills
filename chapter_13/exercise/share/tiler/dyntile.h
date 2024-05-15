@@ -1,5 +1,6 @@
 #ifndef DYNTILE_H
 #define DYNTILE_H
+#include "../../../lib/Debug_window.h"
 #include "../../../lib/Graph.h"
 #include <memory>
 
@@ -27,6 +28,9 @@ inline const Graph_lib::Color& default_bg_color()
 	static const Graph_lib::Color c{Graph_lib::Color::Transparency::invisible};
 	return c;
 }
+
+constexpr float refresh_rate{0.1};
+constexpr float refresh_time_out{10};
 
 enum class Tile_type { Right_triangle, Regular_hexagon };
 
@@ -83,6 +87,22 @@ private:
 	std::unique_ptr<Graph_lib::Closed_polyline> tile;
 	std::unique_ptr<Graph_lib::Closed_polyline> new_tile(Tile_type type);
 };
+
+//------------------------------------------------------------------------------
+// Interactively transforming the initial tile, hacky, but improves debugging.
+
+struct Window_and_tile
+/* The callback needs to access and modify:
+ * - The window: The cursor / mouse
+ * - The tile: Transformation
+ */
+{
+    Debug_window& win;
+    dyntile::Dynamic_tile& tile;
+};
+
+static void transform_tile_cb(void* data);
+void hacky_redraw_tile(Window_and_tile& tw);
 
 } // namespace dyntile
 

@@ -144,23 +144,24 @@ private:
 };
 
 
-FLTK_buffer::FLTK_buffer(Debug_window& win)
+inline FLTK_buffer::FLTK_buffer(Debug_window& win)
 : m_win(win), m_sb(std::cout.rdbuf()) {
 	setp(0, 0);
 	std::cout.rdbuf(this);
 }
 
-FLTK_buffer::~FLTK_buffer() {
+inline FLTK_buffer::~FLTK_buffer() {
 	std::cout.rdbuf(m_sb);
 }
 
-FLTK_buffer::int_type FLTK_buffer::overflow(int_type c) {
+inline FLTK_buffer::int_type FLTK_buffer::overflow(int_type c) {
 	if (c != traits_type::eof()) {
 		this->m_buf.push_back(c);
 	}
 	return traits_type::not_eof(c);
 }
-int FLTK_buffer::sync() {
+
+inline int FLTK_buffer::sync() {
 	m_win.log(m_buf);
 	m_buf.clear();
 	return 0;
