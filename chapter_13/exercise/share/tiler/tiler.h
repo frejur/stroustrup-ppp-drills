@@ -115,7 +115,7 @@ private:
 	void new_bbox();
 	int count_tris_until_oob(Graph_lib::Point point,
 	                         Graph_lib::Point offset,
-	                         const int max_count = 250);
+                             const int max_count = 250);
 	void add_tiles(const Graph_lib::Point point_0,
 	               const Graph_lib::Point point_1,
 	               const int count_a,
@@ -124,7 +124,6 @@ private:
 	               const Graph_lib::Point offset_b,
 	               const bool invert_first = false);
 
-	static constexpr int MAX_TRIS{ 500 };
 	std::vector<std::unique_ptr<Graph_lib::Closed_polyline>> tris;
 	Graph_lib::Point c;
 	Coord_sys::Bounds bg_bnds;

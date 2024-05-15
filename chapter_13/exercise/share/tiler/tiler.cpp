@@ -272,8 +272,8 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	if (!tri_is_inside(*tris.back(), bg_bnds)) {
 		return;
 	}
-	int count_a = count_tris_until_oob(new_pos, offs_a);
-	int inv_count_a = count_tris_until_oob(new_pos, {-offs_a.x, -offs_a.y});
+    int count_a = count_tris_until_oob(new_pos, offs_a);
+    int inv_count_a = count_tris_until_oob(new_pos, {-offs_a.x, -offs_a.y});
 
 	int count_b = count_tris_until_oob(new_pos, offs_b);
 	int inv_count_b = count_tris_until_oob(new_pos, {-offs_b.x, -offs_b.y});
