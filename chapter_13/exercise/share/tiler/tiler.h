@@ -124,8 +124,6 @@ private:
 	               const Graph_lib::Point offset_b,
 	               const bool invert_first = false);
 
-	std::vector<Graph_lib::Point> get_oblique(const Graph_lib::Point p_0,
-	                                          const Graph_lib::Point p_1) const;
 	static constexpr int MAX_TRIS{ 500 };
 	std::vector<std::unique_ptr<Graph_lib::Closed_polyline>> tris;
 	Graph_lib::Point c;
