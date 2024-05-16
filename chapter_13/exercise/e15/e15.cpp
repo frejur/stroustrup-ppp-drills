@@ -54,7 +54,7 @@ void e15()
 	const GL::Point o{200, 200};
 	const int t_w{300};
 	const int t_h{200};
-    Tile_lib::TriangleTiler tiles{o, t_w, t_h, 64, 0};
+	Tile_lib::Triangle_tiler tiles{o, t_w, t_h, 64, 0};
 	win.attach(tiles);
 
 	dyntile::Dynamic_tile dyn_t{dyntile::Tile_type::Right_triangle, o, 64, 0};

@@ -109,31 +109,7 @@ void Tile_lib::Bbox::new_from_bounds()
 	update(width, height, 0);
 }
 
-Tile_lib::Tiler::Tiler(
-    Graph_lib::Point o, int w, int h, int tri_side, double angle)
-    : Graph_lib::Shape()
-    , draw_active(true)
-    , c{o.x + static_cast<int>((w * 5 + 5) / 10),
-        o.y + static_cast<int>((h * 5 + 5) / 10)}
-    , bg_bnds{o, {o.x + w, o.y + h}}
-    , bg{o, w, h}
-    , tiles_cs{c}
-    , tiles_bnds{bg_bnds}
-    , tiles_bbox{o, w, h}
-    , s(tri_side)
-    , a(angle)
-{
-	bg.set_color(Graph_lib::Color::black);
-	tiles_bbox.set_color(Graph_lib::Color::yellow);
-
-	// Add first tile
-	tris.push_back(
-	    std::make_unique<RTRI::RightTriangle>(o,
-                                              Tile_lib::triangle_end_point(o,
-	                                                                    a,
-	                                                                    s)));
-	tris.back()->set_color(Graph_lib::Color::blue);
-}
+//------------------------------------------------------------------------------
 
 void Tile_lib::Tiler::draw_lines() const
 {
@@ -366,6 +342,23 @@ std::vector<Graph_lib::Point> Tile_lib::Tiler::debug_draw_tiles_bbox_grid()
 	}
 
 	return pts;
+}
+
+Tile_lib::Tiler::Tiler(Graph_lib::Point o, int w, int h, int side, double angle)
+    : Graph_lib::Shape()
+    , draw_active(true)
+    , c{o.x + static_cast<int>((w * 5 + 5) / 10),
+        o.y + static_cast<int>((h * 5 + 5) / 10)}
+    , bg_bnds{o, {o.x + w, o.y + h}}
+    , bg{o, w, h}
+    , tiles_cs{c}
+    , tiles_bnds{bg_bnds}
+    , tiles_bbox{o, w, h}
+    , s(side)
+    , a(angle)
+{
+	bg.set_color(Graph_lib::Color::black);
+	tiles_bbox.set_color(Graph_lib::Color::yellow);
 }
 
 bool Tile_lib::Tiler::pt_inside_bbox(Graph_lib::Point pt,

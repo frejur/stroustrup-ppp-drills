@@ -73,8 +73,6 @@ Coord_sys::Bounds rotated_bounds(const Bbox& bb,
 class Tiler : public Graph_lib::Shape
 {
 public:
-    Tiler(
-	    Graph_lib::Point o, int w, int h, int tri_side, double rotation);
 	void pause_drawing() { draw_active = false; };
 	void resume_drawing() { draw_active = true; };
 	void draw_lines() const;
@@ -105,7 +103,8 @@ public:
 	}
 	std::vector<Graph_lib::Point> debug_draw_tiles_bbox_grid();
 
-private:
+protected:
+	Tiler(Graph_lib::Point o, int w, int h, int side, double rotation);
 	bool draw_active;
 
 	bool pt_inside_bbox(Graph_lib::Point pt, const Bbox& bbox) const;

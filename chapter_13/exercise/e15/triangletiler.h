@@ -5,10 +5,11 @@
 
 namespace Tile_lib { //--------------------------------------------------------
 
-class TriangleTiler : public Tiler
+class Triangle_tiler : public Tiler
 {
 public:
-    using Tiler::Tiler;
+	Triangle_tiler(
+	    Graph_lib::Point o, int w, int h, int tri_side, double rotation);
 };
 
 } // namespace Tile_lib -----------------------------------------------------------
