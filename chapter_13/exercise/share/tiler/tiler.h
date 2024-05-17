@@ -84,7 +84,7 @@ public:
 	void toggle_bounding_box() { show_bbox = !show_bbox; }
 	double angle() const { return a; };
 	int side_length() const { return s; };
-	void clear() { tris.clear(); };
+	void clear_tiles() { tiles.clear(); };
 	void update_bounding_box() { new_bbox(); };
 	Graph_lib::Point top_left_tile() const { return tl; };
 	int debug_bbox_width() const
@@ -123,7 +123,7 @@ protected:
 	               const Graph_lib::Point offset_b,
 	               const bool invert_first = false);
 
-	std::vector<std::unique_ptr<Graph_lib::Closed_polyline>> tris;
+	std::vector<std::unique_ptr<Graph_lib::Closed_polyline>> tiles;
 	Graph_lib::Point c;
 	Coord_sys::Bounds bg_bnds;
 	Graph_lib::Rectangle bg;

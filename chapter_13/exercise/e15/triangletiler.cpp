@@ -5,10 +5,10 @@ Tile_lib::Triangle_tiler::Triangle_tiler(
     : Tiler(o, w, h, tri_side, angle)
 {
 	// Add first tile
-	tris.push_back(
+	tiles.push_back(
 	    std::make_unique<RTRI::RightTriangle>(o,
 	                                          Tile_lib::triangle_end_point(o,
 	                                                                       a,
 	                                                                       s)));
-	tris.back()->set_color(Graph_lib::Color::blue);
+	tiles.back()->set_color(Graph_lib::Color::blue);
 }

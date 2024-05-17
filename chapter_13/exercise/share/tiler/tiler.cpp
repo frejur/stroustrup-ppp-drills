@@ -117,7 +117,7 @@ void Tile_lib::Tiler::draw_lines() const
 		return;
 	}
 	tiles_bbox.draw();
-	for (const auto& t : tris) {
+	for (const auto& t : tiles) {
 		t->draw();
 	}
 	bg.draw();
@@ -194,7 +194,7 @@ void Tile_lib::Tiler::add_tiles(const Graph_lib::Point point_0,
 			tri_bbox = bounds(tri_cursor);
 			tri_bbox_inv = bounds(tri_cursor_inv);
 			tri_bbox_combo = Coord_sys::merged_bounds(tri_bbox, tri_bbox_inv);
-			tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+			tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
 			    initializer_list<Graph_lib::Point>{tri_bbox_combo.min,
 			                                       {tri_bbox_combo.max.x,
 			                                        tri_bbox_combo.min.y},
@@ -207,19 +207,19 @@ void Tile_lib::Tiler::add_tiles(const Graph_lib::Point point_0,
 			}
 
 			if (tri_is_inside(tri_cursor, bg_bnds)) {
-				tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+				tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
 				    initializer_list<Graph_lib::Point>{tri_cursor.point(0),
 				                                       tri_cursor.point(1),
 				                                       tri_cursor.point(2)}));
-				tris.back()->set_fill_color(Graph_lib::Color(25));
+				tiles.back()->set_fill_color(Graph_lib::Color(25));
 			}
 			if (tri_is_inside(tri_cursor_inv, bg_bnds)) {
-				tris.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+				tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
 				    initializer_list<Graph_lib::Point>{tri_cursor_inv.point(0),
 				                                       tri_cursor_inv.point(1),
 				                                       tri_cursor_inv.point(
 				                                           2)}));
-				tris.back()->set_fill_color(Graph_lib::Color(20));
+				tiles.back()->set_fill_color(Graph_lib::Color(20));
 			}
 		}
 	}
@@ -232,23 +232,20 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	tiles_cs.set_rotation(new_angle);
 	s = new_side_len;
 	a = new_angle;
-	tris.clear();
-	tris.push_back(
-	    std::make_unique<RTRI::RightTriangle>(new_pos,
-                                              Tile_lib::triangle_end_point(new_pos,
-	                                                                    a,
-	                                                                    s)));
+	clear_tiles();
+	tiles.push_back(std::make_unique<RTRI::RightTriangle>(
+	    new_pos, Tile_lib::triangle_end_point(new_pos, a, s)));
 	new_bbox();
 
-	Graph_lib::Point offs_a{tris.back()->point(1).x - new_pos.x,
-	                        tris.back()->point(1).y - new_pos.y};
-	Graph_lib::Point offs_b{tris.back()->point(2).x - new_pos.x,
-	                        tris.back()->point(2).y - new_pos.y};
+	Graph_lib::Point offs_a{tiles.back()->point(1).x - new_pos.x,
+	                        tiles.back()->point(1).y - new_pos.y};
+	Graph_lib::Point offs_b{tiles.back()->point(2).x - new_pos.x,
+	                        tiles.back()->point(2).y - new_pos.y};
 
-	if (!tri_is_inside(*tris.back(), bg_bnds)) {
+	if (!tri_is_inside(*tiles.back(), bg_bnds)) {
 		return;
 	}
-    int count_a = count_tris_until_oob(new_pos, offs_a);
+	int count_a = count_tris_until_oob(new_pos, offs_a);
     int inv_count_a = count_tris_until_oob(new_pos, {-offs_a.x, -offs_a.y});
 
 	int count_b = count_tris_until_oob(new_pos, offs_b);
@@ -264,10 +261,10 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	                                                 offs_b)};
 	Graph_lib::Point top_l_tri_end_pt{
         Tile_lib::triangle_end_point(top_l_tri.pos, a, s)};
-	tris.push_back(
+	tiles.push_back(
 	    std::make_unique<RTRI::RightTriangle>(top_l_tri.pos, top_l_tri_end_pt));
-	tris.back()->set_color(Graph_lib::Color::dark_yellow);
-	tris.back()->set_style({Graph_lib::Line_style::solid, 2});
+	tiles.back()->set_color(Graph_lib::Color::dark_yellow);
+	tiles.back()->set_style({Graph_lib::Line_style::solid, 2});
 	if (!top_l_tri.inv_dir) {
 		add_tiles(top_l_tri.pos,
 		          top_l_tri_end_pt,
@@ -290,7 +287,7 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 Graph_lib::Point Tile_lib::Tiler::point(int p) const
 {
 	int count = 0;
-	for (const auto& t : tris) {
+	for (const auto& t : tiles) {
 		for (int i = 0; i < t->number_of_points(); ++i) {
 			if (count == p) {
 				return t->point(i);
@@ -309,12 +306,12 @@ std::vector<Graph_lib::Point> Tile_lib::Tiler::debug_draw_tiles_bbox_grid()
 	int bbh = tiles_bbox.vertical_distance_to_min()
 	          + tiles_bbox.vertical_distance_to_max();
 	Graph_lib::Point pt = tiles_cs.to_screen({0, 0});
-	tris.push_back(std::make_unique<Graph_lib::Closed_polyline>());
-	tris.back()->add({pt.x - 1, pt.y - 1});
-	tris.back()->add({pt.x + 1, pt.y - 1});
-	tris.back()->add({pt.x + 1, pt.y + 1});
-	tris.back()->add({pt.x - 1, pt.y + 1});
-	tris.back()->set_color(Graph_lib::Color::red);
+	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
+	tiles.back()->add({pt.x - 1, pt.y - 1});
+	tiles.back()->add({pt.x + 1, pt.y - 1});
+	tiles.back()->add({pt.x + 1, pt.y + 1});
+	tiles.back()->add({pt.x - 1, pt.y + 1});
+	tiles.back()->set_color(Graph_lib::Color::red);
 	bool done_with_x = false;
 	bool done_with_y = false;
 	for (int x = 0; !done_with_x && x < bbw + 20 - 1; x += 20) {
@@ -331,12 +328,12 @@ std::vector<Graph_lib::Point> Tile_lib::Tiler::debug_draw_tiles_bbox_grid()
 			pt = tiles_cs.to_screen(
 			    {-tiles_bbox.horizontal_distance_to_max() + x,
 			     -tiles_bbox.vertical_distance_to_max() + y});
-			tris.push_back(std::make_unique<Graph_lib::Closed_polyline>());
-			tris.back()->add({pt.x - 1, pt.y - 1});
-			tris.back()->add({pt.x + 1, pt.y - 1});
-			tris.back()->add({pt.x + 1, pt.y + 1});
-			tris.back()->add({pt.x - 1, pt.y + 1});
-			tris.back()->set_color(Graph_lib::Color::dark_red);
+			tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
+			tiles.back()->add({pt.x - 1, pt.y - 1});
+			tiles.back()->add({pt.x + 1, pt.y - 1});
+			tiles.back()->add({pt.x + 1, pt.y + 1});
+			tiles.back()->add({pt.x - 1, pt.y + 1});
+			tiles.back()->set_color(Graph_lib::Color::dark_red);
 			pts.push_back(pt);
 		}
 	}
