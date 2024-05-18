@@ -157,72 +157,21 @@ int Tile_lib::Tiler::count_tiles_until_oob(Graph_lib::Point point,
 	return count;
 }
 
-void Tile_lib::Tiler::add_tiles(const Graph_lib::Point point_0,
-                                     const Graph_lib::Point point_1,
-                                     const int count_a,
-                                     const Graph_lib::Point offset_a,
-                                     const int count_b,
-                                     const Graph_lib::Point offset_b,
-                                     const bool inv_tile)
+void Tile_lib::Tiler::add_tile(Graph_lib::Point pos, int side_len, float angle)
 {
-	RTRI::RightTriangle tri_cursor{point_0, point_1, inv_tile};
-	RTRI::RightTriangle tri_cursor_inv{point_0, point_1, !inv_tile};
-	Coord_sys::Bounds tri_bbox{bounds(tri_cursor)};
-	Coord_sys::Bounds tri_bbox_inv{bounds(tri_cursor_inv)};
-	Coord_sys::Bounds tri_bbox_combo{
-	    Coord_sys::merged_bounds(tri_bbox, tri_bbox_inv)};
-	for (int a = 0; a < count_a; ++a) {
-		if (a > 0) {
-			// reset for each 'column'
-			int offs_x = point_0.x
-			             - (inv_tile ? tri_cursor_inv.point(0).x
-			                         : tri_cursor.point(0).x);
-			int offs_y = point_0.y
-			             - (inv_tile ? tri_cursor_inv.point(0).y
-			                         : tri_cursor.point(0).y);
-			tri_cursor.move(offs_x, offs_y);
-			tri_cursor_inv.move(offs_x, offs_y);
+	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+	    std::initializer_list<Graph_lib::Point>{pos}));
+}
 
-			tri_cursor.move(offset_a.x * a, offset_a.y * a);
-			tri_cursor_inv.move(offset_a.x * a, offset_a.y * a);
-		}
-		for (int b = 0; b < count_b; ++b) {
-			if (b > 0) {
-				tri_cursor.move(offset_b.x, offset_b.y);
-				tri_cursor_inv.move(offset_b.x, offset_b.y);
-			}
-			tri_bbox = bounds(tri_cursor);
-			tri_bbox_inv = bounds(tri_cursor_inv);
-			tri_bbox_combo = Coord_sys::merged_bounds(tri_bbox, tri_bbox_inv);
-			tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-			    initializer_list<Graph_lib::Point>{tri_bbox_combo.min,
-			                                       {tri_bbox_combo.max.x,
-			                                        tri_bbox_combo.min.y},
-			                                       tri_bbox_combo.max,
-			                                       {tri_bbox_combo.min.x,
-			                                        tri_bbox_combo.max.y}}));
-
-			if (!Coord_sys::are_overlapping(tri_bbox_combo, bg_bnds)) {
-				continue;
-			}
-
-			if (tri_is_inside(tri_cursor, bg_bnds)) {
-				tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-				    initializer_list<Graph_lib::Point>{tri_cursor.point(0),
-				                                       tri_cursor.point(1),
-				                                       tri_cursor.point(2)}));
-				tiles.back()->set_fill_color(Graph_lib::Color(25));
-			}
-			if (tri_is_inside(tri_cursor_inv, bg_bnds)) {
-				tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-				    initializer_list<Graph_lib::Point>{tri_cursor_inv.point(0),
-				                                       tri_cursor_inv.point(1),
-				                                       tri_cursor_inv.point(
-				                                           2)}));
-				tiles.back()->set_fill_color(Graph_lib::Color(20));
-			}
-		}
-	}
+void Tile_lib::Tiler::add_tiles(const Graph_lib::Point pos,
+                                const int side_len,
+                                const float angle,
+                                const Tile_count count_a,
+                                const Tile_count count_b,
+                                const Graph_lib::Point offs_a,
+                                const Graph_lib::Point offs_b)
+{
+	// TODO: Draw dummy tiles
 }
 
 void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
@@ -233,10 +182,12 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	s = new_side_len;
 	a = new_angle;
 	clear_tiles();
-	tiles.push_back(std::make_unique<RTRI::RightTriangle>(
-	    new_pos, Tile_lib::triangle_end_point(new_pos, a, s)));
-	new_bbox();
 
+	// DEBUG: Draw initial tile
+	add_tile(new_pos, new_side_len, new_angle);
+	// END DEBUG: Draw initial tile
+
+	new_bbox();
 	Graph_lib::Point offs_a{tiles.back()->point(1).x - new_pos.x,
 	                        tiles.back()->point(1).y - new_pos.y};
 	Graph_lib::Point offs_b{tiles.back()->point(2).x - new_pos.x,
@@ -251,37 +202,13 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	int count_b = count_tiles_until_oob(new_pos, offs_b);
 	int inv_count_b = count_tiles_until_oob(new_pos, {-offs_b.x, -offs_b.y});
 
-	Top_left_tile top_l_tri{top_left_tile_attributes(new_angle,
-	                                                 new_pos,
-	                                                 count_a,
-	                                                 inv_count_a,
-	                                                 offs_a,
-	                                                 count_b,
-	                                                 inv_count_b,
-	                                                 offs_b)};
-	Graph_lib::Point top_l_tri_end_pt{
-        Tile_lib::triangle_end_point(top_l_tri.pos, a, s)};
-	tiles.push_back(
-	    std::make_unique<RTRI::RightTriangle>(top_l_tri.pos, top_l_tri_end_pt));
-	tiles.back()->set_color(Graph_lib::Color::dark_yellow);
-	tiles.back()->set_style({Graph_lib::Line_style::solid, 2});
-	if (!top_l_tri.inv_dir) {
-		add_tiles(top_l_tri.pos,
-		          top_l_tri_end_pt,
-		          count_a + inv_count_a + 1,
-		          {offs_a.x * top_l_tri.sign_a, offs_a.y * top_l_tri.sign_a},
-		          count_b + inv_count_b + 1,
-		          {offs_b.x * top_l_tri.sign_b, offs_b.y * top_l_tri.sign_b},
-		          top_l_tri.inv_tile);
-	} else {
-		add_tiles(top_l_tri.pos,
-		          top_l_tri_end_pt,
-		          count_b + inv_count_b + 1,
-		          {offs_b.x * top_l_tri.sign_b, offs_b.y * top_l_tri.sign_b},
-		          count_a + inv_count_a + 1,
-		          {offs_a.x * top_l_tri.sign_a, offs_a.y * top_l_tri.sign_a},
-		          top_l_tri.inv_tile);
-	}
+	add_tiles(new_pos,
+	          new_side_len,
+	          new_angle,
+	          {count_a, inv_count_a},
+	          {count_b, inv_count_b},
+	          offs_a,
+	          offs_b);
 }
 
 Graph_lib::Point Tile_lib::Tiler::point(int p) const
@@ -406,14 +333,13 @@ Coord_sys::Bounds Tile_lib::rotated_bounds(const Bbox& bb,
 
 //------------------------------------------------------------------------------
 
-Tile_lib::Top_left_tile Tile_lib::top_left_tile_attributes(float angle,
-                                                     Graph_lib::Point init_pt,
-                                                     int count_a,
-                                                     int inv_count_a,
-                                                     Graph_lib::Point offs_a,
-                                                     int count_b,
-                                                     int inv_count_b,
-                                                     Graph_lib::Point offs_b)
+Tile_lib::Top_left_tile Tile_lib::top_left_tile_attributes(
+    float angle,
+    Graph_lib::Point init_pt,
+    Tile_count ca,
+    Tile_count cb,
+    Graph_lib::Point offs_a,
+    Graph_lib::Point offs_b)
 {
 	if (angle < 0 || angle > M_PI * 2) {
 		throw std::runtime_error("Invalid angle");
@@ -427,32 +353,32 @@ Tile_lib::Top_left_tile Tile_lib::top_left_tile_attributes(float angle,
 		        false,
 		        1,
 		        1,
-		        {init_pt.x - inv_count_a * offs_a.x - inv_count_b * offs_b.x,
-		         init_pt.y - inv_count_a * offs_a.y - inv_count_b * offs_b.y}};
+		        {init_pt.x - ca.inv_count * offs_a.x - cb.inv_count * offs_b.x,
+		         init_pt.y - ca.inv_count * offs_a.y - cb.inv_count * offs_b.y}};
 	case 1:
 	case 2:
 		return {true,
 		        true,
 		        1,
 		        -1,
-		        {init_pt.x - inv_count_a * offs_a.x + count_b * offs_b.x,
-		         init_pt.y - inv_count_a * offs_a.y + count_b * offs_b.y}};
+		        {init_pt.x - ca.inv_count * offs_a.x + cb.count * offs_b.x,
+		         init_pt.y - ca.inv_count * offs_a.y + cb.count * offs_b.y}};
 	case 3:
 	case 4:
 		return {true,
 		        false,
 		        -1,
 		        -1,
-		        {init_pt.x + count_a * offs_a.x + count_b * offs_b.x,
-		         init_pt.y + count_a * offs_a.y + count_b * offs_b.y}};
+		        {init_pt.x + ca.count * offs_a.x + cb.count * offs_b.x,
+		         init_pt.y + ca.count * offs_a.y + cb.count * offs_b.y}};
 	case 5:
 	case 6:
 		return {true,
 		        false,
 		        -1,
 		        1,
-		        {init_pt.x + count_a * offs_a.x - inv_count_b * offs_b.x,
-		         init_pt.y + count_a * offs_a.y - inv_count_b * offs_b.y}};
+		        {init_pt.x + ca.count * offs_a.x - cb.inv_count * offs_b.x,
+		         init_pt.y + ca.count * offs_a.y - cb.inv_count * offs_b.y}};
 	default:
 		throw std::runtime_error("Invalid angle");
 	}

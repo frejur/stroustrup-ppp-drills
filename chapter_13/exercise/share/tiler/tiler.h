@@ -15,16 +15,6 @@ constexpr int bounds_upper_limit{9999};
 
 //------------------------------------------------------------------------------
 
-inline Graph_lib::Point triangle_end_point(Graph_lib::Point pt,
-                                           float angle,
-                                           int side_len)
-{
-    return {static_cast<int>(std::round(pt.x + cos(angle) * side_len)),
-            static_cast<int>(std::round(pt.y + sin(angle) * side_len))};
-}
-
-//------------------------------------------------------------------------------
-
 class Bbox : public Graph_lib::Shape
 {
 public:
@@ -69,6 +59,23 @@ private:
 
 Coord_sys::Bounds rotated_bounds(const Bbox& bb,
                                  const Coord_sys::Coordinate_system& cs);
+
+//------------------------------------------------------------------------------
+
+struct Tile_count
+{
+	Tile_count(int c, int ic)
+	    : count(c)
+	    , inv_count(ic){};
+	int count;
+	int inv_count;
+
+	// The total no. of tiles is the initial tile plus the count of tiles in
+	// default direction plus the count of tiles in the inverted direction
+	int total() const { return count + inv_count + 1; };
+};
+
+//------------------------------------------------------------------------------
 
 class Tiler : public Graph_lib::Shape
 {
@@ -115,13 +122,14 @@ protected:
 	int count_tiles_until_oob(Graph_lib::Point point,
 	                          Graph_lib::Point offset,
 	                          const int max_count = 250);
-	void add_tiles(const Graph_lib::Point point_0,
-	               const Graph_lib::Point point_1,
-	               const int count_a,
-	               const Graph_lib::Point offset_a,
-	               const int count_b,
-	               const Graph_lib::Point offset_b,
-	               const bool invert_first = false);
+	virtual void add_tile(Graph_lib::Point pos, int side_len, float angle);
+	virtual void add_tiles(const Graph_lib::Point pos,
+	                       const int side_len,
+	                       const float angle,
+	                       const Tile_count count_a,
+	                       const Tile_count count_b,
+	                       const Graph_lib::Point offset_a,
+	                       const Graph_lib::Point offset_b);
 
 	std::vector<std::unique_ptr<Graph_lib::Closed_polyline>> tiles;
 	Graph_lib::Point c;
@@ -146,11 +154,9 @@ struct Top_left_tile
 
 Top_left_tile top_left_tile_attributes(float angle,
                                        Graph_lib::Point init_pt,
-                                       int count_a,
-                                       int inv_count_a,
+                                       Tile_count count_a,
+                                       Tile_count count_b,
                                        Graph_lib::Point offs_a,
-                                       int count_b,
-                                       int inv_count_b,
                                        Graph_lib::Point offs_b);
 
 Coord_sys::Bounds bounds(const RTRI::RightTriangle& tri);

@@ -10,7 +10,27 @@ class Triangle_tiler : public Tiler
 public:
 	Triangle_tiler(
 	    Graph_lib::Point o, int w, int h, int tri_side, double rotation);
+
+	void add_tiles(const Graph_lib::Point pos,
+	               const int side_len,
+	               const float angle,
+	               const Tile_count count_a,
+	               const Tile_count count_b,
+	               const Graph_lib::Point offset_a,
+	               const Graph_lib::Point offset_b);
+	void add_tile(Graph_lib::Point pos, int side_len, float angle);
 };
 
-} // namespace Tile_lib -----------------------------------------------------------
+//------------------------------------------------------------------------------
+
+inline Graph_lib::Point triangle_end_point(Graph_lib::Point pt,
+                                           float angle,
+                                           int side_len)
+{
+	return {static_cast<int>(std::round(pt.x + cos(angle) * side_len)),
+	        static_cast<int>(std::round(pt.y + sin(angle) * side_len))};
+}
+
+} // namespace Tile_lib
+
 #endif // TRIANGLETILER_H
