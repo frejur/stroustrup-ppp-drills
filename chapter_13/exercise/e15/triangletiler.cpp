@@ -5,7 +5,7 @@ Tile_lib::Triangle_tiler::Triangle_tiler(
     : Tiler(o, w, h, tri_side, angle)
 {
 	// Add first tile
-	add_tile(o, tri_side, angle);
+	add_tile(o, s, a);
 	tiles.back()->set_color(Graph_lib::Color::blue);
 }
 
@@ -120,4 +120,12 @@ void Tile_lib::Triangle_tiler::add_tiles(const Graph_lib::Point pos,
 			}
 		}
 	}
+}
+
+bool Tile_lib::Triangle_tiler::tile_is_inside(int idx)
+{
+	if (idx < 0 || idx > tiles.size() - 1) {
+		throw std::runtime_error("Invalid index");
+	}
+	return Tile_lib::tri_is_inside(*tiles[idx], bg_bnds);
 }

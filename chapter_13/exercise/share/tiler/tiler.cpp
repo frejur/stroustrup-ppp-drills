@@ -193,7 +193,7 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	Graph_lib::Point offs_b{tiles.back()->point(2).x - new_pos.x,
 	                        tiles.back()->point(2).y - new_pos.y};
 
-	if (!tri_is_inside(*tiles.back(), bg_bnds)) {
+	if (!tile_is_inside(tiles.size() - 1)) {
 		return;
 	}
 	int count_a = count_tiles_until_oob(new_pos, offs_a);
@@ -397,7 +397,13 @@ Coord_sys::Bounds Tile_lib::bounds(const RTRI::RightTriangle& tri)
 	return Coord_sys::bounds_from_points(pts);
 }
 
-bool Tile_lib::tri_is_inside(Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds)
+bool Tile_lib::Tiler::tile_is_inside(int idx)
+{
+	return false;
+}
+
+bool Tile_lib::tri_is_inside(Graph_lib::Closed_polyline& p,
+                             Coord_sys::Bounds bnds)
 {
 	if (p.number_of_points() != 3) {
 		throw std::runtime_error("Not a triangle");

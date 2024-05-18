@@ -130,6 +130,7 @@ protected:
 	                       const Tile_count count_b,
 	                       const Graph_lib::Point offset_a,
 	                       const Graph_lib::Point offset_b);
+	virtual bool tile_is_inside(int idx);
 
 	std::vector<std::unique_ptr<Graph_lib::Closed_polyline>> tiles;
 	Graph_lib::Point c;
