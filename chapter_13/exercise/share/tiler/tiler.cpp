@@ -123,9 +123,9 @@ void Tile_lib::Tiler::draw_lines() const
 	bg.draw();
 }
 
-int Tile_lib::Tiler::count_tris_until_oob(Graph_lib::Point point,
-                                               Graph_lib::Point offset,
-                                               const int max_count)
+int Tile_lib::Tiler::count_tiles_until_oob(Graph_lib::Point point,
+                                           Graph_lib::Point offset,
+                                           const int max_count)
 {
 	int count = 0;
 	Graph_lib::Point rot_pt{tiles_cs.to_local(point)};
@@ -245,11 +245,11 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	if (!tri_is_inside(*tiles.back(), bg_bnds)) {
 		return;
 	}
-	int count_a = count_tris_until_oob(new_pos, offs_a);
-    int inv_count_a = count_tris_until_oob(new_pos, {-offs_a.x, -offs_a.y});
+	int count_a = count_tiles_until_oob(new_pos, offs_a);
+	int inv_count_a = count_tiles_until_oob(new_pos, {-offs_a.x, -offs_a.y});
 
-	int count_b = count_tris_until_oob(new_pos, offs_b);
-	int inv_count_b = count_tris_until_oob(new_pos, {-offs_b.x, -offs_b.y});
+	int count_b = count_tiles_until_oob(new_pos, offs_b);
+	int inv_count_b = count_tiles_until_oob(new_pos, {-offs_b.x, -offs_b.y});
 
 	Top_left_tile top_l_tri{top_left_tile_attributes(new_angle,
 	                                                 new_pos,
