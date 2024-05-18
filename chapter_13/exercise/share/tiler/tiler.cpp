@@ -307,6 +307,11 @@ void Tile_lib::Tiler::new_bbox()
 	tiles_bbox.rotate(a);
 }
 
+bool Tile_lib::Tiler::tile_is_inside(int idx)
+{
+	return false;
+}
+
 //------------------------------------------------------------------------------
 
 void Tile_lib::Bbox::draw_lines() const
@@ -395,11 +400,6 @@ Coord_sys::Bounds Tile_lib::bounds(const RTRI::RightTriangle& tri)
 		pts.push_back(tri.point(i));
 	}
 	return Coord_sys::bounds_from_points(pts);
-}
-
-bool Tile_lib::Tiler::tile_is_inside(int idx)
-{
-	return false;
 }
 
 bool Tile_lib::tri_is_inside(Graph_lib::Closed_polyline& p,
