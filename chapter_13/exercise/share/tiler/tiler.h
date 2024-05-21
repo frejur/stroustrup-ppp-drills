@@ -186,8 +186,8 @@ inline std::vector<Graph_lib::Point> points_v(const Coord_sys::Bounds& bnds)
 {
 	return {bnds.min,
 	        {bnds.max.x, bnds.min.y},
-	        {bnds.max.x, bnds.max.y},
-	        bnds.max};
+	        bnds.max,
+	        {bnds.min.x, bnds.max.y}};
 }
 
 // Returns -1 if equal, 0 if X is greater, 1 if Y is greater.
