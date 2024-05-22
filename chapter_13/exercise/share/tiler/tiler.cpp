@@ -157,23 +157,6 @@ int Tile_lib::Tiler::count_tiles_until_oob(Graph_lib::Point point,
 	return count;
 }
 
-void Tile_lib::Tiler::add_tile(Graph_lib::Point pos, int side_len, float angle)
-{
-	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-	    std::initializer_list<Graph_lib::Point>{pos}));
-}
-
-void Tile_lib::Tiler::add_tiles(const Graph_lib::Point pos,
-                                const int side_len,
-                                const float angle,
-                                const Tile_count count_a,
-                                const Tile_count count_b,
-                                const Graph_lib::Point offs_a,
-                                const Graph_lib::Point offs_b)
-{
-	// TODO: Draw dummy tiles
-}
-
 void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
                                             int new_side_len,
                                             float new_angle)
@@ -305,11 +288,6 @@ void Tile_lib::Tiler::new_bbox()
 	tiles_bbox.rotate(a);
 	tiles_bbox.new_from_bounds();
 	tiles_bbox.rotate(a);
-}
-
-bool Tile_lib::Tiler::tile_is_inside(int idx)
-{
-	return false;
 }
 
 //------------------------------------------------------------------------------
