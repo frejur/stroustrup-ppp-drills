@@ -4,7 +4,7 @@
 #include <string>
 #include <algorithm>
 
-#include "../../lib/Graph.h"
+#include "../../../lib/Graph.h"
 
 RegularHexagon::RegularHexagon(Graph_lib::Point xy, int radius)
 	: RegularPolygon({ xy.x + radius, xy.y }, radius, num_sides, 90 * M_PI/180),

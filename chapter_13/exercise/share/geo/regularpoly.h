@@ -1,7 +1,7 @@
 #ifndef REGULAR_POLY_H
 #define REGULAR_POLY_H
 
-#include "../../lib/Graph.h"
+#include "../../../lib/Graph.h"
 
 class RegularPolygon : public Graph_lib::Closed_polyline
 {
