@@ -17,6 +17,10 @@ add_executable(${T_THIS}
     ../share/geo/isoscelestriangle.h
     ../share/geo/isoscelestriangle.cpp
     ../share/geo/righttriangle.h
+    ../share/geo/regularpoly.h
+    ../share/geo/regularpoly.cpp
+    ../share/geo/regularhexagon.h
+    ../share/geo/regularhexagon.cpp
     ../share/help/coordinate_system.h
     ../share/help/inters.h
     ../share/tiler/dyntile.h
