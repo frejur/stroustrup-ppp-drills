@@ -5,11 +5,11 @@
 
 namespace Tile_lib { //--------------------------------------------------------
 
-class Triangle_tiler : public Tiler
+class Hexagon_tiler : public Tiler
 {
 public:
-	Triangle_tiler(
-	    Graph_lib::Point o, int w, int h, int tri_side, double rotation);
+	Hexagon_tiler(
+	    Graph_lib::Point o, int w, int h, int hex_side, double rotation);
 
 private:
 	void add_tiles(const Graph_lib::Point pos,

@@ -8,12 +8,12 @@
 
 #include "../../lib/Debug_window.h"
 #include "../../lib/Graph.h"
-#include "../share/tiler/dyntile.h"
 #include "../share/help/inters.h"
-#include "triangletiler.h"
+#include "../share/tiler/dyntile.h"
+#include "hexagontiler.h"
 
-// Exercise 15.
-// Use the RightTriangle class to tile the entire window with triangles.
+// Exercise 17.
+// Use the RegularHexagon class to tile the entire window with hexagons.
 
 namespace GL = Graph_lib;
 
@@ -22,20 +22,20 @@ namespace GL = Graph_lib;
 const std::string& info_click()
 {
 	static const std::string s{
-	    "Click anywhere to place the initial triangle tile"};
+	    "Click anywhere to place the initial hexagon tile"};
 	return s;
 }
 
 const std::string& info_transform()
 {
 	static const std::string s{
-	    "Move the cursor to transform the triangle. Click to confirm"};
+	    "Move the cursor to transform the hexagon. Click to confirm"};
 	return s;
 }
 
 //------------------------------------------------------------------------------
 
-void e15()
+void e17()
 {
 	constexpr bool ENABLE_DEBUG{true};
 	constexpr bool ENABLE_CLICK{true};
@@ -46,7 +46,7 @@ void e15()
 	Debug_window win{{10, 10},
 	                 win_w,
 	                 win_h,
-	                 "Tri Harder",
+	                 "They thought he was a hexagoner",
 	                 ENABLE_DEBUG,
 	                 ENABLE_CLICK};
 
@@ -54,10 +54,10 @@ void e15()
 	const GL::Point o{200, 200};
 	const int t_w{300};
 	const int t_h{200};
-	Tile_lib::Triangle_tiler tiles{o, t_w, t_h, 64, 0};
+	Tile_lib::Hexagon_tiler tiles{o, t_w, t_h, 64, 0};
 	win.attach(tiles);
 
-	dyntile::Dynamic_tile dyn_t{dyntile::Tile_type::Right_triangle, o, 64, 0};
+	dyntile::Dynamic_tile dyn_t{dyntile::Tile_type::Regular_hexagon, o, 64, 0};
 	win.attach(dyn_t);
 
     dyntile::Window_and_tile pass_to_callback{win, dyn_t};
@@ -96,35 +96,10 @@ void e15()
 				tiles.update_transform(dyn_t.origin(),
 				                       dyn_t.side_length(),
 				                       dyn_t.angle());
-				// win.log("Top left tile: "
-				//         + std::to_string(tiles.top_left_tile().x) + ", "
-				//         + std::to_string(tiles.top_left_tile().y) + "\n");
-
 				if (count_logged > 4) {
 					win.clear_logs();
 					count_logged = 0;
 				}
-				win.log("Angle: " + std::to_string(tiles.angle()) + "\n");
-				int sub_quadrant = static_cast<int>(tiles.angle()
-				                                    / (M_PI * 0.25));
-				win.log("Sub-Quadrant: " + std::to_string(sub_quadrant) + "\n");
-				++count_logged;
-
-				// win.log("Rotated Bbox Dim. "
-				//         + std::to_string(tiles.debug_bbox_width()) + " x "
-				//         + std::to_string(tiles.debug_bbox_height()) + "\n");
-
-				win.log(
-				    "Tiles bbox bounds: "
-				    + std::to_string(tiles.debug_rotates_bounds().min.x) + ", "
-				    + std::to_string(tiles.debug_rotates_bounds().min.y) + " | "
-				    + std::to_string(tiles.debug_rotates_bounds().max.x) + ", "
-				    + std::to_string(tiles.debug_rotates_bounds().max.y) + "\n");
-				std::vector<Graph_lib::Point> dp{
-				    tiles.debug_draw_tiles_bbox_grid()};
-				win.log("Origin: " + std::to_string(dp[0].x) + ", "
-				        + std::to_string(dp[0].y) + "\n");
-
 				info.set_label(info_click());
 			}
 		}
@@ -134,8 +109,8 @@ void e15()
 
 int main() {
 	try {
-          e15();
-          return 0;
+		e17();
+		return 0;
 	}
 	catch (std::exception &e) {
 		std::cerr<<e.what()<<'\n';

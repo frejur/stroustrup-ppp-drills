@@ -1,6 +1,6 @@
-#include "triangletiler.h"
+#include "hexagontiler.h"
 
-Tile_lib::Triangle_tiler::Triangle_tiler(
+Tile_lib::Hexagon_tiler::Hexagon_tiler(
     Graph_lib::Point o, int w, int h, int tri_side, double angle)
     : Tiler(o, w, h, tri_side, angle)
 {
@@ -9,9 +9,9 @@ Tile_lib::Triangle_tiler::Triangle_tiler(
 	tiles.back()->set_color(Graph_lib::Color::blue);
 }
 
-void Tile_lib::Triangle_tiler::add_tile(Graph_lib::Point pos,
-                                        int side_len,
-                                        float angle)
+void Tile_lib::Hexagon_tiler::add_tile(Graph_lib::Point pos,
+                                       int side_len,
+                                       float angle)
 {
 	tiles.push_back(
 	    std::make_unique<RTRI::RightTriangle>(pos,
@@ -20,13 +20,13 @@ void Tile_lib::Triangle_tiler::add_tile(Graph_lib::Point pos,
 	                                                                       s)));
 }
 
-void Tile_lib::Triangle_tiler::add_tiles(const Graph_lib::Point pos,
-                                         const int side_len,
-                                         const float angle,
-                                         const Tile_count count_a,
-                                         const Tile_count count_b,
-                                         const Graph_lib::Point offs_a,
-                                         const Graph_lib::Point offs_b)
+void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
+                                        const int side_len,
+                                        const float angle,
+                                        const Tile_count count_a,
+                                        const Tile_count count_b,
+                                        const Graph_lib::Point offs_a,
+                                        const Graph_lib::Point offs_b)
 {
 	Top_left_tile top_l_tri{
 	    top_left_tile_attributes(angle, pos, count_a, count_b, offs_a, offs_b)};
@@ -122,7 +122,7 @@ void Tile_lib::Triangle_tiler::add_tiles(const Graph_lib::Point pos,
 	}
 }
 
-bool Tile_lib::Triangle_tiler::tile_is_inside(int idx)
+bool Tile_lib::Hexagon_tiler::tile_is_inside(int idx)
 {
 	if (idx < 0 || idx > tiles.size() - 1) {
 		throw std::runtime_error("Invalid index");
