@@ -102,8 +102,8 @@ void dyntile::Dynamic_tile::cap_parms(int& side_len, float& angle)
 	// TODO: Implement wrap-around
 	if (angle < 0) {
 		angle = 0;
-	} else if (angle > 360) {
-		angle = 360;
+	} else if (angle > 2 * M_PI) {
+		angle = 2 * M_PI;
 	}
 }
 

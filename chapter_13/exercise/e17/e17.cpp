@@ -96,6 +96,7 @@ void e17()
 				tiles.update_transform(dyn_t.origin(),
 				                       dyn_t.side_length(),
 				                       dyn_t.angle());
+				win.log("Angle: " + std::to_string(dyn_t.angle()) + "\n");
 				if (count_logged > 4) {
 					win.clear_logs();
 					count_logged = 0;
