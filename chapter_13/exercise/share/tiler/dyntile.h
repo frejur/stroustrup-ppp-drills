@@ -58,6 +58,7 @@ public:
 	float angle() const { return a; };
 	int min_side_len() const { return min_s; };
 	int max_side_len() const { return max_s; };
+	Tile_type type() const { return t; };
 
 private:
 	bool init_pos;

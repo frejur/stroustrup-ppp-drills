@@ -3,10 +3,12 @@
 #include "regularpoly.h"
 #include <vector>
 
-class RegularHexagon : public RegularPolygon
+namespace RHEX {
+
+class RegularHexagon : public RPOL::RegularPolygon
 {
 public:
-	RegularHexagon(Graph_lib::Point xy, int radius);
+	RegularHexagon(Graph_lib::Point xy, int radius, float angle = 0);
 	void close_side(int n);
 	void close_sides_before(int n);
 	bool side_is_open(int n) const;
@@ -25,5 +27,6 @@ private:
 	static constexpr int num_sides{ 6 };
 	std::vector<bool> side_states;
 };
+} // namespace RHEX
 
 #endif // REGULARHEXAGON_H

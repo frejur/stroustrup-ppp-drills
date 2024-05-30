@@ -3,6 +3,8 @@
 
 #include "../../../lib/Graph.h"
 
+namespace RPOL {
+
 class RegularPolygon : public Graph_lib::Closed_polyline
 {
 public:
@@ -19,5 +21,7 @@ private:
     float angle;
     void add_poly_points();
 };
+
+} // namespace RPOL
 
 #endif // REGULAR_POLY_H

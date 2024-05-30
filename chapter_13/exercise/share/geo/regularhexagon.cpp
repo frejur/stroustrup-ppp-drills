@@ -6,30 +6,35 @@
 
 #include "../../../lib/Graph.h"
 
-RegularHexagon::RegularHexagon(Graph_lib::Point xy, int radius)
-	: RegularPolygon({ xy.x + radius, xy.y }, radius, num_sides, 90 * M_PI/180),
-	side_states( std::vector<bool>(num_sides, true))
+RHEX::RegularHexagon::RegularHexagon(Graph_lib::Point xy,
+                                     int radius,
+                                     float angle)
+    : RegularPolygon({xy.x + radius, xy.y},
+                     radius,
+                     num_sides,
+                     angle + (90 * M_PI / 180))
+    , side_states(std::vector<bool>(num_sides, true))
 {
 	Graph_lib::Shape::set_color(Graph_lib::Color::black);
 	set_font_size(8);
 }
 
-void RegularHexagon::close_side(int n)
+void RHEX::RegularHexagon::close_side(int n)
 {
 	side_states[n%num_sides] = false;
 }
 
-void RegularHexagon::close_sides_before(int n)
+void RHEX::RegularHexagon::close_sides_before(int n)
 {
 	std::fill(side_states.begin(), side_states.begin() + n, false);
 }
 
-bool RegularHexagon::side_is_open(int n) const
+bool RHEX::RegularHexagon::side_is_open(int n) const
 {
 	return side_states[n%num_sides];
 }
 
-void RegularHexagon::draw_lines() const
+void RHEX::RegularHexagon::draw_lines() const
 {
 	RegularPolygon::draw_lines();
 
@@ -59,7 +64,8 @@ void RegularHexagon::draw_lines() const
 //	fl_font(old_font, old_sz);
 }
 
-std::pair<int, int> RegularHexagon::get_bbox_size(const string &s) const {
+std::pair<int, int> RHEX::RegularHexagon::get_bbox_size(const string &s) const
+{
 	int mv_x = 0, mv_y = 0, sz_x = 0, sz_y = 0;
 	Fl_Font old_font{ fl_font() };
 	Fl_Fontsize old_sz{ fl_size() };
