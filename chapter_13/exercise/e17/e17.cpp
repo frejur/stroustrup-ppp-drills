@@ -46,7 +46,7 @@ void e17()
 	Debug_window win{{10, 10},
 	                 win_w,
 	                 win_h,
-	                 "They thought he was a hexagoner",
+	                 "Hexagon fishing",
 	                 ENABLE_DEBUG,
 	                 ENABLE_CLICK};
 
