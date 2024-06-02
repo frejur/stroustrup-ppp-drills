@@ -393,17 +393,8 @@ bool Tile_lib::tri_is_inside(Graph_lib::Closed_polyline& p,
 		}
 	}
 
-	if (is_inside_tri(inters::bary(bnds.min, p.point(0), p.point(1), p.point(2)))
-	    || is_inside_tri(
-	        inters::bary(bnds.max, p.point(0), p.point(1), p.point(2)))
-	    || is_inside_tri(inters::bary({bnds.min.x, bnds.max.y},
-	                                  p.point(0),
-	                                  p.point(1),
-	                                  p.point(2)))
-	    || is_inside_tri(inters::bary({bnds.max.x, bnds.min.y},
-	                                  p.point(0),
-	                                  p.point(1),
-	                                  p.point(2)))) {
+	if (inters::any_inside_tri(points_v(bnds),
+	                           {p.point(0), p.point(1), p.point(2)})) {
 		p.set_fill_color(Graph_lib::Color::green);
 		return true;
 	}
