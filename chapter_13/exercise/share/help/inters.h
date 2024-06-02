@@ -70,6 +70,26 @@ inline bool is_inside_tri(const Bary_coords& c)
 	return 0 <= c.v && c.v <= 1 && 0 <= c.w && c.w <= 1 && (c.v + c.w) <= 1;
 }
 
+inline bool any_inside_tri(const std::vector<Graph_lib::Point>& any_pts,
+                           const std::vector<Graph_lib::Point>& tri_pts)
+{
+	if (any_pts.size() == 0) {
+		throw std::runtime_error("Vector contains no points to check");
+	}
+	if (tri_pts.size() != 3) {
+		throw std::runtime_error("A triangle must have three points");
+	}
+
+	for (const Graph_lib::Point& pt : any_pts) {
+		const Bary_coords tri_bc = bary(pt, tri_pts[0], tri_pts[1], tri_pts[2]);
+		if (is_inside_tri(tri_bc)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 //------------------------------------------------------------------------------
 // Calculates the intersection point of two lines
 inline Graph_lib::Point intersect_pt(Graph_lib::Point pt_0,
