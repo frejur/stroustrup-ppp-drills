@@ -45,10 +45,9 @@ std::unique_ptr<Graph_lib::Closed_polyline> dyntile::Dynamic_tile::new_tile(
 		                            preview_o.y + sin(preview_a) * preview_s))};
 		return std::make_unique<RTRI::RightTriangle>(preview_o, in_end);
 	} else {
-		return std::make_unique<RHEX::RegularHexagon>(
-		    Graph_lib::Point{preview_o.x - preview_s, preview_o.y},
-		    preview_s,
-		    preview_a - (45 * 3 * M_PI / 180));
+		return std::make_unique<RHEX::RegularHexagon>(preview_o,
+		                                              preview_s,
+		                                              preview_a);
 	}
 };
 
@@ -99,12 +98,6 @@ void dyntile::Dynamic_tile::cap_parms(int& side_len, float& angle)
 	} else if (side_len > max_s) {
 		side_len = max_s;
 	}
-	// TODO: Implement wrap-around
-	if (angle < 0) {
-		angle = 0;
-	} else if (angle > 2 * M_PI) {
-		angle = 2 * M_PI;
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -136,17 +129,16 @@ static void dyntile::transform_tile_cb(void* data)
 		float angle = atan2(static_cast<float>(y_dist),
 		                    static_cast<float>(x_dist))
 		              - (M_PI * 0.25);
-		angle = fmod(angle, 2 * M_PI);
-		if (angle < 0) {
-			angle += 2 * M_PI;
-		}
 
+		Graph_lib::Point o{tw->win.click_position()};
 		int side = dist;
 		if (tw->tile.type() == Tile_type::Regular_hexagon) {
 			side *= 0.5;
+			angle -= (45 * 3 * M_PI / 180);
+			o.x -= side;
 		}
 
-		tw->tile.cue_transform(tw->win.click_position(), side, angle);
+		tw->tile.cue_transform(o, side, angle);
 		tw->tile.apply_transform(preview);
 		Fl::repeat_timeout(refresh_rate, transform_tile_cb, data);
 	}

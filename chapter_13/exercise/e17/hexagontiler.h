@@ -1,6 +1,7 @@
 #ifndef TRIANGLETILER_H
 #define TRIANGLETILER_H
 
+#include "../share/geo/regularhexagon.h"
 #include "../share/tiler/tiler.h"
 
 namespace Tile_lib { //--------------------------------------------------------
@@ -23,7 +24,7 @@ private:
 	bool tile_is_inside(int idx);
 };
 
-bool hex_is_inside(Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds);
+bool hex_is_inside(RHEX::RegularHexagon& p, Coord_sys::Bounds bnds);
 
 } // namespace Tile_lib
 
