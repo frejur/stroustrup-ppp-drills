@@ -138,6 +138,10 @@ static void dyntile::transform_tile_cb(void* data)
 			o.x -= side;
 		}
 
+		if (angle < 0) {
+			angle += M_PI * 2;
+		}
+
 		tw->tile.cue_transform(o, side, angle);
 		tw->tile.apply_transform(preview);
 		Fl::repeat_timeout(refresh_rate, transform_tile_cb, data);

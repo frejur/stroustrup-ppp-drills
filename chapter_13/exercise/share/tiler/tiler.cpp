@@ -179,6 +179,7 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	if (!tile_is_inside(tiles.size() - 1)) {
 		return;
 	}
+
 	int count_a = count_tiles_until_oob(new_pos, offs_a);
 	int inv_count_a = count_tiles_until_oob(new_pos, {-offs_a.x, -offs_a.y});
 

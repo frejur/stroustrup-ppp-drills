@@ -27,6 +27,13 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
                                         const Graph_lib::Point offs_a,
                                         const Graph_lib::Point offs_b)
 {
+	Graph_lib::Point ctr
+	    = reinterpret_cast<RPOL::RegularPolygon&>(*tiles.back()).center();
+	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
+	tiles.back()->add(ctr);
+	tiles.back()->add({ctr.x + 2, ctr.y});
+	tiles.back()->add({ctr.x + 2, ctr.y + 2});
+	tiles.back()->set_color(0);
 	return;
 }
 
@@ -65,11 +72,11 @@ bool Tile_lib::hex_is_inside(RHEX::RegularHexagon& hex, Coord_sys::Bounds bnds)
 			hex.set_fill_color(Graph_lib::Color::green);
 			return true;
 		}
-
-		if (inters::lines_intersect(points_v(hex), points_v(bnds))) {
-			hex.set_fill_color(Graph_lib::Color::magenta);
-			return true;
-		}
-		return false;
 	}
+
+	if (inters::lines_intersect(points_v(hex), points_v(bnds))) {
+		hex.set_fill_color(Graph_lib::Color::magenta);
+		return true;
+	}
+	return false;
 }

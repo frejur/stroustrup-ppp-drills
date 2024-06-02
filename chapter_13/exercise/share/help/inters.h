@@ -139,9 +139,9 @@ inline bool lines_intersect(const std::vector<Graph_lib::Point>& pts_a,
 		throw std::runtime_error(
 		    "Cannot calculate intersection of incomplete shapes");
 	}
-	for (int a = 0; a <= pts_a.size(); ++a) {
+	for (int a = 0; a < pts_a.size(); ++a) {
 		int a_end_idx = (a == pts_a.size() - 1) ? 0 : a + 1;
-		for (int b = 0; b <= pts_b.size(); ++b) {
+		for (int b = 0; b < pts_b.size(); ++b) {
 			int b_end_idx = (b == pts_b.size() - 1) ? 0 : b + 1;
 			if (segments_intersect(pts_a[a],
 			                       pts_a[a_end_idx],

@@ -14,6 +14,7 @@ public:
     );
 	int radius() const { return r; };
 	Graph_lib::Point center() const { return c; };
+
 private:
     Graph_lib::Point origin;
     Graph_lib::Point c;
