@@ -27,6 +27,12 @@ add_executable(${T_THIS}
     e15.cpp
     triangletiler.h
     triangletiler.cpp
+    
+    # include regularpoly, regularhexagon, not in use, but needed for linking dyntile
+    ../share/geo/regularpoly.h
+    ../share/geo/regularpoly.cpp
+    ../share/geo/regularhexagon.h
+    ../share/geo/regularhexagon.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
