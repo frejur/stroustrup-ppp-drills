@@ -1,4 +1,5 @@
 #include "hexagontiler.h"
+#include "../share/geo/regularhexagon.h"
 
 Tile_lib::Hexagon_tiler::Hexagon_tiler(
     Graph_lib::Point o, int w, int h, int tri_side, double angle)
@@ -14,10 +15,7 @@ void Tile_lib::Hexagon_tiler::add_tile(Graph_lib::Point pos,
                                        float angle)
 {
 	tiles.push_back(
-	    std::make_unique<RTRI::RightTriangle>(pos,
-	                                          Tile_lib::triangle_end_point(pos,
-	                                                                       a,
-	                                                                       s)));
+	    std::make_unique<RHEX::RegularHexagon>(pos, side_len, angle));
 }
 
 void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
@@ -127,5 +125,19 @@ bool Tile_lib::Hexagon_tiler::tile_is_inside(int idx)
 	if (idx < 0 || idx > tiles.size() - 1) {
 		throw std::runtime_error("Invalid index");
 	}
+
+	Graph_lib::Closed_polyline& hex{*tiles[idx]};
+
+	if (hex.number_of_points() != 6) {
+		throw std::runtime_error("Not a hexagon");
+	}
+
+	for (int i = 0; i < hex.number_of_points(); ++i) {
+		if (Coord_sys::is_inside(hex.point(i), bg_bnds)) {
+			hex.set_fill_color(Graph_lib::Color::red);
+			return true;
+		}
+	}
+
 	return Tile_lib::tri_is_inside(*tiles[idx], bg_bnds);
 }
