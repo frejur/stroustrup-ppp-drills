@@ -23,15 +23,7 @@ private:
 	bool tile_is_inside(int idx);
 };
 
-//------------------------------------------------------------------------------
-
-inline Graph_lib::Point triangle_end_point(Graph_lib::Point pt,
-                                           float angle,
-                                           int side_len)
-{
-	return {static_cast<int>(std::round(pt.x + cos(angle) * side_len)),
-	        static_cast<int>(std::round(pt.y + sin(angle) * side_len))};
-}
+bool hex_is_inside(Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds);
 
 } // namespace Tile_lib
 

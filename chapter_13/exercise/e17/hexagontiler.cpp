@@ -1,5 +1,6 @@
 #include "hexagontiler.h"
 #include "../share/geo/regularhexagon.h"
+#include "../share/help/inters.h"
 
 Tile_lib::Hexagon_tiler::Hexagon_tiler(
     Graph_lib::Point o, int w, int h, int tri_side, double angle)
@@ -140,4 +141,39 @@ bool Tile_lib::Hexagon_tiler::tile_is_inside(int idx)
 	}
 
 	return Tile_lib::tri_is_inside(*tiles[idx], bg_bnds);
+}
+
+bool Tile_lib::hex_is_inside(Graph_lib::Closed_polyline& p,
+                             Coord_sys::Bounds bnds)
+{
+	if (p.number_of_points() != 6) {
+		throw std::runtime_error("Not a hexagon");
+	}
+	for (int i = 0; i < p.number_of_points(); ++i) {
+		if (Coord_sys::is_inside(p.point(i), bnds)) {
+			p.set_fill_color(Graph_lib::Color::red);
+			return true;
+		}
+	}
+
+	if (is_inside_tri(inters::bary(bnds.min, p.point(0), p.point(1), p.point(2)))
+	    || is_inside_tri(
+	        inters::bary(bnds.max, p.point(0), p.point(1), p.point(2)))
+	    || is_inside_tri(inters::bary({bnds.min.x, bnds.max.y},
+	                                  p.point(0),
+	                                  p.point(1),
+	                                  p.point(2)))
+	    || is_inside_tri(inters::bary({bnds.max.x, bnds.min.y},
+	                                  p.point(0),
+	                                  p.point(1),
+	                                  p.point(2)))) {
+		p.set_fill_color(Graph_lib::Color::green);
+		return true;
+	}
+
+	if (inters::lines_intersect(points_v(p), points_v(bnds))) {
+		p.set_fill_color(Graph_lib::Color::magenta);
+		return true;
+	}
+	return false;
 }
