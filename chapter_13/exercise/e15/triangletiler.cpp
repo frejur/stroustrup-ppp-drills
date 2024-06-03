@@ -20,6 +20,14 @@ void Tile_lib::Triangle_tiler::add_tile(Graph_lib::Point pos,
 	                                                                       s)));
 }
 
+Tile_lib::Offset_pair Tile_lib::Triangle_tiler::offset_pair()
+{
+	return {{tiles.back()->point(1).x - tiles.back()->point(0).x,
+	         tiles.back()->point(1).y - tiles.back()->point(0).y},
+	        {tiles.back()->point(2).x - tiles.back()->point(0).x,
+	         tiles.back()->point(2).y - tiles.back()->point(0).y}};
+}
+
 void Tile_lib::Triangle_tiler::add_tiles(const Graph_lib::Point pos,
                                          const int side_len,
                                          const float angle,

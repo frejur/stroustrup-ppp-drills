@@ -77,6 +77,12 @@ struct Tile_count
 
 //------------------------------------------------------------------------------
 
+struct Offset_pair
+{
+	Graph_lib::Point a;
+	Graph_lib::Point b;
+};
+
 class Tiler : public Graph_lib::Shape
 {
 public:
@@ -132,6 +138,7 @@ protected:
 	                       const Graph_lib::Point offset_b)
 	    = 0;
 	virtual bool tile_is_inside(int idx) = 0;
+	virtual Offset_pair offset_pair() = 0;
 
 	std::vector<std::unique_ptr<Graph_lib::Closed_polyline>> tiles;
 	Graph_lib::Point c;

@@ -19,6 +19,14 @@ void Tile_lib::Hexagon_tiler::add_tile(Graph_lib::Point pos,
 	    std::make_unique<RHEX::RegularHexagon>(pos, side_len, angle));
 }
 
+Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
+{
+	return {{tiles.back()->point(0).x - tiles.back()->point(4).x,
+	         tiles.back()->point(0).y - tiles.back()->point(4).y},
+	        {tiles.back()->point(2).x - tiles.back()->point(5).x,
+	         tiles.back()->point(2).y - tiles.back()->point(5).y}};
+}
+
 void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
                                         const int side_len,
                                         const float angle,
@@ -27,14 +35,39 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
                                         const Graph_lib::Point offs_a,
                                         const Graph_lib::Point offs_b)
 {
-	Graph_lib::Point ctr
-	    = reinterpret_cast<RPOL::RegularPolygon&>(*tiles.back()).center();
+	Top_left_tile top_l_tri{
+	    top_left_tile_attributes(angle, pos, count_a, count_b, offs_a, offs_b)};
+
+	const Tile_count& count_col = (top_l_tri.inv_dir) ? count_b : count_a;
+	const Tile_count& count_row = (top_l_tri.inv_dir) ? count_a : count_b;
+	const Graph_lib::Point offs_col
+	    = (top_l_tri.inv_dir) ? Graph_lib::Point{offs_b.x * top_l_tri.sign_b,
+	                                             offs_b.y * top_l_tri.sign_b}
+	                          : Graph_lib::Point{offs_a.x * top_l_tri.sign_a,
+	                                             offs_a.y * top_l_tri.sign_a};
+	const Graph_lib::Point offs_row
+	    = (top_l_tri.inv_dir) ? Graph_lib::Point{offs_a.x * top_l_tri.sign_a,
+	                                             offs_a.y * top_l_tri.sign_a}
+	                          : Graph_lib::Point{offs_b.x * top_l_tri.sign_b,
+	                                             offs_b.y * top_l_tri.sign_b};
+
+	// DEBUG:: Draw "top-left" triangle
+	tiles.push_back(
+	    std::make_unique<RHEX::RegularHexagon>(top_l_tri.pos, side_len, angle));
+	tiles.back()->set_color(Graph_lib::Color::dark_yellow);
+	tiles.back()->set_style({Graph_lib::Line_style::solid, 2});
+	// DEBUG:: Draw "top-left" triangle
+
+	// DEBUG: Draw offset
 	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
-	tiles.back()->add(ctr);
-	tiles.back()->add({ctr.x + 2, ctr.y});
-	tiles.back()->add({ctr.x + 2, ctr.y + 2});
-	tiles.back()->set_color(0);
-	return;
+	tiles.back()->add(pos);
+	tiles.back()->add({pos.x + offs_a.x, pos.y + offs_a.y});
+	tiles.back()->set_color(Graph_lib::Color::yellow);
+	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
+	tiles.back()->add(pos);
+	tiles.back()->add({pos.x + offs_b.x, pos.y + offs_b.y});
+	tiles.back()->set_color(Graph_lib::Color::blue);
+	// DEBUG: Draw offset
 }
 
 bool Tile_lib::Hexagon_tiler::tile_is_inside(int idx)

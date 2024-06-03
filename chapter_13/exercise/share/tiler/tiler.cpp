@@ -171,28 +171,25 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	// END DEBUG: Draw initial tile
 
 	new_bbox();
-	Graph_lib::Point offs_a{tiles.back()->point(1).x - new_pos.x,
-	                        tiles.back()->point(1).y - new_pos.y};
-	Graph_lib::Point offs_b{tiles.back()->point(2).x - new_pos.x,
-	                        tiles.back()->point(2).y - new_pos.y};
+	Offset_pair offs{offset_pair()};
 
 	if (!tile_is_inside(tiles.size() - 1)) {
 		return;
 	}
 
-	int count_a = count_tiles_until_oob(new_pos, offs_a);
-	int inv_count_a = count_tiles_until_oob(new_pos, {-offs_a.x, -offs_a.y});
+	int count_a = count_tiles_until_oob(new_pos, offs.a);
+	int inv_count_a = count_tiles_until_oob(new_pos, {-offs.a.x, -offs.a.y});
 
-	int count_b = count_tiles_until_oob(new_pos, offs_b);
-	int inv_count_b = count_tiles_until_oob(new_pos, {-offs_b.x, -offs_b.y});
+	int count_b = count_tiles_until_oob(new_pos, offs.b);
+	int inv_count_b = count_tiles_until_oob(new_pos, {-offs.b.x, -offs.b.y});
 
 	add_tiles(new_pos,
 	          new_side_len,
 	          new_angle,
 	          {count_a, inv_count_a},
 	          {count_b, inv_count_b},
-	          offs_a,
-	          offs_b);
+	          offs.a,
+	          offs.b);
 }
 
 Graph_lib::Point Tile_lib::Tiler::point(int p) const
