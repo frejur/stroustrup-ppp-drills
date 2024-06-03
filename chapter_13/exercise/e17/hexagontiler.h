@@ -26,6 +26,25 @@ private:
 };
 
 bool hex_is_inside(RHEX::RegularHexagon& p, Coord_sys::Bounds bnds);
+//------------------------------------------------------------------------------
+
+struct TL_hex_attr
+{
+	bool inv_tile;
+	bool inv_dir;
+	int sign_a;
+	int sign_b;
+	Graph_lib::Point pos;
+};
+
+TL_hex_attr top_left_hex_attributes(float angle,
+                                    Graph_lib::Point init_pt,
+                                    Tile_count count_a,
+                                    Tile_count count_b,
+                                    Graph_lib::Point offs_a,
+                                    Graph_lib::Point offs_b);
+
+//------------------------------------------------------------------------------
 
 } // namespace Tile_lib
 

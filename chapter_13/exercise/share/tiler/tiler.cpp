@@ -314,56 +314,6 @@ Coord_sys::Bounds Tile_lib::rotated_bounds(const Bbox& bb,
 
 //------------------------------------------------------------------------------
 
-Tile_lib::Top_left_tile Tile_lib::top_left_tile_attributes(
-    float angle,
-    Graph_lib::Point init_pt,
-    Tile_count ca,
-    Tile_count cb,
-    Graph_lib::Point offs_a,
-    Graph_lib::Point offs_b)
-{
-	if (angle < 0 || angle > M_PI * 2) {
-		throw std::runtime_error("Invalid angle");
-	}
-
-	int sub_quadrant = static_cast<int>(angle / (M_PI * 0.25));
-	switch (sub_quadrant) {
-	case 0:
-	case 7:
-		return {false,
-		        false,
-		        1,
-		        1,
-		        {init_pt.x - ca.inv_count * offs_a.x - cb.inv_count * offs_b.x,
-		         init_pt.y - ca.inv_count * offs_a.y - cb.inv_count * offs_b.y}};
-	case 1:
-	case 2:
-		return {true,
-		        true,
-		        1,
-		        -1,
-		        {init_pt.x - ca.inv_count * offs_a.x + cb.count * offs_b.x,
-		         init_pt.y - ca.inv_count * offs_a.y + cb.count * offs_b.y}};
-	case 3:
-	case 4:
-		return {true,
-		        false,
-		        -1,
-		        -1,
-		        {init_pt.x + ca.count * offs_a.x + cb.count * offs_b.x,
-		         init_pt.y + ca.count * offs_a.y + cb.count * offs_b.y}};
-	case 5:
-	case 6:
-		return {true,
-		        false,
-		        -1,
-		        1,
-		        {init_pt.x + ca.count * offs_a.x - cb.inv_count * offs_b.x,
-		         init_pt.y + ca.count * offs_a.y - cb.inv_count * offs_b.y}};
-	default:
-		throw std::runtime_error("Invalid angle");
-	}
-}
 
 Coord_sys::Bounds Tile_lib::bounds(const RTRI::RightTriangle& tri)
 {

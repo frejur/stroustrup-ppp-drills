@@ -152,22 +152,6 @@ protected:
 	double a;
 };
 
-struct Top_left_tile
-{
-	bool inv_tile;
-	bool inv_dir;
-	int sign_a;
-	int sign_b;
-	Graph_lib::Point pos;
-};
-
-Top_left_tile top_left_tile_attributes(float angle,
-                                       Graph_lib::Point init_pt,
-                                       Tile_count count_a,
-                                       Tile_count count_b,
-                                       Graph_lib::Point offs_a,
-                                       Graph_lib::Point offs_b);
-
 Coord_sys::Bounds bounds(const RTRI::RightTriangle& tri);
 
 bool tri_is_inside(Graph_lib::Closed_polyline& p, Coord_sys::Bounds bnds);

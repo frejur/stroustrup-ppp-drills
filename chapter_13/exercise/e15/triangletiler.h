@@ -26,6 +26,24 @@ private:
 
 //------------------------------------------------------------------------------
 
+struct TL_tri_attr
+{
+	bool inv_tile;
+	bool inv_dir;
+	int sign_a;
+	int sign_b;
+	Graph_lib::Point pos;
+};
+
+TL_tri_attr top_left_tri_attributes(float angle,
+                                    Graph_lib::Point init_pt,
+                                    Tile_count count_a,
+                                    Tile_count count_b,
+                                    Graph_lib::Point offs_a,
+                                    Graph_lib::Point offs_b);
+
+//------------------------------------------------------------------------------
+
 inline Graph_lib::Point triangle_end_point(Graph_lib::Point pt,
                                            float angle,
                                            int side_len)

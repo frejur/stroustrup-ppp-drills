@@ -28,6 +28,56 @@ Tile_lib::Offset_pair Tile_lib::Triangle_tiler::offset_pair()
 	         tiles.back()->point(2).y - tiles.back()->point(0).y}};
 }
 
+Tile_lib::TL_tri_attr Tile_lib::top_left_tri_attributes(float angle,
+                                                        Graph_lib::Point init_pt,
+                                                        Tile_count ca,
+                                                        Tile_count cb,
+                                                        Graph_lib::Point offs_a,
+                                                        Graph_lib::Point offs_b)
+{
+	if (angle < 0 || angle > M_PI * 2) {
+		throw std::runtime_error("Invalid angle");
+	}
+
+	int sub_quadrant = static_cast<int>(angle / (M_PI * 0.25));
+	switch (sub_quadrant) {
+	case 0:
+	case 7:
+		return {false,
+		        false,
+		        1,
+		        1,
+		        {init_pt.x - ca.inv_count * offs_a.x - cb.inv_count * offs_b.x,
+		         init_pt.y - ca.inv_count * offs_a.y - cb.inv_count * offs_b.y}};
+	case 1:
+	case 2:
+		return {true,
+		        true,
+		        1,
+		        -1,
+		        {init_pt.x - ca.inv_count * offs_a.x + cb.count * offs_b.x,
+		         init_pt.y - ca.inv_count * offs_a.y + cb.count * offs_b.y}};
+	case 3:
+	case 4:
+		return {true,
+		        false,
+		        -1,
+		        -1,
+		        {init_pt.x + ca.count * offs_a.x + cb.count * offs_b.x,
+		         init_pt.y + ca.count * offs_a.y + cb.count * offs_b.y}};
+	case 5:
+	case 6:
+		return {true,
+		        false,
+		        -1,
+		        1,
+		        {init_pt.x + ca.count * offs_a.x - cb.inv_count * offs_b.x,
+		         init_pt.y + ca.count * offs_a.y - cb.inv_count * offs_b.y}};
+	default:
+		throw std::runtime_error("Invalid angle");
+	}
+}
+
 void Tile_lib::Triangle_tiler::add_tiles(const Graph_lib::Point pos,
                                          const int side_len,
                                          const float angle,
@@ -36,8 +86,8 @@ void Tile_lib::Triangle_tiler::add_tiles(const Graph_lib::Point pos,
                                          const Graph_lib::Point offs_a,
                                          const Graph_lib::Point offs_b)
 {
-	Top_left_tile top_l_tri{
-	    top_left_tile_attributes(angle, pos, count_a, count_b, offs_a, offs_b)};
+	TL_tri_attr top_l_tri{
+	    top_left_tri_attributes(angle, pos, count_a, count_b, offs_a, offs_b)};
 	Graph_lib::Point top_l_tri_end_pt{
 	    Tile_lib::triangle_end_point(top_l_tri.pos, angle, side_len)};
 
