@@ -128,6 +128,9 @@ protected:
 	int count_tiles_until_oob(Graph_lib::Point point,
 	                          Graph_lib::Point offset,
 	                          const int max_count = 250);
+
+	virtual Offset_pair offset_pair() = 0;
+	virtual Tile_count tile_count(Graph_lib::Point p, Graph_lib::Point offs) = 0;
 	virtual void add_tile(Graph_lib::Point pos, int side_len, float angle) = 0;
 	virtual void add_tiles(const Graph_lib::Point pos,
 	                       const int side_len,
@@ -138,7 +141,6 @@ protected:
 	                       const Graph_lib::Point offset_b)
 	    = 0;
 	virtual bool tile_is_inside(int idx) = 0;
-	virtual Offset_pair offset_pair() = 0;
 
 	std::vector<std::unique_ptr<Graph_lib::Closed_polyline>> tiles;
 	Graph_lib::Point c;

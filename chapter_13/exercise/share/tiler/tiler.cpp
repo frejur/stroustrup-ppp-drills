@@ -177,19 +177,10 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 		return;
 	}
 
-	int count_a = count_tiles_until_oob(new_pos, offs.a);
-	int inv_count_a = count_tiles_until_oob(new_pos, {-offs.a.x, -offs.a.y});
+	Tile_count count_a{tile_count(new_pos, offs.a)};
+	Tile_count count_b{tile_count(new_pos, offs.b)};
 
-	int count_b = count_tiles_until_oob(new_pos, offs.b);
-	int inv_count_b = count_tiles_until_oob(new_pos, {-offs.b.x, -offs.b.y});
-
-	add_tiles(new_pos,
-	          new_side_len,
-	          new_angle,
-	          {count_a, inv_count_a},
-	          {count_b, inv_count_b},
-	          offs.a,
-	          offs.b);
+	add_tiles(new_pos, new_side_len, new_angle, count_a, count_b, offs.a, offs.b);
 }
 
 Graph_lib::Point Tile_lib::Tiler::point(int p) const

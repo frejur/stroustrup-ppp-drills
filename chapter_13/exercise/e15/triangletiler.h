@@ -21,6 +21,7 @@ private:
 	               const Graph_lib::Point offset_b);
 	void add_tile(Graph_lib::Point pos, int side_len, float angle);
 	bool tile_is_inside(int idx);
+	Tile_count tile_count(Graph_lib::Point p, Graph_lib::Point offs);
 	Offset_pair offset_pair();
 };
 
