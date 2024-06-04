@@ -28,15 +28,6 @@ Tile_lib::Offset_pair Tile_lib::Triangle_tiler::offset_pair()
 	         tiles.back()->point(2).y - tiles.back()->point(0).y}};
 }
 
-Tile_lib::Tile_count Tile_lib::Triangle_tiler::tile_count(Graph_lib::Point p,
-                                                          Graph_lib::Point offs)
-{
-	int count = count_tiles_until_oob(p, offs);
-	int inv_count = count_tiles_until_oob(p, {-offs.x, -offs.y});
-
-	return {count, inv_count};
-}
-
 Tile_lib::TL_tri_attr Tile_lib::top_left_tri_attributes(float angle,
                                                         Graph_lib::Point init_pt,
                                                         Tile_count ca,

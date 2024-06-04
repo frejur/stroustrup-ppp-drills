@@ -119,18 +119,28 @@ public:
 protected:
 	Tiler(Graph_lib::Point o, int w, int h, int side, double rotation);
 	bool draw_active;
+	int s;
+	double a;
+	Graph_lib::Point c;
+	Coord_sys::Bounds bg_bnds;
+	Graph_lib::Rectangle bg;
+	Coord_sys::Coordinate_system tiles_cs;
+	Coord_sys::Bounds tiles_bnds;
+	Bbox tiles_bbox;
+	Graph_lib::Point tl;
+	std::vector<std::unique_ptr<Graph_lib::Closed_polyline>> tiles;
 
 	bool pt_inside_bbox(Graph_lib::Point pt, const Bbox& bbox) const;
 	bool is_oob(const Graph_lib::Point p_0, const Graph_lib::Point p_1) const;
 	bool p_fits_bbox(const Graph_lib::Point p) const;
 	bool show_bbox = false;
 	void new_bbox();
+	Tile_count tile_count(Graph_lib::Point p, Graph_lib::Point offs);
 	int count_tiles_until_oob(Graph_lib::Point point,
 	                          Graph_lib::Point offset,
 	                          const int max_count = 250);
 
 	virtual Offset_pair offset_pair() = 0;
-	virtual Tile_count tile_count(Graph_lib::Point p, Graph_lib::Point offs) = 0;
 	virtual void add_tile(Graph_lib::Point pos, int side_len, float angle) = 0;
 	virtual void add_tiles(const Graph_lib::Point pos,
 	                       const int side_len,
@@ -142,16 +152,6 @@ protected:
 	    = 0;
 	virtual bool tile_is_inside(int idx) = 0;
 
-	std::vector<std::unique_ptr<Graph_lib::Closed_polyline>> tiles;
-	Graph_lib::Point c;
-	Coord_sys::Bounds bg_bnds;
-	Graph_lib::Rectangle bg;
-	Coord_sys::Coordinate_system tiles_cs;
-	Coord_sys::Bounds tiles_bnds;
-	Bbox tiles_bbox;
-	Graph_lib::Point tl;
-	int s;
-	double a;
 };
 
 Coord_sys::Bounds bounds(const RTRI::RightTriangle& tri);

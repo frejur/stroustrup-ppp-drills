@@ -123,6 +123,15 @@ void Tile_lib::Tiler::draw_lines() const
 	bg.draw();
 }
 
+Tile_lib::Tile_count Tile_lib::Tiler::tile_count(Graph_lib::Point p,
+                                                 Graph_lib::Point offs)
+{
+	int count = count_tiles_until_oob(p, offs);
+	int inv_count = count_tiles_until_oob(p, {-offs.x, -offs.y});
+
+	return {count, inv_count};
+}
+
 int Tile_lib::Tiler::count_tiles_until_oob(Graph_lib::Point point,
                                            Graph_lib::Point offset,
                                            const int max_count)
