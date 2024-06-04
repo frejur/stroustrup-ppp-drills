@@ -151,7 +151,7 @@ int Tile_lib::Tiler::count_tiles_until_oob(Graph_lib::Point point,
 		rot_pt.x += rot_offset.x;
 		rot_pt.y += rot_offset.y;
 		if (++count == max_count) {
-			throw std::runtime_error("Too many triangles in pattern");
+			throw std::runtime_error("Too many tiles in pattern");
 		}
 	} while (count < max_count && Coord_sys::is_inside(rot_pt, rot_bnds));
 	return count;
