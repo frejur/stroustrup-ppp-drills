@@ -25,6 +25,8 @@ private:
 	Offset_pair offset_pair();
 };
 
+Coord_sys::Bounds bounds(const RHEX::RegularHexagon& hex);
+
 bool hex_is_inside(RHEX::RegularHexagon& p, Coord_sys::Bounds bnds);
 //------------------------------------------------------------------------------
 

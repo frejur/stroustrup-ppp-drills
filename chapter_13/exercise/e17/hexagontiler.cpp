@@ -21,10 +21,10 @@ void Tile_lib::Hexagon_tiler::add_tile(Graph_lib::Point pos,
 
 Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 {
-	return {{tiles.back()->point(0).x - tiles.back()->point(4).x,
-	         tiles.back()->point(0).y - tiles.back()->point(4).y},
-	        {tiles.back()->point(2).x - tiles.back()->point(5).x,
-	         tiles.back()->point(2).y - tiles.back()->point(5).y}};
+	return {{tiles.back()->point(1).x - tiles.back()->point(5).x,
+	         tiles.back()->point(1).y - tiles.back()->point(5).y},
+	        {tiles.back()->point(3).x - tiles.back()->point(0).x,
+	         tiles.back()->point(3).y - tiles.back()->point(0).y}};
 }
 
 Tile_lib::TL_hex_attr Tile_lib::top_left_hex_attributes(float angle,
@@ -62,8 +62,8 @@ Tile_lib::TL_hex_attr Tile_lib::top_left_hex_attributes(float angle,
 		        false,
 		        -1,
 		        -1,
-		        {init_pt.x + ca.count * offs_a.x + cb.count * offs_b.x,
-		         init_pt.y + ca.count * offs_a.y + cb.count * offs_b.y}};
+		        {init_pt.x - ca.count * offs_a.x - cb.count * offs_b.x,
+		         init_pt.y - ca.count * offs_a.y - cb.count * offs_b.y}};
 	case 5:
 	case 6:
 		return {true,
@@ -75,6 +75,19 @@ Tile_lib::TL_hex_attr Tile_lib::top_left_hex_attributes(float angle,
 	default:
 		throw std::runtime_error("Invalid angle");
 	}
+}
+
+Coord_sys::Bounds Tile_lib::bounds(const RHEX::RegularHexagon& hex)
+{
+	if (hex.number_of_points() == 0) {
+		throw std::runtime_error(
+		    "Cannot calculate bounds for a hexagon containing no points");
+	}
+	std::vector<Graph_lib::Point> pts;
+	for (int i = 0; i < hex.number_of_points(); ++i) {
+		pts.push_back(hex.point(i));
+	}
+	return Coord_sys::bounds_from_points(pts);
 }
 
 void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
@@ -118,6 +131,45 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 	tiles.back()->add({pos.x + offs_b.x, pos.y + offs_b.y});
 	tiles.back()->set_color(Graph_lib::Color::blue);
 	// DEBUG: Draw offset
+
+	RHEX::RegularHexagon hex_cursor{top_l_hex.pos, side_len, angle};
+	Coord_sys::Bounds hex_bbox{bounds(hex_cursor)};
+
+	for (int col = 0; col < count_col.total(); ++col) {
+		if (col > 0) {
+			// reset for each 'column'
+			int offs_x = top_l_hex.pos.x - hex_cursor.point(0).x;
+			int offs_y = top_l_hex.pos.y - hex_cursor.point(0).y;
+			hex_cursor.move(offs_x, offs_y);
+			hex_cursor.move(offs_col.x * col, offs_col.y * col);
+		}
+		for (int row = 0; row < count_row.total(); ++row) {
+			if (row > 0) {
+				hex_cursor.move(offs_row.x, offs_row.y);
+			}
+			hex_bbox = bounds(hex_cursor);
+
+			// DEBUG: Draw triangles bbox
+			tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+			    initializer_list<Graph_lib::Point>{hex_bbox.min,
+			                                       {hex_bbox.max.x,
+			                                        hex_bbox.min.y},
+			                                       hex_bbox.max,
+			                                       {hex_bbox.min.x,
+			                                        hex_bbox.max.y}}));
+			tiles.back()->set_color(Graph_lib::Color::cyan);
+			// END DEBUG: Draw triangles bbox
+
+			if (!Coord_sys::are_overlapping(hex_bbox, bg_bnds)) {
+				continue;
+			}
+
+			// if (hex_is_inside(hex_cursor, bg_bnds)) {
+			// 	add_tile(hex_cursor.point(0), side_len, angle);
+			// 	tiles.back()->set_fill_color(Graph_lib::Color(25));
+			// }
+		}
+	}
 }
 
 bool Tile_lib::Hexagon_tiler::tile_is_inside(int idx)

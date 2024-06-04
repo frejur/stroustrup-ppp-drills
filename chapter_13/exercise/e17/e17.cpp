@@ -97,11 +97,19 @@ void e17()
 				                       dyn_t.side_length(),
 				                       dyn_t.angle());
 				win.log("Angle: " + std::to_string(dyn_t.angle()) + "\n");
-				if (count_logged > 4) {
+				++count_logged;
+				win.log("Sub-q: "
+				        + std::to_string(
+				            static_cast<int>(dyn_t.angle() / (M_PI * 0.25)))
+				        + "\n");
+				++count_logged;
+				if (count_logged > 10) {
 					win.clear_logs();
 					count_logged = 0;
 				}
 				info.set_label(info_click());
+
+				tiles.debug_draw_tiles_bbox_grid();
 			}
 		}
 		win.wait_for_click();
