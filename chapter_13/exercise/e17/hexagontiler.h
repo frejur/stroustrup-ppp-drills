@@ -23,6 +23,7 @@ private:
 	void add_tile(Graph_lib::Point pos, int side_len, float angle);
 	bool tile_is_inside(int idx);
 	Offset_pair offset_pair();
+	Tile_count tile_count(Graph_lib::Point p, Graph_lib::Point offs);
 };
 
 Coord_sys::Bounds bounds(const RHEX::RegularHexagon& hex);

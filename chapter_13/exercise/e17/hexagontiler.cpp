@@ -27,6 +27,15 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 	         tiles.back()->point(3).y - tiles.back()->point(0).y}};
 }
 
+Tile_lib::Tile_count Tile_lib::Hexagon_tiler::tile_count(Graph_lib::Point p,
+                                                         Graph_lib::Point offs)
+{
+	int count = count_tiles_until_oob(p, offs);
+	int inv_count = count_tiles_until_oob(p, {-offs.x, -offs.y});
+
+	return {count, inv_count};
+}
+
 Tile_lib::TL_hex_attr Tile_lib::top_left_hex_attributes(float angle,
                                                         Graph_lib::Point init_pt,
                                                         Tile_count ca,
