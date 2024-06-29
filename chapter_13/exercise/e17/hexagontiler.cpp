@@ -39,36 +39,30 @@ Tile_lib::TL_hex_attr Tile_lib::top_left_hex_attributes(float angle,
 		throw std::runtime_error("Invalid angle");
 	}
 
-	int sub_quadrant = static_cast<int>(angle / (M_PI * 0.25));
-	switch (sub_quadrant) {
+	int sub_sextant = static_cast<int>(angle / (M_PI * 0.33333));
+	switch (sub_sextant) {
 	case 0:
-	case 7:
 		return {false,
-		        false,
 		        1,
-		        1,
+		        -1,
 		        {init_pt.x - ca.inv_count * offs_a.x - cb.inv_count * offs_b.x,
 		         init_pt.y - ca.inv_count * offs_a.y - cb.inv_count * offs_b.y}};
 	case 1:
-	case 2:
 		return {true,
-		        true,
 		        1,
-		        -1,
+		        1,
 		        {init_pt.x - ca.inv_count * offs_a.x + cb.count * offs_b.x,
 		         init_pt.y - ca.inv_count * offs_a.y + cb.count * offs_b.y}};
 	case 3:
 	case 4:
-		return {true,
-		        false,
+		return {false,
 		        -1,
 		        -1,
 		        {init_pt.x - ca.count * offs_a.x - cb.count * offs_b.x,
 		         init_pt.y - ca.count * offs_a.y - cb.count * offs_b.y}};
 	case 5:
 	case 6:
-		return {true,
-		        false,
+		return {false,
 		        -1,
 		        1,
 		        {init_pt.x + ca.count * offs_a.x - cb.inv_count * offs_b.x,
@@ -125,11 +119,11 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 	// DEBUG: Draw offset
 	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
 	tiles.back()->add(pos);
-	tiles.back()->add({pos.x + offs_a.x, pos.y + offs_a.y});
+	tiles.back()->add({pos.x + offs_col.x, pos.y + offs_col.y});
 	tiles.back()->set_color(Graph_lib::Color::yellow);
 	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
 	tiles.back()->add(pos);
-	tiles.back()->add({pos.x + offs_b.x, pos.y + offs_b.y});
+	tiles.back()->add({pos.x + offs_row.x, pos.y + offs_row.y});
 	tiles.back()->set_color(Graph_lib::Color::blue);
 	// DEBUG: Draw offset
 
@@ -151,14 +145,14 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 			hex_bbox = bounds(hex_cursor);
 
 			// DEBUG: Draw triangles bbox
-			tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-			    initializer_list<Graph_lib::Point>{hex_bbox.min,
-			                                       {hex_bbox.max.x,
-			                                        hex_bbox.min.y},
-			                                       hex_bbox.max,
-			                                       {hex_bbox.min.x,
-			                                        hex_bbox.max.y}}));
-			tiles.back()->set_color(Graph_lib::Color::cyan);
+			// tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+			//     initializer_list<Graph_lib::Point>{hex_bbox.min,
+			//                                        {hex_bbox.max.x,
+			//                                         hex_bbox.min.y},
+			//                                        hex_bbox.max,
+			//                                        {hex_bbox.min.x,
+			//                                         hex_bbox.max.y}}));
+			// tiles.back()->set_color(Graph_lib::Color::cyan);
 			// END DEBUG: Draw triangles bbox
 
 			if (!Coord_sys::are_overlapping(hex_bbox, bg_bnds)) {

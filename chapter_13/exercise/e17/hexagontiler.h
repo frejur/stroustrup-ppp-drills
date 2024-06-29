@@ -32,7 +32,6 @@ bool hex_is_inside(RHEX::RegularHexagon& p, Coord_sys::Bounds bnds);
 
 struct TL_hex_attr
 {
-	bool inv_tile;
 	bool inv_dir;
 	int sign_a;
 	int sign_b;

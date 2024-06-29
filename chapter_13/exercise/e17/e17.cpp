@@ -100,7 +100,7 @@ void e17()
 				++count_logged;
 				win.log("Sub-q: "
 				        + std::to_string(
-				            static_cast<int>(dyn_t.angle() / (M_PI * 0.25)))
+				            static_cast<int>(dyn_t.angle() / (M_PI * 0.33333)))
 				        + "\n");
 				++count_logged;
 				if (count_logged > 10) {
