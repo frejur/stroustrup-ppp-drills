@@ -21,12 +21,53 @@ void Tile_lib::Hexagon_tiler::add_tile(Graph_lib::Point pos,
 
 Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 {
-	return {{tiles.back()->point(1).x - tiles.back()->point(5).x,
-	         tiles.back()->point(1).y - tiles.back()->point(5).y},
-	        {tiles.back()->point(3).x - tiles.back()->point(0).x,
-	         tiles.back()->point(3).y - tiles.back()->point(0).y}};
-}
+	int a0, a1, b0, b1;
+	switch (sextant(a)) {
+	case 0:
+		a0 = 2;
+		a1 = 4;
+		b0 = 0;
+		b1 = 3;
+		break;
+	case 1:
+		a0 = 1;
+		a1 = 5;
+		b0 = 3;
+		b1 = 0;
+		break;
+	case 2:
+		a0 = 1;
+		a1 = 5;
+		b0 = 3;
+		b1 = 0;
+		break;
+	case 3:
+		a0 = 1;
+		a1 = 5;
+		b0 = 3;
+		b1 = 0;
+		break;
+	case 4:
+		a0 = 1;
+		a1 = 5;
+		b0 = 3;
+		b1 = 0;
+		break;
+	case 5:
+		a0 = 1;
+		a1 = 5;
+		b0 = 3;
+		b1 = 0;
+		break;
+	default:
+		throw std::runtime_error("Invalid angle");
+	}
 
+	return {{tiles.back()->point(a0).x - tiles.back()->point(a1).x,
+	         tiles.back()->point(a0).y - tiles.back()->point(a1).y},
+	        {tiles.back()->point(b0).x - tiles.back()->point(b1).x,
+	         tiles.back()->point(b0).y - tiles.back()->point(b1).y}};
+}
 
 Tile_lib::TL_hex_attr Tile_lib::top_left_hex_attributes(float angle,
                                                         Graph_lib::Point init_pt,
@@ -39,8 +80,7 @@ Tile_lib::TL_hex_attr Tile_lib::top_left_hex_attributes(float angle,
 		throw std::runtime_error("Invalid angle");
 	}
 
-	int sub_sextant = static_cast<int>(angle / (M_PI * 0.33333));
-	switch (sub_sextant) {
+	switch (sextant(angle)) {
 	case 0:
 		return {false,
 		        1,
@@ -48,6 +88,7 @@ Tile_lib::TL_hex_attr Tile_lib::top_left_hex_attributes(float angle,
 		        {init_pt.x - ca.inv_count * offs_a.x - cb.inv_count * offs_b.x,
 		         init_pt.y - ca.inv_count * offs_a.y - cb.inv_count * offs_b.y}};
 	case 1:
+	case 2:
 		return {true,
 		        1,
 		        1,

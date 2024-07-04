@@ -45,6 +45,11 @@ TL_hex_attr top_left_hex_attributes(float angle,
                                     Graph_lib::Point offs_a,
                                     Graph_lib::Point offs_b);
 
+inline int sextant(const float angle)
+{
+	return static_cast<int>(angle / (M_PI * 0.33333));
+};
+
 //------------------------------------------------------------------------------
 
 } // namespace Tile_lib
