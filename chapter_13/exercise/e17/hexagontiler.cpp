@@ -21,43 +21,46 @@ void Tile_lib::Hexagon_tiler::add_tile(Graph_lib::Point pos,
 
 Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 {
+	// Returns the points representing the offset in pixels on:
+	// a. The lateral axis
+	// b. The vertical axis
 	int a0, a1, b0, b1;
 	switch (sextant(a)) {
 	case 0:
-		a0 = 2;
-		a1 = 4;
+		a0 = 5;
+		a1 = 1;
 		b0 = 0;
 		b1 = 3;
 		break;
 	case 1:
-		a0 = 1;
-		a1 = 5;
-		b0 = 3;
-		b1 = 0;
+		a0 = 4;
+		a1 = 0;
+		b0 = 5;
+		b1 = 2;
 		break;
 	case 2:
-		a0 = 1;
+		a0 = 3;
 		a1 = 5;
-		b0 = 3;
-		b1 = 0;
+		b0 = 4;
+		b1 = 1;
 		break;
 	case 3:
-		a0 = 1;
-		a1 = 5;
+		a0 = 2;
+		a1 = 4;
 		b0 = 3;
 		b1 = 0;
 		break;
 	case 4:
 		a0 = 1;
-		a1 = 5;
-		b0 = 3;
-		b1 = 0;
+		a1 = 3;
+		b0 = 2;
+		b1 = 5;
 		break;
 	case 5:
-		a0 = 1;
-		a1 = 5;
-		b0 = 3;
-		b1 = 0;
+		a0 = 0;
+		a1 = 2;
+		b0 = 1;
+		b1 = 4;
 		break;
 	default:
 		throw std::runtime_error("Invalid angle");
