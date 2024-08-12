@@ -21,99 +21,85 @@ void Tile_lib::Hexagon_tiler::add_tile(Graph_lib::Point pos,
 
 Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 {
-	// Returns the points representing the offset in pixels on:
+	// Returns the offset in pixels on:
 	// a. The lateral axis
 	// b. The vertical axis
-	int a0, a1, b0, b1;
+	//  - represented as Point objects.
+	int lat_0, lat_1, vert_0, vert_1;
+	bool flip_lat, flip_vert;
 	switch (sextant(a)) {
 	case 0:
-		a0 = 5;
-		a1 = 1;
-		b0 = 0;
-		b1 = 3;
+		lat_0 = 2;
+		lat_1 = 4;
+		vert_0 = 0;
+		vert_1 = 3;
+		flip_lat = false;
+		flip_vert = false;
 		break;
 	case 1:
-		a0 = 4;
-		a1 = 0;
-		b0 = 5;
-		b1 = 2;
+		lat_0 = 5;
+		lat_1 = 2;
+		vert_0 = 4;
+		vert_1 = 0;
+		flip_lat = false;
+		flip_vert = false;
 		break;
 	case 2:
-		a0 = 3;
-		a1 = 5;
-		b0 = 4;
-		b1 = 1;
+		lat_0 = 4;
+		lat_1 = 1;
+		vert_0 = 3;
+		vert_1 = 5;
+		flip_lat = false;
+		flip_vert = false;
 		break;
 	case 3:
-		a0 = 2;
-		a1 = 4;
-		b0 = 3;
-		b1 = 0;
+		lat_0 = 3;
+		lat_1 = 0;
+		vert_0 = 2;
+		vert_1 = 4;
+		flip_lat = false;
+		flip_vert = false;
 		break;
 	case 4:
-		a0 = 1;
-		a1 = 3;
-		b0 = 2;
-		b1 = 5;
+		lat_0 = 2;
+		lat_1 = 5;
+		vert_0 = 1;
+		vert_1 = 3;
+		flip_lat = false;
+		flip_vert = false;
 		break;
 	case 5:
-		a0 = 0;
-		a1 = 2;
-		b0 = 1;
-		b1 = 4;
+		lat_0 = 1;
+		lat_1 = 4;
+		vert_0 = 0;
+		vert_1 = 2;
+		flip_lat = false;
+		flip_vert = false;
 		break;
 	default:
 		throw std::runtime_error("Invalid angle");
 	}
 
-	return {{tiles.back()->point(a0).x - tiles.back()->point(a1).x,
-	         tiles.back()->point(a0).y - tiles.back()->point(a1).y},
-	        {tiles.back()->point(b0).x - tiles.back()->point(b1).x,
-	         tiles.back()->point(b0).y - tiles.back()->point(b1).y}};
+	int lat_x{tiles.back()->point(lat_0).x - tiles.back()->point(lat_1).x};
+	int lat_y{tiles.back()->point(lat_0).y - tiles.back()->point(lat_1).y};
+	int vert_x{tiles.back()->point(vert_0).x - tiles.back()->point(vert_1).x};
+	int vert_y{tiles.back()->point(vert_0).y - tiles.back()->point(vert_1).y};
+	lat_x *= (flip_lat) ? -1 : 1;
+	lat_y *= (flip_lat) ? -1 : 1;
+	vert_x *= (flip_vert) ? -1 : 1;
+	vert_y *= (flip_vert) ? -1 : 1;
+
+	return {{lat_x, lat_y}, {vert_x, vert_y}};
 }
 
-Tile_lib::TL_hex_attr Tile_lib::top_left_hex_attributes(float angle,
-                                                        Graph_lib::Point init_pt,
-                                                        Tile_count ca,
-                                                        Tile_count cb,
-                                                        Graph_lib::Point offs_a,
-                                                        Graph_lib::Point offs_b)
+Graph_lib::Point Tile_lib::top_left_hex_position(Graph_lib::Point init_pt,
+                                                 Tile_count ca,
+                                                 Tile_count cb,
+                                                 Graph_lib::Point offs_a,
+                                                 Graph_lib::Point offs_b)
 {
-	if (angle < 0 || angle > M_PI * 2) {
-		throw std::runtime_error("Invalid angle");
-	}
-
-	switch (sextant(angle)) {
-	case 0:
-		return {false,
-		        1,
-		        -1,
-		        {init_pt.x - ca.inv_count * offs_a.x - cb.inv_count * offs_b.x,
-		         init_pt.y - ca.inv_count * offs_a.y - cb.inv_count * offs_b.y}};
-	case 1:
-	case 2:
-		return {true,
-		        1,
-		        1,
-		        {init_pt.x - ca.inv_count * offs_a.x + cb.count * offs_b.x,
-		         init_pt.y - ca.inv_count * offs_a.y + cb.count * offs_b.y}};
-	case 3:
-	case 4:
-		return {false,
-		        -1,
-		        -1,
-		        {init_pt.x - ca.count * offs_a.x - cb.count * offs_b.x,
-		         init_pt.y - ca.count * offs_a.y - cb.count * offs_b.y}};
-	case 5:
-	case 6:
-		return {false,
-		        -1,
-		        1,
-		        {init_pt.x + ca.count * offs_a.x - cb.inv_count * offs_b.x,
-		         init_pt.y + ca.count * offs_a.y - cb.inv_count * offs_b.y}};
-	default:
-		throw std::runtime_error("Invalid angle");
-	}
+	return {init_pt.x + ca.inv_count * offs_a.x - cb.inv_count * offs_b.x,
+	        init_pt.y + ca.inv_count * offs_a.y - cb.inv_count * offs_b.y};
 }
 
 Coord_sys::Bounds Tile_lib::bounds(const RHEX::RegularHexagon& hex)
@@ -137,25 +123,12 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
                                         const Graph_lib::Point offs_a,
                                         const Graph_lib::Point offs_b)
 {
-	TL_hex_attr top_l_hex{
-	    top_left_hex_attributes(angle, pos, count_a, count_b, offs_a, offs_b)};
-
-	const Tile_count& count_col = (top_l_hex.inv_dir) ? count_b : count_a;
-	const Tile_count& count_row = (top_l_hex.inv_dir) ? count_a : count_b;
-	const Graph_lib::Point offs_col
-	    = (top_l_hex.inv_dir) ? Graph_lib::Point{offs_b.x * top_l_hex.sign_b,
-	                                             offs_b.y * top_l_hex.sign_b}
-	                          : Graph_lib::Point{offs_a.x * top_l_hex.sign_a,
-	                                             offs_a.y * top_l_hex.sign_a};
-	const Graph_lib::Point offs_row
-	    = (top_l_hex.inv_dir) ? Graph_lib::Point{offs_a.x * top_l_hex.sign_a,
-	                                             offs_a.y * top_l_hex.sign_a}
-	                          : Graph_lib::Point{offs_b.x * top_l_hex.sign_b,
-	                                             offs_b.y * top_l_hex.sign_b};
+	Graph_lib::Point top_l_hex_pos{
+	    top_left_hex_position(pos, count_a, count_b, offs_a, offs_b)};
 
 	// DEBUG:: Draw "top-left" triangle
 	tiles.push_back(
-	    std::make_unique<RHEX::RegularHexagon>(top_l_hex.pos, side_len, angle));
+	    std::make_unique<RHEX::RegularHexagon>(top_l_hex_pos, side_len, angle));
 	tiles.back()->set_color(Graph_lib::Color::dark_yellow);
 	tiles.back()->set_style({Graph_lib::Line_style::solid, 2});
 	// DEBUG:: Draw "top-left" triangle
@@ -163,28 +136,28 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 	// DEBUG: Draw offset
 	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
 	tiles.back()->add(pos);
-	tiles.back()->add({pos.x + offs_col.x, pos.y + offs_col.y});
-	tiles.back()->set_color(Graph_lib::Color::yellow);
+	tiles.back()->add({pos.x + offs_a.x, pos.y + offs_a.y});
+	tiles.back()->set_color(Graph_lib::Color::dark_green);
 	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
 	tiles.back()->add(pos);
-	tiles.back()->add({pos.x + offs_row.x, pos.y + offs_row.y});
-	tiles.back()->set_color(Graph_lib::Color::blue);
+	tiles.back()->add({pos.x + offs_b.x, pos.y + offs_b.y});
+	tiles.back()->set_color(Graph_lib::Color::yellow);
 	// DEBUG: Draw offset
 
-	RHEX::RegularHexagon hex_cursor{top_l_hex.pos, side_len, angle};
+	RHEX::RegularHexagon hex_cursor{top_l_hex_pos, side_len, angle};
 	Coord_sys::Bounds hex_bbox{bounds(hex_cursor)};
 
-	for (int col = 0; col < count_col.total(); ++col) {
+	for (int col = 0; col < count_a.total(); ++col) {
 		if (col > 0) {
 			// reset for each 'column'
-			int offs_x = top_l_hex.pos.x - hex_cursor.point(0).x;
-			int offs_y = top_l_hex.pos.y - hex_cursor.point(0).y;
+			int offs_x = top_l_hex_pos.x - hex_cursor.point(0).x;
+			int offs_y = top_l_hex_pos.y - hex_cursor.point(0).y;
 			hex_cursor.move(offs_x, offs_y);
-			hex_cursor.move(offs_col.x * col, offs_col.y * col);
+			hex_cursor.move(offs_a.x * col, offs_a.y * col);
 		}
-		for (int row = 0; row < count_row.total(); ++row) {
+		for (int row = 0; row < count_b.total(); ++row) {
 			if (row > 0) {
-				hex_cursor.move(offs_row.x, offs_row.y);
+				hex_cursor.move(offs_b.x, offs_b.y);
 			}
 			hex_bbox = bounds(hex_cursor);
 
