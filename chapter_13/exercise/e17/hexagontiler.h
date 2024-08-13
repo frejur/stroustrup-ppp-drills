@@ -1,5 +1,5 @@
-#ifndef TRIANGLETILER_H
-#define TRIANGLETILER_H
+#ifndef HEXAGONTILER_H
+#define HEXAGONTILER_H
 
 #include "../share/geo/regularhexagon.h"
 #include "../share/tiler/tiler.h"
@@ -50,4 +50,4 @@ inline int sexstant(const float angle)
 
 } // namespace Tile_lib
 
-#endif // TRIANGLETILER_H
+#endif // HEXAGONTILER_H
