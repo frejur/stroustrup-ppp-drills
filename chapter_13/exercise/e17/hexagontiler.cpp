@@ -39,10 +39,10 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 		break;
 	case 1:
 	case 2:
-		lat_0 = 4;
-		lat_1 = 1;
-		vert_0 = 3;
-		vert_1 = 5;
+		lat_0 = 1;
+		lat_1 = 4;
+		vert_0 = 5;
+		vert_1 = 3;
 		flip_lat = false;
 		flip_vert = false;
 		break;
@@ -50,8 +50,8 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 	case 4:
 		lat_0 = 0;
 		lat_1 = 3;
-		vert_0 = 2;
-		vert_1 = 4;
+		vert_0 = 4;
+		vert_1 = 2;
 		flip_lat = false;
 		flip_vert = false;
 		break;
@@ -59,8 +59,8 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 	case 6:
 		lat_0 = 5;
 		lat_1 = 2;
-		vert_0 = 1;
-		vert_1 = 3;
+		vert_0 = 3;
+		vert_1 = 1;
 		flip_lat = false;
 		flip_vert = false;
 		break;
@@ -68,8 +68,8 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 	case 8:
 		lat_0 = 4;
 		lat_1 = 1;
-		vert_0 = 5;
-		vert_1 = 2;
+		vert_0 = 2;
+		vert_1 = 0;
 		flip_lat = false;
 		flip_vert = false;
 		break;
@@ -77,8 +77,8 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 	case 10:
 		lat_0 = 3;
 		lat_1 = 0;
-		vert_0 = 4;
-		vert_1 = 1;
+		vert_0 = 1;
+		vert_1 = 5;
 		flip_lat = false;
 		flip_vert = false;
 		break;
