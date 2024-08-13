@@ -8,10 +8,8 @@ namespace RHEX {
 class RegularHexagon : public RPOL::RegularPolygon
 {
 public:
-	RegularHexagon(Graph_lib::Point xy,
-	               int radius,
-	               float angle = 0,
-	               bool stop = false);
+	RegularHexagon(Graph_lib::Point xy, int radius, float angle = 0);
+
 	void close_side(int n);
 	void close_sides_before(int n);
 	bool side_is_open(int n) const;
@@ -31,7 +29,6 @@ private:
     int fnt_sz{fl_size()<14?14:fl_size()};
 	static constexpr int num_sides{ 6 };
 	std::vector<bool> side_states;
-	bool debug_stop = false;
 };
 } // namespace RHEX
 

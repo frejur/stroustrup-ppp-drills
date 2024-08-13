@@ -176,7 +176,7 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	clear_tiles();
 
 	// DEBUG: Draw initial tile
-	add_tile(new_pos, new_side_len, new_angle, true);
+	add_tile(new_pos, new_side_len, new_angle);
 	// END DEBUG: Draw initial tile
 
 	new_bbox();

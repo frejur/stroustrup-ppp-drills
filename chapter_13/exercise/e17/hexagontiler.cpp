@@ -13,11 +13,10 @@ Tile_lib::Hexagon_tiler::Hexagon_tiler(
 
 void Tile_lib::Hexagon_tiler::add_tile(Graph_lib::Point pos,
                                        int side_len,
-                                       float angle,
-                                       bool stop)
+                                       float angle)
 {
 	tiles.push_back(
-	    std::make_unique<RHEX::RegularHexagon>(pos, side_len, angle, stop));
+	    std::make_unique<RHEX::RegularHexagon>(pos, side_len, angle));
 }
 
 Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
