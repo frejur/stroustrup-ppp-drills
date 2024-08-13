@@ -13,10 +13,11 @@ Tile_lib::Hexagon_tiler::Hexagon_tiler(
 
 void Tile_lib::Hexagon_tiler::add_tile(Graph_lib::Point pos,
                                        int side_len,
-                                       float angle)
+                                       float angle,
+                                       bool stop)
 {
 	tiles.push_back(
-	    std::make_unique<RHEX::RegularHexagon>(pos, side_len, angle));
+	    std::make_unique<RHEX::RegularHexagon>(pos, side_len, angle, stop));
 }
 
 Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
@@ -131,6 +132,21 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 {
 	Graph_lib::Point top_l_hex_pos{
 	    top_left_hex_position(pos, count_a, count_b, offs_a, offs_b)};
+
+	// DEBUG: Draw point numbers
+	for (int i = 0; i < tiles.back()->number_of_points(); ++i) {
+		if (i != 3) {
+			continue;
+		}
+		Graph_lib::Point pt0{tiles.back()->point(i)};
+		tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
+		tiles.back()->add(pt0);
+		tiles.back()->add({pt0.x + 10, pt0.y});
+		tiles.back()->add({pt0.x + 10, pt0.y + 10});
+		tiles.back()->add({pt0.x, pt0.y + 10});
+		tiles.back()->set_color(Graph_lib::Color::black);
+	}
+	// END DEBUG: Draw point numbers
 
 	// DEBUG:: Draw "top-left" triangle
 	tiles.push_back(

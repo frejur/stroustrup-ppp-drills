@@ -20,7 +20,10 @@ private:
 	               const Tile_count count_b,
 	               const Graph_lib::Point offset_a,
 	               const Graph_lib::Point offset_b);
-	void add_tile(Graph_lib::Point pos, int side_len, float angle);
+	void add_tile(Graph_lib::Point pos,
+	              int side_len,
+	              float angle,
+	              bool stop = false);
 	bool tile_is_inside(int idx);
 	Offset_pair offset_pair();
 };
