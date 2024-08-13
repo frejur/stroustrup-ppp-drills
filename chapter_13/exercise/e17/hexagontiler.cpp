@@ -27,16 +27,18 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 	//  - represented as Point objects.
 	int lat_0, lat_1, vert_0, vert_1;
 	bool flip_lat, flip_vert;
-	switch (sextant(a)) {
+	switch (dodecant(a)) {
+	case 11:
 	case 0:
-		lat_0 = 2;
-		lat_1 = 4;
-		vert_0 = 0;
-		vert_1 = 3;
+		lat_0 = 0;
+		lat_1 = 3;
+		vert_0 = 1;
+		vert_1 = 5;
 		flip_lat = false;
 		flip_vert = false;
 		break;
 	case 1:
+	case 2:
 		lat_0 = 5;
 		lat_1 = 2;
 		vert_0 = 4;
@@ -44,7 +46,8 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 		flip_lat = false;
 		flip_vert = false;
 		break;
-	case 2:
+	case 3:
+	case 4:
 		lat_0 = 4;
 		lat_1 = 1;
 		vert_0 = 3;
@@ -52,7 +55,8 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 		flip_lat = false;
 		flip_vert = false;
 		break;
-	case 3:
+	case 5:
+	case 6:
 		lat_0 = 3;
 		lat_1 = 0;
 		vert_0 = 2;
@@ -60,7 +64,8 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 		flip_lat = false;
 		flip_vert = false;
 		break;
-	case 4:
+	case 7:
+	case 8:
 		lat_0 = 2;
 		lat_1 = 5;
 		vert_0 = 1;
@@ -68,7 +73,8 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 		flip_lat = false;
 		flip_vert = false;
 		break;
-	case 5:
+	case 9:
+	case 10:
 		lat_0 = 1;
 		lat_1 = 4;
 		vert_0 = 0;

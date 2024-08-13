@@ -38,9 +38,11 @@ void RHEX::RegularHexagon::draw_lines() const
 {
 	RegularPolygon::draw_lines();
 
+	// DEBUG: Draw edge and point numbers
 	Fl_Font old_font{fl_font()};
 	Fl_Fontsize old_sz{fl_size()};
 	fl_font(font().as_int(), font_size());
+
 	for (int i = 0; i < 6; ++i) {
 		std::string s{std::to_string(i)};
 		auto bbox{get_bbox_size(s)};
@@ -53,9 +55,12 @@ void RHEX::RegularHexagon::draw_lines() const
 		Fl_Color oc = fl_color();
 		fl_color((side_is_open(i)) ? 68 : FL_RED);
 		fl_draw(std::to_string(i).c_str(), x, y);
+		fl_color(FL_BLUE);
+		fl_draw(std::to_string(i).c_str(), point(i).x, point(i).y + 10);
 		fl_color(oc);
 	}
 	fl_font(old_font, old_sz);
+	// END DEBUG: Draw edge and point numbers
 }
 
 std::pair<int, int> RHEX::RegularHexagon::get_bbox_size(const string &s) const
