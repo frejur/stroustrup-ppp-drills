@@ -98,9 +98,9 @@ void e17()
 				                       dyn_t.angle());
 				win.log("Angle: " + std::to_string(dyn_t.angle()) + "\n");
 				++count_logged;
-				win.log("Sub-q: "
+				win.log("Dodecant: "
 				        + std::to_string(
-				            static_cast<int>(dyn_t.angle() / (M_PI * 0.33333)))
+				            static_cast<int>(dyn_t.angle() / (M_PI / 6)))
 				        + "\n");
 				++count_logged;
 				if (count_logged > 10) {
