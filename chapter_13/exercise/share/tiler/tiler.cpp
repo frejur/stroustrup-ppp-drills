@@ -167,8 +167,8 @@ int Tile_lib::Tiler::count_tiles_until_oob(Graph_lib::Point point,
 }
 
 void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
-                                            int new_side_len,
-                                            float new_angle)
+                                       int new_side_len,
+                                       float new_angle)
 {
 	tiles_cs.set_rotation(new_angle);
 	s = new_side_len;
