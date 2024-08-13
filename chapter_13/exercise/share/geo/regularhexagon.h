@@ -21,8 +21,9 @@ public:
 	Graph_lib::Font font() const { return fnt; }
     void set_font_size(int s) { fnt_sz = s; }
     int font_size() const { return fnt_sz; }
-    Graph_lib::Point point(int i) const {
-    	return Shape::point((((6-i)%6) + 2)%6);
+	Graph_lib::Point point(int i) const override
+	{
+		return Shape::point((((6 - i) % 6) + 2) % 6);
 	}
 
 private:

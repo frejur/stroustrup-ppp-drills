@@ -99,9 +99,9 @@ void Shape::draw_lines() const
         fl_color(fill_color().as_int());
         fl_begin_complex_polygon();
         for(int i=0; i<number_of_points(); ++i){
-            fl_vertex(point(i).x, point(i).y);
-        }
-        fl_end_complex_polygon();
+			fl_vertex(Shape::point(i).x, Shape::point(i).y);
+		}
+		fl_end_complex_polygon();
         fl_color(color().as_int());    // reset color
     }
 
@@ -243,10 +243,10 @@ void Closed_polyline::draw_lines() const
 
     // then draw closing line:
     if (2<number_of_points() && color().visibility())
-        fl_line(point(number_of_points()-1).x, 
-        point(number_of_points()-1).y,
-        point(0).x,
-        point(0).y);
+		fl_line(Shape::point(number_of_points() - 1).x,
+		        Shape::point(number_of_points() - 1).y,
+		        Shape::point(0).x,
+		        Shape::point(0).y);
 }
 
 //------------------------------------------------------------------------------
