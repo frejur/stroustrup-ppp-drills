@@ -39,12 +39,12 @@ Graph_lib::Point top_left_hex_position(Graph_lib::Point init_pt,
 
 inline int sextant(const float angle)
 {
-	return static_cast<int>(angle / M_PI / 3);
+	return static_cast<int>(angle / (M_PI / 3));
 };
 
 inline int dodecant(const float angle)
 {
-	return static_cast<int>(angle / M_PI / 6);
+	return static_cast<int>(angle / (M_PI / 6));
 };
 
 //------------------------------------------------------------------------------

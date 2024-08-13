@@ -30,24 +30,15 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 	switch (dodecant(a)) {
 	case 11:
 	case 0:
-		lat_0 = 0;
-		lat_1 = 3;
-		vert_0 = 1;
-		vert_1 = 5;
+		lat_0 = 2;
+		lat_1 = 5;
+		vert_0 = 0;
+		vert_1 = 4;
 		flip_lat = false;
 		flip_vert = false;
 		break;
 	case 1:
 	case 2:
-		lat_0 = 5;
-		lat_1 = 2;
-		vert_0 = 4;
-		vert_1 = 0;
-		flip_lat = false;
-		flip_vert = false;
-		break;
-	case 3:
-	case 4:
 		lat_0 = 4;
 		lat_1 = 1;
 		vert_0 = 3;
@@ -55,30 +46,39 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 		flip_lat = false;
 		flip_vert = false;
 		break;
-	case 5:
-	case 6:
-		lat_0 = 3;
-		lat_1 = 0;
+	case 3:
+	case 4:
+		lat_0 = 0;
+		lat_1 = 3;
 		vert_0 = 2;
 		vert_1 = 4;
 		flip_lat = false;
 		flip_vert = false;
 		break;
-	case 7:
-	case 8:
-		lat_0 = 2;
-		lat_1 = 5;
+	case 5:
+	case 6:
+		lat_0 = 5;
+		lat_1 = 2;
 		vert_0 = 1;
 		vert_1 = 3;
 		flip_lat = false;
 		flip_vert = false;
 		break;
+	case 7:
+	case 8:
+		lat_0 = 4;
+		lat_1 = 1;
+		vert_0 = 5;
+		vert_1 = 2;
+		flip_lat = false;
+		flip_vert = false;
+		break;
 	case 9:
 	case 10:
-		lat_0 = 1;
-		lat_1 = 4;
-		vert_0 = 0;
-		vert_1 = 2;
+		lat_0 = 3;
+		lat_1 = 0;
+		vert_0 = 4;
+		vert_1 = 1;
 		flip_lat = false;
 		flip_vert = false;
 		break;
@@ -134,7 +134,7 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 
 	// DEBUG: Draw point numbers
 	for (int i = 0; i < tiles.back()->number_of_points(); ++i) {
-		if (i != 3) {
+		if (i != 5) {
 			continue;
 		}
 		Graph_lib::Point pt0{tiles.back()->point(i)};
