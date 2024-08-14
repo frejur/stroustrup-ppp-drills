@@ -20,7 +20,7 @@ void Tile_lib::Triangle_tiler::add_tile(Graph_lib::Point pos,
 	                                                                       s)));
 }
 
-Tile_lib::Offset_pair Tile_lib::Triangle_tiler::offset_pair()
+Tile_lib::Offset_pair Tile_lib::Triangle_tiler::offset_pair(const double angle)
 {
 	return {{tiles.back()->point(1).x - tiles.back()->point(0).x,
 	         tiles.back()->point(1).y - tiles.back()->point(0).y},
@@ -178,6 +178,20 @@ void Tile_lib::Triangle_tiler::add_tiles(const Graph_lib::Point pos,
 			}
 		}
 	}
+	// DEBUG: Draw offset
+	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
+	tiles.back()->add(pos);
+	tiles.back()->add({pos.x + offs_col.x * 2, pos.y + offs_col.y * 2});
+	tiles.back()->set_color(Graph_lib::Color::dark_green);
+	tiles.back()->set_style(
+	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 5));
+	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
+	tiles.back()->add(pos);
+	tiles.back()->add({pos.x + offs_row.x * 2, pos.y + offs_row.y * 2});
+	tiles.back()->set_style(
+	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 5));
+	tiles.back()->set_color(Graph_lib::Color::yellow);
+	// DEBUG: Draw offset
 }
 
 bool Tile_lib::Triangle_tiler::tile_is_inside(int idx)

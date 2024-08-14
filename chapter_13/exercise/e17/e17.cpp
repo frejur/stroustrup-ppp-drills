@@ -65,6 +65,10 @@ void e17()
 	GL::Text info{{64, 32}, info_click()};
 	win.attach(info);
 
+	Graph_lib::Closed_polyline marker{{-1, -1}, {1, -1}, {1, 1}, {-1, 1}};
+	marker.set_color(Graph_lib::Color::cyan);
+	win.attach(marker);
+
 	int count_logged = 0;
 	while (win.shown()) {
 		if (win.click_has_been_registered()) {
@@ -73,22 +77,6 @@ void e17()
 				dyn_t.enable_transform();
                 hacky_redraw_tile(pass_to_callback); // transform by moving mouse
 				info.set_label(info_transform());
-				std::stringstream ss;
-				for (int i = 0; i < 4; ++i) {
-					Point corner = o;
-					if (i == 1) {
-						corner.x += t_w;
-					} else if (i == 2) {
-						corner.x += t_w;
-						corner.y += t_h;
-					} else if (i == 3) {
-						corner.y += t_h;
-					}
-					inters::Bary_coords b{inters::bary(corner,
-					                                   tiles.point(0),
-					                                   tiles.point(1),
-					                                   tiles.point(2))};
-				}
 			} else {
 				tiles.resume_drawing();
 				dyn_t.apply_transform();
@@ -97,6 +85,8 @@ void e17()
 				                       dyn_t.side_length(),
 				                       dyn_t.angle());
 				double deg_conv{180.0 / M_PI};
+				marker.move(dyn_t.origin().x - marker.point(0).x + 1,
+				            dyn_t.origin().y - marker.point(0).y + 1);
 				win.log("Angle: " + std::to_string(dyn_t.angle() * deg_conv)
 				        + " degrees.\n");
 				++count_logged;

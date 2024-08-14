@@ -25,7 +25,8 @@ private:
 	double coordsys_angle() const;
 
 	bool tile_is_inside(int idx);
-	Offset_pair offset_pair();
+	Offset_pair offset_pair(const double angle);
+	Graph_lib::Point tile_origin_offset(const double angle) const;
 };
 
 Coord_sys::Bounds bounds(const RHEX::RegularHexagon& hex);

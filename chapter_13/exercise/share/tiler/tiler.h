@@ -140,7 +140,7 @@ protected:
 	                          Graph_lib::Point offset,
 	                          const int max_count = 250);
 
-	virtual Offset_pair offset_pair() = 0;
+	virtual Offset_pair offset_pair(const double angle) = 0;
 	virtual void add_tile(Graph_lib::Point pos, int side_len, float angle) = 0;
 	virtual void add_tiles(const Graph_lib::Point pos,
 	                       const int side_len,
@@ -152,6 +152,10 @@ protected:
 	    = 0;
 	virtual bool tile_is_inside(int idx) = 0;
 	virtual double coordsys_angle() const { return a; };
+	virtual Graph_lib::Point tile_origin_offset(const double angle) const
+	{
+		return {0, 0};
+	};
 };
 
 Coord_sys::Bounds bounds(const RTRI::RightTriangle& tri);

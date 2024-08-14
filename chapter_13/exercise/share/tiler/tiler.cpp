@@ -172,22 +172,31 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 {
 	s = new_side_len;
 	a = new_angle;
-	tiles_cs.set_rotation(coordsys_angle());
+	tiles_cs.set_rotation(coordsys_angle()); // run after updating 'a'
 	clear_tiles();
 
 	add_tile(new_pos, new_side_len, new_angle); // Initial tile
 
 	new_bbox();
-	Offset_pair offs{offset_pair()};
 
 	if (!tile_is_inside(tiles.size() - 1)) {
 		return;
 	}
 
-	Tile_count count_a{tile_count(new_pos, offs.a)};
-	Tile_count count_b{tile_count(new_pos, offs.b)};
+	Offset_pair tile_offs{offset_pair(new_angle)};
+	Graph_lib::Point origin_offs{tile_origin_offset(new_angle)};
+	Graph_lib::Point origin{new_pos.x - origin_offs.x,
+	                        new_pos.y - origin_offs.y};
+	Tile_count count_a{tile_count(origin, tile_offs.a)};
+	Tile_count count_b{tile_count(origin, tile_offs.b)};
 
-	add_tiles(new_pos, new_side_len, new_angle, count_a, count_b, offs.a, offs.b);
+	add_tiles(new_pos,
+	          new_side_len,
+	          new_angle,
+	          count_a,
+	          count_b,
+	          tile_offs.a,
+	          tile_offs.b);
 }
 
 Graph_lib::Point Tile_lib::Tiler::point(int p) const
