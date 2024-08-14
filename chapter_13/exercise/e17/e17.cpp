@@ -96,12 +96,19 @@ void e17()
 				tiles.update_transform(dyn_t.origin(),
 				                       dyn_t.side_length(),
 				                       dyn_t.angle());
-				win.log("Angle: " + std::to_string(dyn_t.angle()) + "\n");
+				double deg_conv{180.0 / M_PI};
+				win.log("Angle: " + std::to_string(dyn_t.angle() * deg_conv)
+				        + " degrees.\n");
+				++count_logged;
+				win.log(
+				    "CS-angle: "
+				    + std::to_string(tiles.coordinate_system_angle() * deg_conv)
+				    + " degrees.\n");
 				++count_logged;
 				win.log("Dodecant: "
 				        + std::to_string(
 				            static_cast<int>(dyn_t.angle() / (M_PI / 6)))
-				        + "\n");
+				        + ".\n");
 				++count_logged;
 				if (count_logged > 10) {
 					win.clear_logs();

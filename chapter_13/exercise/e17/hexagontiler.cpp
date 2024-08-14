@@ -254,9 +254,23 @@ double Tile_lib::Hexagon_tiler::coordsys_angle() const
 		throw std::runtime_error("Invalid angle");
 	}
 
+	// Divide unit circle
 	const double section_size = M_PI / 3;
-	const int section = static_cast<int>((a + section_size * 0.5)
-	                                     / section_size);
+	const double section_half = section_size * 0.5;
 
-	return a - (section * section_size);
+	// To align with the rotation of the hexagon, offset by 30 deg.
+	const double offs_a = a + section_half;
+
+	if (a <= section_half) {
+		return a;
+	}
+
+	const int section = static_cast<int>((offs_a) / section_size);
+
+	const double diff = (a - (section * section_size));
+	if (diff < 0) {
+		return 2 * M_PI + diff; // "wrap-around" if negative
+	}
+
+	return diff;
 }

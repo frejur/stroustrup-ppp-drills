@@ -11,6 +11,7 @@ class Hexagon_tiler : public Tiler
 public:
 	Hexagon_tiler(
 	    Graph_lib::Point o, int w, int h, int hex_side, double rotation);
+	double coordinate_system_angle() const { return coordsys_angle(); };
 
 private:
 	void add_tiles(const Graph_lib::Point pos,
