@@ -151,7 +151,7 @@ protected:
 	                       const Graph_lib::Point offset_b)
 	    = 0;
 	virtual bool tile_is_inside(int idx) = 0;
-
+	virtual double coordsys_angle() const { return a; };
 };
 
 Coord_sys::Bounds bounds(const RTRI::RightTriangle& tri);

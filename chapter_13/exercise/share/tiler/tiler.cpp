@@ -170,9 +170,9 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
                                        int new_side_len,
                                        float new_angle)
 {
-	tiles_cs.set_rotation(new_angle);
 	s = new_side_len;
 	a = new_angle;
+	tiles_cs.set_rotation(coordsys_angle());
 	clear_tiles();
 
 	// DEBUG: Draw initial tile
@@ -283,9 +283,9 @@ bool Tile_lib::Tiler::pt_inside_bbox(Graph_lib::Point pt,
 void Tile_lib::Tiler::new_bbox()
 {
 	tiles_bbox.reset_transform();
-	tiles_bbox.rotate(a);
+	tiles_bbox.rotate(coordsys_angle());
 	tiles_bbox.new_from_bounds();
-	tiles_bbox.rotate(a);
+	tiles_bbox.rotate(coordsys_angle());
 }
 
 //------------------------------------------------------------------------------

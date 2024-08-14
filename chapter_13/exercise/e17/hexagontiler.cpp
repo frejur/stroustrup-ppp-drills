@@ -248,3 +248,15 @@ bool Tile_lib::hex_is_inside(RHEX::RegularHexagon& hex, Coord_sys::Bounds bnds)
 	}
 	return false;
 }
+double Tile_lib::Hexagon_tiler::coordsys_angle() const
+{
+	if (a < 0 || a >= 2 * M_PI) {
+		throw std::runtime_error("Invalid angle");
+	}
+
+	const double section_size = M_PI / 3;
+	const int section = static_cast<int>((a + section_size * 0.5)
+	                                     / section_size);
+
+	return a - (section * section_size);
+}
