@@ -175,9 +175,7 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	tiles_cs.set_rotation(coordsys_angle());
 	clear_tiles();
 
-	// DEBUG: Draw initial tile
-	add_tile(new_pos, new_side_len, new_angle);
-	// END DEBUG: Draw initial tile
+	add_tile(new_pos, new_side_len, new_angle); // Initial tile
 
 	new_bbox();
 	Offset_pair offs{offset_pair()};
