@@ -25,77 +25,74 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair()
 	// a. The lateral axis
 	// b. The vertical axis
 	//  - represented as Point objects.
-	int lat_0, lat_1, vert_0, vert_1;
-	bool flip_lat, flip_vert;
+	int lat_a_0, lat_a_1, lat_b_0, lat_b_1, vert_0, vert_1;
 	switch (dodecant(a)) {
 	case 11:
 	case 0:
-		lat_0 = 2;
-		lat_1 = 5;
+		lat_a_0 = 2;
+		lat_a_1 = 5;
+		lat_b_0 = 1;
+		lat_b_1 = 0;
 		vert_0 = 0;
 		vert_1 = 4;
-		flip_lat = false;
-		flip_vert = false;
 		break;
 	case 1:
 	case 2:
-		lat_0 = 1;
-		lat_1 = 4;
+		lat_a_0 = 1;
+		lat_a_1 = 4;
+		lat_b_0 = 0;
+		lat_b_1 = 5;
 		vert_0 = 5;
 		vert_1 = 3;
-		flip_lat = false;
-		flip_vert = false;
 		break;
 	case 3:
 	case 4:
-		lat_0 = 0;
-		lat_1 = 3;
+		lat_a_0 = 0;
+		lat_a_1 = 3;
+		lat_b_0 = 5;
+		lat_b_1 = 4;
 		vert_0 = 4;
 		vert_1 = 2;
-		flip_lat = false;
-		flip_vert = false;
 		break;
 	case 5:
 	case 6:
-		lat_0 = 5;
-		lat_1 = 2;
+		lat_a_0 = 5;
+		lat_a_1 = 2;
+		lat_b_0 = 4;
+		lat_b_1 = 3;
 		vert_0 = 3;
 		vert_1 = 1;
-		flip_lat = false;
-		flip_vert = false;
 		break;
 	case 7:
 	case 8:
-		lat_0 = 4;
-		lat_1 = 1;
+		lat_a_0 = 4;
+		lat_a_1 = 1;
+		lat_b_0 = 3;
+		lat_b_1 = 2;
 		vert_0 = 2;
 		vert_1 = 0;
-		flip_lat = false;
-		flip_vert = false;
 		break;
 	case 9:
 	case 10:
-		lat_0 = 3;
-		lat_1 = 0;
+		lat_a_0 = 3;
+		lat_a_1 = 0;
+		lat_b_0 = 2;
+		lat_b_1 = 1;
 		vert_0 = 1;
 		vert_1 = 5;
-		flip_lat = false;
-		flip_vert = false;
 		break;
 	default:
 		throw std::runtime_error("Invalid angle");
 	}
 
-	int lat_x{tiles.back()->point(lat_0).x - tiles.back()->point(lat_1).x};
-	int lat_y{tiles.back()->point(lat_0).y - tiles.back()->point(lat_1).y};
+	int lat_a_x{tiles.back()->point(lat_a_0).x - tiles.back()->point(lat_a_1).x};
+	int lat_a_y{tiles.back()->point(lat_a_0).y - tiles.back()->point(lat_a_1).y};
+	int lat_b_x{tiles.back()->point(lat_b_0).x - tiles.back()->point(lat_b_1).x};
+	int lat_b_y{tiles.back()->point(lat_b_0).y - tiles.back()->point(lat_b_1).y};
 	int vert_x{tiles.back()->point(vert_0).x - tiles.back()->point(vert_1).x};
 	int vert_y{tiles.back()->point(vert_0).y - tiles.back()->point(vert_1).y};
-	lat_x *= (flip_lat) ? -1 : 1;
-	lat_y *= (flip_lat) ? -1 : 1;
-	vert_x *= (flip_vert) ? -1 : 1;
-	vert_y *= (flip_vert) ? -1 : 1;
 
-	return {{lat_x, lat_y}, {vert_x, vert_y}};
+	return {{lat_a_x + lat_b_x, lat_a_y + lat_b_y}, {vert_x, vert_y}};
 }
 
 Graph_lib::Point Tile_lib::top_left_hex_position(Graph_lib::Point init_pt,
