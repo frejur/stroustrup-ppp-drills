@@ -62,7 +62,9 @@ void dyntile::Dynamic_tile::cue_transform(Graph_lib::Point new_origin,
 	if (!is_transforming() || !init_pos) {
 		return;
 	}
-	if (new_origin != preview_o) {
+	if (t == Tile_type::Regular_hexagon) {
+		preview_o = {new_origin.x + new_side_len, new_origin.y};
+	} else {
 		preview_o = new_origin;
 	}
 	cap_parms(new_side_len, new_angle);

@@ -9,10 +9,7 @@
 RHEX::RegularHexagon::RegularHexagon(Graph_lib::Point xy,
                                      int radius,
                                      float angle)
-    : RegularPolygon({xy.x + radius, xy.y},
-                     radius,
-                     num_sides,
-                     angle + (90 * M_PI / 180))
+    : RegularPolygon(xy, radius, num_sides, angle + (90 * M_PI / 180))
     , side_states(std::vector<bool>(num_sides, true))
 {
 	Graph_lib::Shape::set_color(Graph_lib::Color::black);
