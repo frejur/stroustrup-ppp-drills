@@ -149,8 +149,8 @@ Graph_lib::Point Tile_lib::top_left_hex_position(Graph_lib::Point init_pt,
                                                  Graph_lib::Point offs_a,
                                                  Graph_lib::Point offs_b)
 {
-	return {init_pt.x + ca.inv_count * offs_a.x - cb.inv_count * offs_b.x,
-	        init_pt.y + ca.inv_count * offs_a.y - cb.inv_count * offs_b.y};
+	return {init_pt.x - ca.inv_count * offs_a.x + cb.count * offs_b.x,
+	        init_pt.y - ca.inv_count * offs_a.y + cb.count * offs_b.y};
 }
 
 Coord_sys::Bounds Tile_lib::bounds(const RHEX::RegularHexagon& hex)
@@ -212,7 +212,33 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 	tiles.back()->set_color(Graph_lib::Color::yellow);
 	// DEBUG: Draw offset
 
-	// Debug -------------------------------------------------------------------
+	// DEBUG: Draw counted tiles
+	Graph_lib::Point debug_cursor{pos};
+	//        Lateral count
+	for (int c = 0; c < count_a.count; ++c) {
+		debug_cursor.x = pos.x + (c + 1) * offs_a.x;
+		debug_cursor.y = pos.y + (c + 1) * offs_a.y;
+		add_tile(debug_cursor, side_len, angle);
+	}
+	for (int c = 0; c < count_a.inv_count; ++c) {
+		debug_cursor.x = pos.x - (c + 1) * offs_a.x;
+		debug_cursor.y = pos.y - (c + 1) * offs_a.y;
+		add_tile(debug_cursor, side_len, angle);
+	}
+	//        Vertical count
+	for (int c = 0; c < count_b.count; ++c) {
+		debug_cursor.x = pos.x + (c + 1) * offs_b.x;
+		debug_cursor.y = pos.y + (c + 1) * offs_b.y;
+		add_tile(debug_cursor, side_len, angle);
+	}
+	for (int c = 0; c < count_b.inv_count; ++c) {
+		debug_cursor.x = pos.x - (c + 1) * offs_b.x;
+		debug_cursor.y = pos.y - (c + 1) * offs_b.y;
+		add_tile(debug_cursor, side_len, angle);
+	}
+	// DEBUG: Draw counted tiles
+
+	// End Debug ---------------------------------------------------------------
 
 	RHEX::RegularHexagon hex_cursor{top_l_hex_pos, side_len, angle};
 	Coord_sys::Bounds hex_bbox{bounds(hex_cursor)};
