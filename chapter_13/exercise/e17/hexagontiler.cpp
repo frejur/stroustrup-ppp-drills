@@ -219,22 +219,26 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 		debug_cursor.x = pos.x + (c + 1) * offs_a.x;
 		debug_cursor.y = pos.y + (c + 1) * offs_a.y;
 		add_tile(debug_cursor, side_len, angle);
+		tiles.back()->set_color(Graph_lib::Color::green);
 	}
 	for (int c = 0; c < count_a.inv_count; ++c) {
 		debug_cursor.x = pos.x - (c + 1) * offs_a.x;
 		debug_cursor.y = pos.y - (c + 1) * offs_a.y;
 		add_tile(debug_cursor, side_len, angle);
+		tiles.back()->set_color(Graph_lib::Color::red);
 	}
 	//        Vertical count
 	for (int c = 0; c < count_b.count; ++c) {
 		debug_cursor.x = pos.x + (c + 1) * offs_b.x;
 		debug_cursor.y = pos.y + (c + 1) * offs_b.y;
 		add_tile(debug_cursor, side_len, angle);
+		tiles.back()->set_color(Graph_lib::Color::yellow);
 	}
 	for (int c = 0; c < count_b.inv_count; ++c) {
 		debug_cursor.x = pos.x - (c + 1) * offs_b.x;
 		debug_cursor.y = pos.y - (c + 1) * offs_b.y;
 		add_tile(debug_cursor, side_len, angle);
+		tiles.back()->set_color(Graph_lib::Color::blue);
 	}
 	// DEBUG: Draw counted tiles
 

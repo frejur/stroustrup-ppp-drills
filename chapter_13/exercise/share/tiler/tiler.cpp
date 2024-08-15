@@ -156,9 +156,35 @@ int Tile_lib::Tiler::count_tiles_until_oob(Graph_lib::Point point,
 		rot_bnds.max.x = bounds_upper_limit;
 	}
 
+	// DEBUG: Draw count offset
+	Graph_lib::Point pt0 = tiles_cs.to_screen({rot_pt.x, rot_pt.y});
+	tiles.insert(tiles.begin(), std::make_unique<Graph_lib::Closed_polyline>());
+	tiles.front()->add({pt0.x - 5, pt0.y - 5});
+	tiles.front()->add({pt0.x + 5, pt0.y - 5});
+	tiles.front()->add({pt0.x + 5, pt0.y + 5});
+	tiles.front()->add({pt0.x - 5, pt0.y + 5});
+	tiles.front()->set_style(
+	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 10));
+	tiles.front()->set_color(Graph_lib::Color::dark_blue);
+	// DEBUG: Draw count offset
+
 	do {
 		rot_pt.x += rot_offset.x;
 		rot_pt.y += rot_offset.y;
+
+		// DEBUG: Draw count offset
+		Graph_lib::Point pt = tiles_cs.to_screen({rot_pt.x, rot_pt.y});
+		tiles.insert(tiles.begin(),
+		             std::make_unique<Graph_lib::Closed_polyline>());
+		tiles.front()->add({pt.x - 5, pt.y - 5});
+		tiles.front()->add({pt.x + 5, pt.y - 5});
+		tiles.front()->add({pt.x + 5, pt.y + 5});
+		tiles.front()->add({pt.x - 5, pt.y + 5});
+		tiles.front()->set_style(
+		    Graph_lib::Line_style(Graph_lib::Line_style::solid, 10));
+		tiles.front()->set_color(Graph_lib::Color::dark_yellow);
+		// DEBUG: Draw count offset
+
 		if (++count == max_count) {
 			throw std::runtime_error("Too many tiles in pattern");
 		}
