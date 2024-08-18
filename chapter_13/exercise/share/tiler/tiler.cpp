@@ -211,8 +211,8 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 
 	Offset_pair tile_offs{offset_pair(new_angle)};
 	Graph_lib::Point origin_offs{tile_origin_offset(new_angle)};
-	Graph_lib::Point origin{new_pos.x - origin_offs.x,
-	                        new_pos.y - origin_offs.y};
+	Graph_lib::Point origin{new_pos.x + origin_offs.x,
+	                        new_pos.y + origin_offs.y};
 	Tile_count count_a{tile_count(origin, tile_offs.a)};
 	Tile_count count_b{tile_count(origin, tile_offs.b)};
 
@@ -285,6 +285,8 @@ std::vector<Graph_lib::Point> Tile_lib::Tiler::debug_draw_tiles_bbox_grid()
 Tile_lib::Tiler::Tiler(Graph_lib::Point o, int w, int h, int side, double angle)
     : Graph_lib::Shape()
     , draw_active(true)
+    , s(side)
+    , a(angle)
     , c{o.x + static_cast<int>((w * 5 + 5) / 10),
         o.y + static_cast<int>((h * 5 + 5) / 10)}
     , bg_bnds{o, {o.x + w, o.y + h}}
@@ -292,8 +294,6 @@ Tile_lib::Tiler::Tiler(Graph_lib::Point o, int w, int h, int side, double angle)
     , tiles_cs{c}
     , tiles_bnds{bg_bnds}
     , tiles_bbox{o, w, h}
-    , s(side)
-    , a(angle)
 {
 	bg.set_color(Graph_lib::Color::black);
 	tiles_bbox.set_color(Graph_lib::Color::yellow);

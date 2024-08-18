@@ -101,45 +101,63 @@ Tile_lib::Offset_pair Tile_lib::Hexagon_tiler::offset_pair(const double angle)
 	int vert_x{tiles.back()->point(vert_0).x - tiles.back()->point(vert_1).x};
 	int vert_y{tiles.back()->point(vert_0).y - tiles.back()->point(vert_1).y};
 
-	return {{lat_a_x + lat_b_x, lat_a_y + lat_b_y}, {vert_x, vert_y}};
+	return {{static_cast<int>((lat_a_x + lat_b_x) * 0.5),
+	         static_cast<int>((lat_a_y + lat_b_y) * 0.5)},
+	        {vert_x, vert_y}};
 }
 
 Graph_lib::Point Tile_lib::Hexagon_tiler::tile_origin_offset(
     const double angle) const
 {
 	const int origin_idx = 2;
-	int offs_idx = 0;
+	int lat_idx = 0;
+	int vert_idx = 0;
 	switch (dodecant(angle)) {
 	case 11:
 	case 0:
-		offs_idx = 0;
+		lat_idx = 4;
+		vert_idx = 0;
 		break;
 	case 1:
 	case 2:
-		offs_idx = 5;
+		lat_idx = 3;
+		vert_idx = 5;
 		break;
 	case 3:
 	case 4:
-		offs_idx = 4;
+		lat_idx = 2;
+		vert_idx = 4;
 		break;
 	case 5:
 	case 6:
-		offs_idx = 3;
+		lat_idx = 1;
+		vert_idx = 3;
 		break;
 	case 7:
 	case 8:
-		return {0, 0};
+		lat_idx = 0;
+		vert_idx = 2;
+		break;
 	case 9:
 	case 10:
-		offs_idx = 1;
+		lat_idx = 5;
+		vert_idx = 1;
 		break;
 	default:
 		throw std::runtime_error("Invalid angle");
 	}
-	int offs_x = tiles.back()->point(offs_idx).x
-	             - tiles.back()->point(origin_idx).x;
-	int offs_y = tiles.back()->point(offs_idx).y
-	             - tiles.back()->point(origin_idx).y;
+
+	// Lateral offset
+	int lat_x = tiles.back()->point(lat_idx).x;
+	int lat_y = tiles.back()->point(lat_idx).y;
+
+	int offs_x = lat_x - tiles.back()->point(origin_idx).x;
+	int offs_y = lat_y - tiles.back()->point(origin_idx).y;
+
+	// Vertical offset (move down by half the dist.)
+	offs_x -= static_cast<int>((lat_x - tiles.back()->point(vert_idx).x) * 0.5);
+	offs_y -= static_cast<int>((lat_y - tiles.back()->point(vert_idx).y) * 0.5);
+
 	return {offs_x, offs_y};
 }
 
@@ -149,6 +167,14 @@ Graph_lib::Point Tile_lib::top_left_hex_position(Graph_lib::Point init_pt,
                                                  Graph_lib::Point offs_a,
                                                  Graph_lib::Point offs_b)
 {
+	// Offset vertically if the lateral count (a) is odd
+	if (ca.inv_count % 2 == 1) {
+		return {init_pt.x - ca.inv_count * offs_a.x
+		            + static_cast<int>((cb.count - 0.5) * offs_b.x),
+		        init_pt.y - ca.inv_count * offs_a.y
+		            + static_cast<int>((cb.count - 0.5) * offs_b.y)};
+	}
+
 	return {init_pt.x - ca.inv_count * offs_a.x + cb.count * offs_b.x,
 	        init_pt.y - ca.inv_count * offs_a.y + cb.count * offs_b.y};
 }
@@ -176,6 +202,8 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 {
 	Graph_lib::Point top_l_hex_pos{
 	    top_left_hex_position(pos, count_a, count_b, offs_a, offs_b)};
+	Graph_lib::Point offs_odd{static_cast<int>(offs_b.x * 0.5),
+	                          static_cast<int>(offs_b.y * 0.5)};
 
 	// Debug -------------------------------------------------------------------
 
@@ -187,7 +215,8 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 	tiles.back()->add({pt_o.x + 5, pt_o.y + 5});
 	tiles.back()->add({pt_o.x + 5, pt_o.y - 5});
 	tiles.back()->add({pt_o.x - 5, pt_o.y - 5});
-	tiles.back()->set_color(Graph_lib::Color::black);
+	tiles.back()->set_style({Graph_lib::Line_style::solid, 4});
+	tiles.back()->set_color(Graph_lib::Color::green);
 	// DEBUG: Draw (offset) origin of inital tile
 
 	// DEBUG:: Draw "top-left" triangle
@@ -218,12 +247,20 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 	for (int c = 0; c < count_a.count; ++c) {
 		debug_cursor.x = pos.x + (c + 1) * offs_a.x;
 		debug_cursor.y = pos.y + (c + 1) * offs_a.y;
+		if (c % 2 == 0) {
+			debug_cursor.x = static_cast<int>(debug_cursor.x - offs_odd.x);
+			debug_cursor.y = static_cast<int>(debug_cursor.y - offs_odd.y);
+		}
 		add_tile(debug_cursor, side_len, angle);
 		tiles.back()->set_color(Graph_lib::Color::green);
 	}
 	for (int c = 0; c < count_a.inv_count; ++c) {
 		debug_cursor.x = pos.x - (c + 1) * offs_a.x;
 		debug_cursor.y = pos.y - (c + 1) * offs_a.y;
+		if (c % 2 == 0) {
+			debug_cursor.x = static_cast<int>(debug_cursor.x - offs_odd.x);
+			debug_cursor.y = static_cast<int>(debug_cursor.y - offs_odd.y);
+		}
 		add_tile(debug_cursor, side_len, angle);
 		tiles.back()->set_color(Graph_lib::Color::red);
 	}
@@ -247,39 +284,46 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 	RHEX::RegularHexagon hex_cursor{top_l_hex_pos, side_len, angle};
 	Coord_sys::Bounds hex_bbox{bounds(hex_cursor)};
 
+	int odd_col_dir_sign = (count_a.inv_count % 2 == 1) ? 1 : -1;
 	for (int col = 0; col < count_a.total(); ++col) {
 		if (col > 0) {
 			// reset for each 'column'
-			int offs_x = top_l_hex_pos.x - hex_cursor.point(0).x;
-			int offs_y = top_l_hex_pos.y - hex_cursor.point(0).y;
+			int offs_x = top_l_hex_pos.x - hex_cursor.point(2).x;
+			int offs_y = top_l_hex_pos.y - hex_cursor.point(2).y;
 			hex_cursor.move(offs_x, offs_y);
 			hex_cursor.move(offs_a.x * col, offs_a.y * col);
 		}
+		if (col % 2 == 1) {
+			hex_cursor.move(offs_odd.x * odd_col_dir_sign,
+			                offs_odd.y * odd_col_dir_sign);
+		}
 		for (int row = 0; row < count_b.total(); ++row) {
 			if (row > 0) {
-				hex_cursor.move(offs_b.x, offs_b.y);
+				hex_cursor.move(-offs_b.x, -offs_b.y);
 			}
 			hex_bbox = bounds(hex_cursor);
 
-			// DEBUG: Draw triangles bbox
-			// tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-			//     initializer_list<Graph_lib::Point>{hex_bbox.min,
-			//                                        {hex_bbox.max.x,
-			//                                         hex_bbox.min.y},
-			//                                        hex_bbox.max,
-			//                                        {hex_bbox.min.x,
-			//                                         hex_bbox.max.y}}));
-			// tiles.back()->set_color(Graph_lib::Color::cyan);
-			// END DEBUG: Draw triangles bbox
+			// DEBUG: Draw hexagon bbox
+			tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+			    initializer_list<Graph_lib::Point>{hex_bbox.min,
+			                                       {hex_bbox.max.x,
+			                                        hex_bbox.min.y},
+			                                       hex_bbox.max,
+			                                       {hex_bbox.min.x,
+			                                        hex_bbox.max.y}}));
+			tiles.back()->set_color(Graph_lib::Color::cyan);
+			// END DEBUG: Draw hexagon bbox
 
 			if (!Coord_sys::are_overlapping(hex_bbox, bg_bnds)) {
+				tiles.back()->set_color(Graph_lib::Color::magenta); // DEBUG
 				continue;
 			}
 
-			// if (hex_is_inside(hex_cursor, bg_bnds)) {
-			// 	add_tile(hex_cursor.point(0), side_len, angle);
-			// 	tiles.back()->set_fill_color(Graph_lib::Color(25));
-			// }
+			if (hex_is_inside(hex_cursor, bg_bnds)) {
+				tiles.back()->set_color(Graph_lib::Color::yellow); // DEBUG
+				add_tile(hex_cursor.point(2), side_len, angle);
+				tiles.back()->set_fill_color(Graph_lib::Color(25));
+			}
 		}
 	}
 }
