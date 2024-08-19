@@ -38,7 +38,7 @@ const std::string& info_transform()
 
 void e15()
 {
-	constexpr bool ENABLE_DEBUG{true};
+	constexpr bool ENABLE_DEBUG{false};
 	constexpr bool ENABLE_CLICK{true};
 
 	constexpr int win_w{ 640 };
@@ -56,6 +56,9 @@ void e15()
 	const int t_w{300};
 	const int t_h{200};
 	Tile_lib::Triangle_tiler tiles{o, t_w, t_h, 64, 0};
+	if (ENABLE_DEBUG) {
+		tiles.enable_debug();
+	}
 	win.attach(tiles);
 
 	dyntile::Dynamic_tile dyn_t{dyntile::Tile_type::Right_triangle, o, 64, 0};
