@@ -276,6 +276,7 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 	Coord_sys::Bounds hex_bbox{bounds(hex_cursor)};
 
 	int odd_col_dir_sign = (count_a.inv_count % 2 == 1) ? 1 : -1;
+	int count = 0;
 	for (int col = 0; col < count_a.total(); ++col) {
 		if (col > 0) {
 			// reset for each 'column'
@@ -302,7 +303,12 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 
 			if (hex_is_inside(hex_cursor, bg_bnds)) {
 				add_tile(hex_cursor.point(2), side_len, angle);
-				tiles.back()->set_fill_color(Graph_lib::Color(25));
+				tiles.back()->set_fill_color(Graph_lib::Color(25 + count));
+			}
+			if (count < 128) {
+				++count;
+			} else {
+				count = 0;
 			}
 		}
 	}
