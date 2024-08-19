@@ -22,14 +22,15 @@ namespace GL = Graph_lib;
 const std::string& info_click()
 {
 	static const std::string s{
-	    "Click anywhere to place the initial hexagon tile"};
+	    "Click anywhere to  start placing the initial hexagon tile"};
 	return s;
 }
 
 const std::string& info_transform()
 {
 	static const std::string s{
-	    "Move the cursor to transform the hexagon. Click to confirm"};
+	    "Move the cursor to transform and place the hexagon on "
+	    "the canvas. Click to confirm"};
 	return s;
 }
 
