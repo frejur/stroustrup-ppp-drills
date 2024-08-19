@@ -52,9 +52,9 @@ void e17()
 	                 ENABLE_CLICK};
 
 	fl_color(0);
-	const GL::Point o{200, 200};
-	const int t_w{300};
-	const int t_h{200};
+	const GL::Point o{32, 64};
+	const int t_w{win_w - 64};
+	const int t_h{win_h - 96};
 	Tile_lib::Hexagon_tiler tiles{o, t_w, t_h, 64, 0};
 	if (ENABLE_DEBUG) {
 		tiles.enable_debug();
