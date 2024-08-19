@@ -69,8 +69,11 @@ void e17()
 	win.attach(info);
 
 	Graph_lib::Closed_polyline marker{{-1, -1}, {1, -1}, {1, 1}, {-1, 1}};
-	marker.set_color(Graph_lib::Color::cyan);
-	win.attach(marker);
+
+	if (ENABLE_DEBUG) {
+		marker.set_color(Graph_lib::Color::cyan);
+		win.attach(marker);
+	}
 
 	int count_logged = 0;
 	while (win.shown()) {
@@ -88,8 +91,10 @@ void e17()
 				                       dyn_t.side_length(),
 				                       dyn_t.angle());
 				double deg_conv{180.0 / M_PI};
-				marker.move(dyn_t.origin().x - marker.point(0).x + 1,
-				            dyn_t.origin().y - marker.point(0).y + 1);
+				if (ENABLE_DEBUG) {
+					marker.move(dyn_t.origin().x - marker.point(0).x + 1,
+					            dyn_t.origin().y - marker.point(0).y + 1);
+				}
 				win.log("Angle: " + std::to_string(dyn_t.angle() * deg_conv)
 				        + " degrees.\n");
 				++count_logged;
