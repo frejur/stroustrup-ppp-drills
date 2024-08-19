@@ -14,16 +14,6 @@ void Tile_lib::Hexagon_tiler::add_tile(Graph_lib::Point pos,
                                        int side_len,
                                        float angle)
 {
-	// DEBUG: Draw position of inital tile
-	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
-	tiles.back()->add({pos.x - 5, pos.y + 5});
-	tiles.back()->add({pos.x + 5, pos.y + 5});
-	tiles.back()->add({pos.x + 5, pos.y - 5});
-	tiles.back()->add({pos.x - 5, pos.y - 5});
-	tiles.back()->set_style(
-	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 5));
-	tiles.back()->set_color(Graph_lib::Color::magenta);
-	// DEBUG: Draw position of inital tile
 	tiles.push_back(
 	    std::make_unique<RHEX::RegularHexagon>(pos, side_len, angle));
 }
@@ -192,22 +182,12 @@ Coord_sys::Bounds Tile_lib::bounds(const RHEX::RegularHexagon& hex)
 	return Coord_sys::bounds_from_points(pts);
 }
 
-void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
-                                        const int side_len,
-                                        const float angle,
-                                        const Tile_count count_a,
-                                        const Tile_count count_b,
-                                        const Graph_lib::Point offs_a,
-                                        const Graph_lib::Point offs_b)
+void Tile_lib::Hexagon_tiler::debug_draw_tile_origin(const Graph_lib::Point pos,
+                                                     const float angle)
 {
-	Graph_lib::Point top_l_hex_pos{
-	    top_left_hex_position(pos, count_a, count_b, offs_a, offs_b)};
-	Graph_lib::Point offs_odd{static_cast<int>(offs_b.x * 0.5),
-	                          static_cast<int>(offs_b.y * 0.5)};
-
-	// Debug -------------------------------------------------------------------
-
-	// DEBUG: Draw (offset) origin of inital tile
+	if (!debug) {
+		return;
+	}
 	Graph_lib::Point o_offs{tile_origin_offset(angle)};
 	Graph_lib::Point pt_o = {pos.x + o_offs.x, pos.y + o_offs.y};
 	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
@@ -217,31 +197,32 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 	tiles.back()->add({pt_o.x - 5, pt_o.y - 5});
 	tiles.back()->set_style({Graph_lib::Line_style::solid, 4});
 	tiles.back()->set_color(Graph_lib::Color::green);
-	// DEBUG: Draw (offset) origin of inital tile
-
-	// DEBUG:: Draw "top-left" triangle
+}
+void Tile_lib::Hexagon_tiler::debug_draw_top_left_hex(
+    const int side_len, const float angle, Graph_lib::Point top_l_hex_pos)
+{
+	if (!debug) {
+		return;
+	}
 	tiles.push_back(
 	    std::make_unique<RHEX::RegularHexagon>(top_l_hex_pos, side_len, angle));
 	tiles.back()->set_color(Graph_lib::Color::dark_yellow);
 	tiles.back()->set_style({Graph_lib::Line_style::solid, 2});
-	// DEBUG:: Draw "top-left" triangle
+}
 
-	// DEBUG: Draw offset
-	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
-	tiles.back()->add(pos);
-	tiles.back()->add({pos.x + offs_a.x, pos.y + offs_a.y});
-	tiles.back()->set_style(
-	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 5));
-	tiles.back()->set_color(Graph_lib::Color::dark_green);
-	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
-	tiles.back()->add(pos);
-	tiles.back()->add({pos.x + offs_b.x, pos.y + offs_b.y});
-	tiles.back()->set_style(
-	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 5));
-	tiles.back()->set_color(Graph_lib::Color::yellow);
-	// DEBUG: Draw offset
-
-	// DEBUG: Draw counted tiles
+void Tile_lib::Hexagon_tiler::debug_draw_counted_tiles(
+    const Graph_lib::Point pos,
+    const int& side_len,
+    const float& angle,
+    const Tile_count count_a,
+    const Tile_count count_b,
+    const Graph_lib::Point offs_a,
+    const Graph_lib::Point offs_b,
+    Graph_lib::Point offs_odd)
+{
+	if (!debug) {
+		return;
+	}
 	Graph_lib::Point debug_cursor{pos};
 	//        Lateral count
 	for (int c = 0; c < count_a.count; ++c) {
@@ -277,9 +258,19 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 		add_tile(debug_cursor, side_len, angle);
 		tiles.back()->set_color(Graph_lib::Color::blue);
 	}
-	// DEBUG: Draw counted tiles
-
-	// End Debug ---------------------------------------------------------------
+}
+void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
+                                        const int side_len,
+                                        const float angle,
+                                        const Tile_count count_a,
+                                        const Tile_count count_b,
+                                        const Graph_lib::Point offs_a,
+                                        const Graph_lib::Point offs_b)
+{
+	Graph_lib::Point top_l_hex_pos{
+	    top_left_hex_position(pos, count_a, count_b, offs_a, offs_b)};
+	Graph_lib::Point offs_odd{static_cast<int>(offs_b.x * 0.5),
+	                          static_cast<int>(offs_b.y * 0.5)};
 
 	RHEX::RegularHexagon hex_cursor{top_l_hex_pos, side_len, angle};
 	Coord_sys::Bounds hex_bbox{bounds(hex_cursor)};
@@ -303,29 +294,31 @@ void Tile_lib::Hexagon_tiler::add_tiles(const Graph_lib::Point pos,
 			}
 			hex_bbox = bounds(hex_cursor);
 
-			// DEBUG: Draw hexagon bbox
-			tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-			    initializer_list<Graph_lib::Point>{hex_bbox.min,
-			                                       {hex_bbox.max.x,
-			                                        hex_bbox.min.y},
-			                                       hex_bbox.max,
-			                                       {hex_bbox.min.x,
-			                                        hex_bbox.max.y}}));
-			tiles.back()->set_color(Graph_lib::Color::cyan);
-			// END DEBUG: Draw hexagon bbox
+			debug_draw_tile_bbox(hex_bbox);
 
 			if (!Coord_sys::are_overlapping(hex_bbox, bg_bnds)) {
-				tiles.back()->set_color(Graph_lib::Color::magenta); // DEBUG
 				continue;
 			}
 
 			if (hex_is_inside(hex_cursor, bg_bnds)) {
-				tiles.back()->set_color(Graph_lib::Color::yellow); // DEBUG
 				add_tile(hex_cursor.point(2), side_len, angle);
 				tiles.back()->set_fill_color(Graph_lib::Color(25));
 			}
 		}
 	}
+	// Debug -------------------------------------------------------------------
+	debug_draw_top_left_hex(side_len, angle, top_l_hex_pos);
+	debug_draw_tile_origin(pos, angle);
+	debug_draw_offset(offs_b, pos, offs_a);
+	debug_draw_counted_tiles(pos,
+	                         side_len,
+	                         angle,
+	                         count_a,
+	                         count_b,
+	                         offs_a,
+	                         offs_b,
+	                         offs_odd);
+	// End Debug ---------------------------------------------------------------
 }
 
 bool Tile_lib::Hexagon_tiler::tile_is_inside(int idx)

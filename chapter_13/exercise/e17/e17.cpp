@@ -37,7 +37,7 @@ const std::string& info_transform()
 
 void e17()
 {
-	constexpr bool ENABLE_DEBUG{true};
+	constexpr bool ENABLE_DEBUG{false};
 	constexpr bool ENABLE_CLICK{true};
 
 	constexpr int win_w{ 640 };
@@ -55,6 +55,9 @@ void e17()
 	const int t_w{300};
 	const int t_h{200};
 	Tile_lib::Hexagon_tiler tiles{o, t_w, t_h, 64, 0};
+	if (ENABLE_DEBUG) {
+		tiles.enable_debug();
+	}
 	win.attach(tiles);
 
 	dyntile::Dynamic_tile dyn_t{dyntile::Tile_type::Regular_hexagon, o, 64, 0};
@@ -105,8 +108,6 @@ void e17()
 					count_logged = 0;
 				}
 				info.set_label(info_click());
-
-				tiles.debug_draw_tiles_bbox_grid();
 			}
 		}
 		win.wait_for_click();
