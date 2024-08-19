@@ -8,9 +8,11 @@
 
 RHEX::RegularHexagon::RegularHexagon(Graph_lib::Point xy,
                                      int radius,
-                                     float angle)
+                                     float angle,
+                                     bool en_debug)
     : RegularPolygon(xy, radius, num_sides, angle + (90 * M_PI / 180))
     , side_states(std::vector<bool>(num_sides, true))
+    , debug(en_debug)
 {
 	Graph_lib::Shape::set_color(Graph_lib::Color::black);
 	set_font_size(8);
@@ -35,6 +37,9 @@ void RHEX::RegularHexagon::draw_lines() const
 {
 	RegularPolygon::draw_lines();
 
+	if (!debug) {
+		return;
+	}
 	// DEBUG: Draw edge and point numbers
 	Fl_Font old_font{fl_font()};
 	Fl_Fontsize old_sz{fl_size()};
