@@ -22,14 +22,15 @@ namespace GL = Graph_lib;
 const std::string& info_click()
 {
 	static const std::string s{
-	    "Click anywhere to place the initial triangle tile"};
+	    "Click anywhere to start placing the initial triangle tile"};
 	return s;
 }
 
 const std::string& info_transform()
 {
 	static const std::string s{
-	    "Move the cursor to transform the triangle. Click to confirm"};
+	    "Move the cursor to transform and place the triangle on "
+	    "the canvas. Click to confirm"};
 	return s;
 }
 
@@ -37,7 +38,7 @@ const std::string& info_transform()
 
 void e15()
 {
-	constexpr bool ENABLE_DEBUG{false};
+	constexpr bool ENABLE_DEBUG{true};
 	constexpr bool ENABLE_CLICK{true};
 
 	constexpr int win_w{ 640 };
