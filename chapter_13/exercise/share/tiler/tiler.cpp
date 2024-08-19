@@ -114,12 +114,18 @@ void Tile_lib::Bbox::new_from_bounds()
 void Tile_lib::Tiler::draw_lines() const
 {
 	if (!draw_active) {
+		bg.draw();
 		return;
 	}
-	tiles_bbox.draw();
+	if (debug) {
+		tiles_bbox.draw();
+	} else {
+		fl_clip(bg.point(0).x, bg.point(0).y, bg.width(), bg.height());
+	}
 	for (const auto& t : tiles) {
 		t->draw();
 	}
+	fl_pop_clip();
 	bg.draw();
 }
 
