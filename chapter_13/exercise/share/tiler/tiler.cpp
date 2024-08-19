@@ -132,6 +132,22 @@ Tile_lib::Tile_count Tile_lib::Tiler::tile_count(Graph_lib::Point p,
 	return {count, inv_count};
 }
 
+void Tile_lib::Tiler::debug_draw_count_offset(Graph_lib::Point pt)
+{
+	if (!debug) {
+		return;
+	}
+	Graph_lib::Point pt0 = tiles_cs.to_screen({pt.x, pt.y});
+	tiles.insert(tiles.begin(), std::make_unique<Graph_lib::Closed_polyline>());
+	tiles.front()->add({pt0.x - 5, pt0.y - 5});
+	tiles.front()->add({pt0.x + 5, pt0.y - 5});
+	tiles.front()->add({pt0.x + 5, pt0.y + 5});
+	tiles.front()->add({pt0.x - 5, pt0.y + 5});
+	tiles.front()->set_style(
+	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 10));
+	tiles.front()->set_color(Graph_lib::Color::dark_blue);
+}
+
 int Tile_lib::Tiler::count_tiles_until_oob(Graph_lib::Point point,
                                            Graph_lib::Point offset,
                                            const int max_count)
@@ -156,34 +172,13 @@ int Tile_lib::Tiler::count_tiles_until_oob(Graph_lib::Point point,
 		rot_bnds.max.x = bounds_upper_limit;
 	}
 
-	// DEBUG: Draw count offset
-	Graph_lib::Point pt0 = tiles_cs.to_screen({rot_pt.x, rot_pt.y});
-	tiles.insert(tiles.begin(), std::make_unique<Graph_lib::Closed_polyline>());
-	tiles.front()->add({pt0.x - 5, pt0.y - 5});
-	tiles.front()->add({pt0.x + 5, pt0.y - 5});
-	tiles.front()->add({pt0.x + 5, pt0.y + 5});
-	tiles.front()->add({pt0.x - 5, pt0.y + 5});
-	tiles.front()->set_style(
-	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 10));
-	tiles.front()->set_color(Graph_lib::Color::dark_blue);
-	// DEBUG: Draw count offset
+	debug_draw_count_offset(rot_pt);
 
 	do {
 		rot_pt.x += rot_offset.x;
 		rot_pt.y += rot_offset.y;
 
-		// DEBUG: Draw count offset
-		Graph_lib::Point pt = tiles_cs.to_screen({rot_pt.x, rot_pt.y});
-		tiles.insert(tiles.begin(),
-		             std::make_unique<Graph_lib::Closed_polyline>());
-		tiles.front()->add({pt.x - 5, pt.y - 5});
-		tiles.front()->add({pt.x + 5, pt.y - 5});
-		tiles.front()->add({pt.x + 5, pt.y + 5});
-		tiles.front()->add({pt.x - 5, pt.y + 5});
-		tiles.front()->set_style(
-		    Graph_lib::Line_style(Graph_lib::Line_style::solid, 10));
-		tiles.front()->set_color(Graph_lib::Color::dark_yellow);
-		// DEBUG: Draw count offset
+		debug_draw_count_offset(rot_pt);
 
 		if (++count == max_count) {
 			throw std::runtime_error("Too many tiles in pattern");
@@ -223,6 +218,8 @@ void Tile_lib::Tiler::update_transform(Graph_lib::Point new_pos,
 	          count_b,
 	          tile_offs.a,
 	          tile_offs.b);
+
+	debug_draw_tiles_bbox_grid();
 }
 
 Graph_lib::Point Tile_lib::Tiler::point(int p) const
@@ -239,8 +236,11 @@ Graph_lib::Point Tile_lib::Tiler::point(int p) const
 	throw std::runtime_error("No point carries that index");
 }
 
-std::vector<Graph_lib::Point> Tile_lib::Tiler::debug_draw_tiles_bbox_grid()
+void Tile_lib::Tiler::debug_draw_tiles_bbox_grid()
 {
+	if (!debug) {
+		return;
+	}
 	std::vector<Graph_lib::Point> pts;
 	int bbw = tiles_bbox.horizontal_distance_to_min()
 	          + tiles_bbox.horizontal_distance_to_max();
@@ -278,8 +278,40 @@ std::vector<Graph_lib::Point> Tile_lib::Tiler::debug_draw_tiles_bbox_grid()
 			pts.push_back(pt);
 		}
 	}
+}
 
-	return pts;
+void Tile_lib::Tiler::debug_draw_offset(const Graph_lib::Point offs_row,
+                                        const Graph_lib::Point pos,
+                                        const Graph_lib::Point offs_col)
+{
+	if (!debug) {
+		return;
+	}
+	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
+	tiles.back()->add(pos);
+	tiles.back()->add({pos.x + offs_col.x * 2, pos.y + offs_col.y * 2});
+	tiles.back()->set_color(Graph_lib::Color::dark_green);
+	tiles.back()->set_style(
+	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 5));
+	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
+	tiles.back()->add(pos);
+	tiles.back()->add({pos.x + offs_row.x * 2, pos.y + offs_row.y * 2});
+	tiles.back()->set_style(
+	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 5));
+	tiles.back()->set_color(Graph_lib::Color::yellow);
+}
+
+void Tile_lib::Tiler::debug_draw_tile_bbox(Coord_sys::Bounds bbox)
+{
+	if (!debug) {
+		return;
+	}
+	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
+	    initializer_list<Graph_lib::Point>{bbox.min,
+	                                       {bbox.max.x, bbox.min.y},
+	                                       bbox.max,
+	                                       {bbox.min.x, bbox.max.y}}));
+	tiles.back()->set_color(Graph_lib::Color::cyan);
 }
 
 Tile_lib::Tiler::Tiler(Graph_lib::Point o, int w, int h, int side, double angle)

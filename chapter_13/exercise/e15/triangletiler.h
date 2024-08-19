@@ -22,6 +22,8 @@ private:
 	void add_tile(Graph_lib::Point pos, int side_len, float angle);
 	bool tile_is_inside(int idx);
 	Offset_pair offset_pair(const double angle);
+	void debug_draw_top_left_tri(Graph_lib::Point top_l_tri_pos,
+	                             Graph_lib::Point top_l_tri_end_pt);
 };
 
 //------------------------------------------------------------------------------

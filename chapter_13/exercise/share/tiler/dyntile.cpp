@@ -121,8 +121,8 @@ static void dyntile::transform_tile_cb(void* data)
         time = 0;
         Fl::remove_timeout(transform_tile_cb, data);
     } else {
-        bool preview = true;
-        GL::Point clk{tw->win.click_position()};
+		bool preview = true;
+		GL::Point clk{tw->win.click_position()};
         GL::Point m{tw->win.mouse_position()};
         int x_dist = m.x - clk.x;
         int y_dist = m.y - clk.y;

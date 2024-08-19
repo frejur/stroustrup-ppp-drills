@@ -100,6 +100,10 @@ public:
 	void clear_tiles() { tiles.clear(); };
 	void update_bounding_box() { new_bbox(); };
 	Graph_lib::Point top_left_tile() const { return tl; };
+
+	// DEBUG methods
+	void enable_debug() { debug = true; };
+	void disable_debug() { debug = false; };
 	int debug_bbox_width() const
 	{
 		return tiles_bbox.horizontal_distance_to_max()
@@ -114,9 +118,10 @@ public:
 	{
 		return rotated_bounds(tiles_bbox, tiles_cs);
 	}
-	std::vector<Graph_lib::Point> debug_draw_tiles_bbox_grid();
 
 protected:
+	bool debug = false;
+
 	Tiler(Graph_lib::Point o, int w, int h, int side, double rotation);
 	bool draw_active;
 	int s;
@@ -156,6 +161,14 @@ protected:
 	{
 		return {0, 0};
 	};
+
+	// DEBUG draw methods
+	void debug_draw_tiles_bbox_grid();
+	void debug_draw_count_offset(Graph_lib::Point pt);
+	void debug_draw_offset(const Graph_lib::Point offs_row,
+	                       const Graph_lib::Point pos,
+	                       const Graph_lib::Point offs_col);
+	void debug_draw_tile_bbox(Coord_sys::Bounds bbox);
 };
 
 Coord_sys::Bounds bounds(const RTRI::RightTriangle& tri);

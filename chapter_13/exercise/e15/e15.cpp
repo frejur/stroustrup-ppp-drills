@@ -37,7 +37,7 @@ const std::string& info_transform()
 
 void e15()
 {
-	constexpr bool ENABLE_DEBUG{true};
+	constexpr bool ENABLE_DEBUG{false};
 	constexpr bool ENABLE_CLICK{true};
 
 	constexpr int win_w{ 640 };
@@ -84,10 +84,6 @@ void e15()
 					} else if (i == 3) {
 						corner.y += t_h;
 					}
-					inters::Bary_coords b{inters::bary(corner,
-					                                   tiles.point(0),
-					                                   tiles.point(1),
-					                                   tiles.point(2))};
 				}
 			} else {
 				tiles.resume_drawing();
@@ -96,10 +92,6 @@ void e15()
 				tiles.update_transform(dyn_t.origin(),
 				                       dyn_t.side_length(),
 				                       dyn_t.angle());
-				// win.log("Top left tile: "
-				//         + std::to_string(tiles.top_left_tile().x) + ", "
-				//         + std::to_string(tiles.top_left_tile().y) + "\n");
-
 				if (count_logged > 4) {
 					win.clear_logs();
 					count_logged = 0;
@@ -110,20 +102,12 @@ void e15()
 				win.log("Sub-Quadrant: " + std::to_string(sub_quadrant) + "\n");
 				++count_logged;
 
-				// win.log("Rotated Bbox Dim. "
-				//         + std::to_string(tiles.debug_bbox_width()) + " x "
-				//         + std::to_string(tiles.debug_bbox_height()) + "\n");
-
 				win.log(
 				    "Tiles bbox bounds: "
 				    + std::to_string(tiles.debug_rotates_bounds().min.x) + ", "
 				    + std::to_string(tiles.debug_rotates_bounds().min.y) + " | "
 				    + std::to_string(tiles.debug_rotates_bounds().max.x) + ", "
 				    + std::to_string(tiles.debug_rotates_bounds().max.y) + "\n");
-				std::vector<Graph_lib::Point> dp{
-				    tiles.debug_draw_tiles_bbox_grid()};
-				win.log("Origin: " + std::to_string(dp[0].x) + ", "
-				        + std::to_string(dp[0].y) + "\n");
 
 				info.set_label(info_click());
 			}

@@ -78,6 +78,17 @@ Tile_lib::TL_tri_attr Tile_lib::top_left_tri_attributes(float angle,
 	}
 }
 
+void Tile_lib::Triangle_tiler::debug_draw_top_left_tri(
+    Graph_lib::Point top_l_tri_pos, Graph_lib::Point top_l_tri_end_pt)
+{
+	if (!debug) {
+		return;
+	}
+	tiles.push_back(
+	    std::make_unique<RTRI::RightTriangle>(top_l_tri_pos, top_l_tri_end_pt));
+	tiles.back()->set_color(Graph_lib::Color::dark_yellow);
+	tiles.back()->set_style({Graph_lib::Line_style::solid, 2});
+}
 void Tile_lib::Triangle_tiler::add_tiles(const Graph_lib::Point pos,
                                          const int side_len,
                                          const float angle,
@@ -104,12 +115,7 @@ void Tile_lib::Triangle_tiler::add_tiles(const Graph_lib::Point pos,
 	                          : Graph_lib::Point{offs_b.x * top_l_tri.sign_b,
 	                                             offs_b.y * top_l_tri.sign_b};
 
-	// DEBUG:: Draw "top-left" triangle
-	tiles.push_back(
-	    std::make_unique<RTRI::RightTriangle>(top_l_tri.pos, top_l_tri_end_pt));
-	tiles.back()->set_color(Graph_lib::Color::dark_yellow);
-	tiles.back()->set_style({Graph_lib::Line_style::solid, 2});
-	// DEBUG:: Draw "top-left" triangle
+	debug_draw_top_left_tri(top_l_tri.pos, top_l_tri_end_pt);
 
 	RTRI::RightTriangle tri_cursor{top_l_tri.pos,
 	                               top_l_tri_end_pt,
@@ -147,14 +153,7 @@ void Tile_lib::Triangle_tiler::add_tiles(const Graph_lib::Point pos,
 			tri_bbox_combo = Coord_sys::merged_bounds(tri_bbox, tri_bbox_inv);
 
 			// DEBUG: Draw triangles bbox
-			tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>(
-			    initializer_list<Graph_lib::Point>{tri_bbox_combo.min,
-			                                       {tri_bbox_combo.max.x,
-			                                        tri_bbox_combo.min.y},
-			                                       tri_bbox_combo.max,
-			                                       {tri_bbox_combo.min.x,
-			                                        tri_bbox_combo.max.y}}));
-			tiles.back()->set_color(Graph_lib::Color::cyan);
+			debug_draw_tile_bbox(tri_bbox_combo);
 			// END DEBUG: Draw triangles bbox
 
 			if (!Coord_sys::are_overlapping(tri_bbox_combo, bg_bnds)) {
@@ -178,20 +177,7 @@ void Tile_lib::Triangle_tiler::add_tiles(const Graph_lib::Point pos,
 			}
 		}
 	}
-	// DEBUG: Draw offset
-	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
-	tiles.back()->add(pos);
-	tiles.back()->add({pos.x + offs_col.x * 2, pos.y + offs_col.y * 2});
-	tiles.back()->set_color(Graph_lib::Color::dark_green);
-	tiles.back()->set_style(
-	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 5));
-	tiles.push_back(std::make_unique<Graph_lib::Closed_polyline>());
-	tiles.back()->add(pos);
-	tiles.back()->add({pos.x + offs_row.x * 2, pos.y + offs_row.y * 2});
-	tiles.back()->set_style(
-	    Graph_lib::Line_style(Graph_lib::Line_style::solid, 5));
-	tiles.back()->set_color(Graph_lib::Color::yellow);
-	// DEBUG: Draw offset
+	debug_draw_offset(offs_row, pos, offs_col);
 }
 
 bool Tile_lib::Triangle_tiler::tile_is_inside(int idx)
