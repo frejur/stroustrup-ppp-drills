@@ -16,6 +16,8 @@ add_executable(${T_THIS}
     ../../lib/Debug_window.h
 
     e19.cpp
+    star.h
+    star.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
