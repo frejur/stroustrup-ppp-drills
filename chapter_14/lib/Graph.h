@@ -144,10 +144,10 @@ public:
     Line_style style() const; 
 
     void set_fill_color(Color col); 
-    Color fill_color() const; 
+    Color fill_color() const;
 
-    Point point(int i) const;  		// read only access to points
-    int number_of_points() const; 
+	virtual Point point(int i) const; // read only access to points
+	int number_of_points() const; 
 
     Shape(const Shape&) = delete;      	// prevent copying
     Shape& operator=(const Shape&) = delete;
@@ -190,8 +190,8 @@ struct Rectangle : Shape {
     Rectangle(Point x, Point y);
     void draw_lines() const;
 
-    int height() const { return h; }
-    int width() const { return w; }
+	int height() const { return h; }
+	int width() const { return w; }
 private:
     int h;    // height
     int w;    // width
