@@ -23,6 +23,10 @@ set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
 )
 message("Building target: ${SELECTED_TARGET}")
 
-IF(${SELECTED_TARGET} MATCHES ${T_DRILL})
-    add_subdirectory(${CMAKE_SOURCE_DIR}/drill)
-ENDIF()
+if(
+    ${SELECTED_TARGET} STREQUAL ${T_DRILL})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/drill)
+elseif(
+    ${SELECTED_TARGET} STREQUAL ${T_E01})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e01)
+endif()
