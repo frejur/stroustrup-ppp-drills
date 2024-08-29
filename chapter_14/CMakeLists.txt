@@ -13,13 +13,13 @@ find_package(FLTK REQUIRED NO_MODULE)
 message(STATUS "FLTK_INCLUDE_DIRS = '${FLTK_INCLUDE_DIRS}'")
 
 # Targets
-set(T_TEST "Test")
 set(T_DRILL "Drill")
+set(T_E01 "Exercise 1")
 
 set(SELECTED_TARGET ${T_DRILL} CACHE STRING "Selected target")
 set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
-    ${T_TEST}
     ${T_DRILL}
+    ${T_E01}
 )
 message("Building target: ${SELECTED_TARGET}")
 
