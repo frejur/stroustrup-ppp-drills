@@ -1,8 +1,10 @@
-#include "../../lib/Simple_window.h"
 #include "../../lib/Graph.h"
-#include <iostream>
+#include "../../lib/Simple_window.h"
 #include "../share/geo/arc.h"
+#include "attire.h"
+#include "emoticons.h"
 #include <cmath>
+#include <iostream>
 
 // Exercise 1.
 // - Define classes 'Smiley' and 'Frowny' derived from class 'Circle'.
@@ -24,39 +26,34 @@
 //   different emoticons with the apropriate hats.
 
 int main() {
-    try {
-        constexpr int w {640};
-        constexpr int h {480};
-        const int mid_x{
-            static_cast<int>(std::round(w * 0.5))};
-        const int mid_y{
-            static_cast<int>(std::round(h * 0.5))};
-        Simple_window win{
-            {100, 100}, w, h,
-            "Toot-toot!" };
+	try {
+		constexpr int w{640};
+		constexpr int h{480};
+		const int mid_x{static_cast<int>(std::round(w * 0.5))};
+		const int mid_y{static_cast<int>(std::round(h * 0.5))};
+		Simple_window win{{100, 100}, w, h, "Toot-toot!"};
 
-	// Test mouth
-        Arc_geo::Arc a{
-            {mid_x, mid_y}, {mid_x - 100, mid_y - 50}, true};
-        a.set_color(Color::black);
-        win.attach(a);
+		// Test mouth
+		Arc_geo::Arc a{{mid_x, mid_y}, {mid_x - 100, mid_y - 50}, true};
+		a.set_color(Color::black);
+		win.attach(a);
 
-        Arc_geo::Arc b{
-            {mid_x + 100, mid_y - 50},
-            {mid_x, mid_y}
-        };
-        b.set_color(Color::red);
-        win.attach(b);
+		Arc_geo::Arc b{{mid_x + 100, mid_y - 50}, {mid_x, mid_y}};
+		b.set_color(Color::red);
+		win.attach(b);
 
-        win.wait_for_button();
-    }
-    catch (exception& e) {
-        std::cerr << "Error: " << e.what() << '\n';
-        return 1;
-    }
-    catch (...) {
-        std::cerr << "Unknown error\n";
-        return 2;
-    }
-    return 0;
+		// Cannot initialize abstract classes:
+		// emot::Emoticon e;
+		// emot::Attire at;
+		// emot::Hat hat;
+
+		win.wait_for_button();
+	} catch (exception& e) {
+		std::cerr << "Error: " << e.what() << '\n';
+		return 1;
+	} catch (...) {
+		std::cerr << "Unknown error\n";
+		return 2;
+	}
+	return 0;
 }

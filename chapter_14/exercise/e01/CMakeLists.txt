@@ -16,6 +16,8 @@ add_executable(${T_THIS}
     e01.cpp
     ../share/geo/arc.h
     ../share/geo/arc.cpp
+    emoticons.h emoticons.cpp
+    attire.h attire.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
