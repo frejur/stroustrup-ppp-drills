@@ -13,11 +13,15 @@ add_executable(${T_THIS}
     ../../lib/std_lib_facilities.h
     ../../lib/Window.h
     ../../lib/Window.cpp
-    e01.cpp
     ../share/geo/arc.h
     ../share/geo/arc.cpp
+    ../share/geo/isoscelestriangle.cpp
+    ../share/geo/isoscelestriangle.h
+    ../share/geo/star.cpp
+    ../share/geo/star.h
     emoticons.h emoticons.cpp
     attire.h attire.cpp
+    e01.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)

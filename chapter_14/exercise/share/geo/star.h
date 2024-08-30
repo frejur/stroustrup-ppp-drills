@@ -1,7 +1,7 @@
 #ifndef STAR_H
 #define STAR_H
 #define _USE_MATH_DEFINES
-#include "../../lib/Graph.h"
+#include "../../../lib/Graph.h"
 #include <cmath>
 
 constexpr int default_radius{64};

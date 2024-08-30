@@ -16,8 +16,9 @@
 // - Reuse code from Chapter 12 for drawing the arcs that make up the mouth.
 // - Add an 'Emoticon' base class for derived classes 'Smiley' and 'Frowney'.
 // - Add abstract base classes 'Attire' and 'Hat'. Derive 'Hat' from 'Attire'.
-// - Add an 'attach_attire()' method to the 'Emoticon', which passes a reference
-//   to an 'Attire' object and stores it in the 'Emoticon' object.
+// - Add an 'add_attire()' method to the 'Emoticon', which creates a concrete
+//   object derived from 'Attire' and stores a reference to it in the
+//   'Emoticon' object.
 // - Add classes 'Dunce_hat' and 'Party_hat' derived from class 'Hat'.
 // - 'Dunce_hat' is a conical hat with the letter 'D' printed on the front.
 // - 'Party_hat' is a conical hat with an image pattern and a star on top
@@ -31,16 +32,15 @@ int main() {
 		constexpr int h{480};
 		const int mid_x{static_cast<int>(std::round(w * 0.5))};
 		const int mid_y{static_cast<int>(std::round(h * 0.5))};
+		constexpr int e_sz{64};
+
 		Simple_window win{{100, 100}, w, h, "Toot-toot!"};
 
-		// Test mouth
-		Arc_geo::Arc a{{mid_x, mid_y}, {mid_x - 100, mid_y - 50}, true};
-		a.set_color(Color::black);
-		win.attach(a);
+		emot::Smiley sm{{mid_x - e_sz * 2, mid_y}, e_sz};
+		win.attach(sm);
 
-		Arc_geo::Arc b{{mid_x + 100, mid_y - 50}, {mid_x, mid_y}};
-		b.set_color(Color::red);
-		win.attach(b);
+		emot::Frowney fr{{mid_x + e_sz * 2, mid_y}, e_sz};
+		win.attach(fr);
 
 		// Cannot initialize abstract classes:
 		// emot::Emoticon e;
