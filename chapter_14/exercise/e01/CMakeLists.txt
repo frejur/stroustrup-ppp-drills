@@ -19,10 +19,16 @@ add_executable(${T_THIS}
     ../share/geo/isoscelestriangle.h
     ../share/geo/star.cpp
     ../share/geo/star.h
+    ../share/img/image_cutout.cpp
+    ../share/img/image_cutout.h
+    
     emoticons.h emoticons.cpp
     attire.h attire.cpp
     e01.cpp
+    em_templates.h em_templates.cpp
 )
+
+configure_file(img/dots.jpg dots.jpg COPYONLY)
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
 target_include_directories(${T_THIS} PUBLIC ${FLTK_INCLUDE_DIRS})

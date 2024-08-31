@@ -2,7 +2,7 @@
 #define ISOSCELESTRIANGLE_H
 #include "../../../lib/Graph.h"
 #include <cmath>
-namespace ITRI { //-------------------------------------------------------------
+namespace itri { //-------------------------------------------------------------
 
 namespace GL = Graph_lib;
 
@@ -12,10 +12,12 @@ public:
 	                  GL::Point end_opposite,
 	                  double angle,
 	                  bool invert = false);
+	IsoscelesTriangle(GL::Point origin,
+	                  int width,
+	                  int height,
+	                  double rotation = 0);
 };
 
-} // namespace TRI -------------------------------------------------------------
-
-
+} // namespace itri
 
 #endif // ISOSCELESTRIANGLE_H

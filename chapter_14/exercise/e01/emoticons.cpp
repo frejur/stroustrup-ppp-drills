@@ -33,6 +33,7 @@ void emot::Smiley::draw_lines() const
 	Circle::draw_lines();
 	mouth.draw();
 	draw_eyes();
+	draw_attire();
 }
 
 //------------------------------------------------------------------------------
@@ -58,4 +59,5 @@ void emot::Frowney::draw_lines() const
 	Circle::draw_lines();
 	mouth.draw();
 	draw_eyes();
+	draw_attire();
 }

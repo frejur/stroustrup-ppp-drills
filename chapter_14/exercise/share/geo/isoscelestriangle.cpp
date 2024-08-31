@@ -4,7 +4,7 @@
 
 namespace GL = Graph_lib;
 
-ITRI::IsoscelesTriangle::IsoscelesTriangle(GL::Point origin,
+itri::IsoscelesTriangle::IsoscelesTriangle(GL::Point origin,
                                            GL::Point end_opposite,
                                            double angle,
                                            bool invert)
@@ -30,3 +30,23 @@ ITRI::IsoscelesTriangle::IsoscelesTriangle(GL::Point origin,
 	}
 }
 
+itri::IsoscelesTriangle::IsoscelesTriangle(Graph_lib::Point base_pt,
+                                           int width,
+                                           int height,
+                                           double rotation)
+{
+	int half_w{static_cast<int>(width * 0.5)};
+	double rot_rad = rotation * (M_PI / 180);
+
+	// Calculate the offset for the base points
+	Graph_lib::Point rot_offs{static_cast<int>(cos(rot_rad) * half_w),
+	                          static_cast<int>(sin(rot_rad) * half_w)};
+
+	Graph_lib::Point
+	    apex{base_pt.x + static_cast<int>(cos(rot_rad - M_PI * 0.5) * height),
+	         base_pt.y + static_cast<int>(sin(rot_rad - M_PI * 0.5) * height)};
+
+	add({base_pt.x - rot_offs.x, base_pt.y - rot_offs.y});
+	add(apex);
+	add({base_pt.x + rot_offs.x, base_pt.y + rot_offs.y});
+}

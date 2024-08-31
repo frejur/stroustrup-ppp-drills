@@ -1,8 +1,5 @@
-#include "../../lib/Graph.h"
 #include "../../lib/Simple_window.h"
-#include "../share/geo/arc.h"
-#include "attire.h"
-#include "emoticons.h"
+#include "em_templates.h"
 #include <cmath>
 #include <iostream>
 
@@ -16,7 +13,7 @@
 // - Reuse code from Chapter 12 for drawing the arcs that make up the mouth.
 // - Add an 'Emoticon' base class for derived classes 'Smiley' and 'Frowney'.
 // - Add abstract base classes 'Attire' and 'Hat'. Derive 'Hat' from 'Attire'.
-// - Add an 'add_attire()' method to the 'Emoticon', which creates a concrete
+// - Add an 'attach_attire()' method to the 'Emoticon', which takes a concrete
 //   object derived from 'Attire' and stores a reference to it in the
 //   'Emoticon' object.
 // - Add classes 'Dunce_hat' and 'Party_hat' derived from class 'Hat'.
@@ -32,20 +29,17 @@ int main() {
 		constexpr int h{480};
 		const int mid_x{static_cast<int>(std::round(w * 0.5))};
 		const int mid_y{static_cast<int>(std::round(h * 0.5))};
-		constexpr int e_sz{64};
+		constexpr int e_sz{80};
 
-		Simple_window win{{100, 100}, w, h, "Toot-toot!"};
+		Simple_window win{{100, 100}, w, h, "Is bliss"};
 
-		emot::Smiley sm{{mid_x - e_sz * 2, mid_y}, e_sz};
-		win.attach(sm);
+		emot::Smiling_party_animal spa{{mid_x - e_sz * 2, mid_y + e_sz},
+		                               e_sz,
+		                               "dots.jpg"};
+		win.attach(spa);
 
-		emot::Frowney fr{{mid_x + e_sz * 2, mid_y}, e_sz};
-		win.attach(fr);
-
-		// Cannot initialize abstract classes:
-		// emot::Emoticon e;
-		// emot::Attire at;
-		// emot::Hat hat;
+		emot::Frowning_dunce frd{{mid_x + e_sz * 2, mid_y + e_sz}, e_sz};
+		win.attach(frd);
 
 		win.wait_for_button();
 	} catch (exception& e) {

@@ -2,6 +2,7 @@
 #define EMOTICONS_H
 #include "../../lib/Graph.h"
 #include "../share/geo/arc.h"
+#include "attire.h"
 
 namespace emot {
 
@@ -30,11 +31,6 @@ struct Eye_attr
 };
 
 Eye_attr eye_attributes(Graph_lib::Point pos, int radius);
-
-//------------------------------------------------------------------------------
-
-// Forward declare to avoid circular dependencies
-class Attire;
 
 //------------------------------------------------------------------------------
 
@@ -70,6 +66,12 @@ protected:
 		l_eye.set_fill_color(color);
 		r_eye.set_fill_color(color);
 	}
+	void draw_attire() const
+	{
+		for (int i = 0; i < att_v.size(); ++i) {
+			att_v[i].draw_lines();
+		}
+	}
 };
 
 //------------------------------------------------------------------------------
@@ -101,6 +103,8 @@ public:
 private:
 	Arc_geo::Semi_arc mouth;
 };
+
+//------------------------------------------------------------------------------
 
 } // namespace emot
 #endif // EMOTICONS_H

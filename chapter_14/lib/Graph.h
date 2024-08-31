@@ -361,17 +361,21 @@ enum class Suffix {
     none, jpg, gif 
 };
 
+Suffix get_encoding(const string& s);
+
 //------------------------------------------------------------------------------
 
-struct Image : Shape {
-    Image(Point xy, string file_name, Suffix e = Suffix::none);
-    ~Image() { delete p; }
+struct Image : Shape
+{
+	Image(Point xy, string file_name, Suffix e = Suffix::none);
+	~Image() { delete p; }
     void draw_lines() const;
     void set_mask(Point xy, int ww, int hh) { w=ww; h=hh; cx=xy.x; cy=xy.y; }
-private:
-    int w,h;  // define "masking box" within image relative to position (cx,cy)
-    int cx,cy; 
-    Fl_Image* p;
+
+protected:
+	int w, h; // define "masking box" within image relative to position (cx,cy)
+	int cx, cy;
+	Fl_Image* p;
     Text fn;
 };
 
