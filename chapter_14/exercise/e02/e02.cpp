@@ -19,6 +19,20 @@ public:
 	virtual void hello() = 0;
 };
 
+class Immobile_circle : public Graph_lib::Circle
+{
+public:
+	Immobile_circle(Graph_lib::Point pos, int radius)
+	    : Graph_lib::Circle(pos, radius){};
+
+private:
+	void move(int x, int y) override
+	{
+		throw std::runtime_error(
+		    "The move() functionality has been disabled for this subclass");
+	};
+};
+
 //------------------------------------------------------------------------------
 
 void e02()
@@ -55,6 +69,32 @@ void e03()
 	          << '\t' << "                'Abstract_pure'" << '\n';
 }
 
+void e04()
+{
+	// Basically there are three options:
+	// 1. Override and make private (If it's a public function)
+	// 2. Override it with an empty definition.
+	// 3. Throw an exception.
+
+	// Only the first option provides some kind of compile time check but if the
+	// function to be disabled is already private you are otu of luck.
+
+	// Option 1 can be combined with either option 2 or 3.
+	// (The implementation of Immobile_circle featured here uses 1 and 3 )
+
+	// This is fine
+	Graph_lib::Circle c{{0, 0}, 200};
+	c.move(50, 50);
+
+	// This is not
+	Immobile_circle ic{{0, 0}, 200};
+	// ic.move(50, 50);
+
+	std::cout << "Trying to call 'Immobile_circle'.move(int x, int y):" << '\n';
+	std::cout << '\t' << "Compiler error: 'move' is a private member of" << '\n'
+	          << '\t' << "                'Immobile_circle'" << '\n';
+}
+
 //------------------------------------------------------------------------------
 
 int main() {
@@ -62,6 +102,8 @@ int main() {
 		e02();
 		std::cout << "\n\n";
 		e03();
+		std::cout << "\n\n";
+		e04();
 
 		std::cout << '\n' << "Press <ENTER> to exit" << '\n';
 		std::cin.get();
