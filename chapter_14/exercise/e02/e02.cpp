@@ -1,9 +1,10 @@
 #include "../../lib/Graph.h"
 #include <iostream>
 
-// Exercise 2 and 3.
+// Exercise 2 - 4.
 // E2: Try to copy a 'Shape'. (Try to copy a concrete class derived from 'Shape')
 // E3: Define an abstract class, try to to initialize it.
+// E4: Derive class 'Immobile_circle' from 'Circle' and disable the move() method.
 
 //------------------------------------------------------------------------------
 
@@ -77,7 +78,7 @@ void e04()
 	// 3. Throw an exception.
 
 	// Only the first option provides some kind of compile time check but if the
-	// function to be disabled is already private you are otu of luck.
+	// function to be disabled is already private you are out of luck.
 
 	// Option 1 can be combined with either option 2 or 3.
 	// (The implementation of Immobile_circle featured here uses 1 and 3 )
