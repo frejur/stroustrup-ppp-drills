@@ -15,6 +15,7 @@ add_executable(${T_THIS}
     ../../lib/Window.cpp
     ../share/geo/strpe_rend.h ../share/geo/strpe_rend.cpp
     ../share/geo/strpe_rec.h ../share/geo/strpe_rec.cpp
+    ../share/geo/strpe_circ.h ../share/geo/strpe_circ.cpp
     ../share/help/helpers.h ../share/help/helpers.cpp
 
     e05.cpp

@@ -1,5 +1,6 @@
 #include "../../lib/Debug_window.h"
 #include "../../lib/Graph.h"
+#include "../share/geo/strpe_circ.h"
 #include "../share/geo/strpe_rec.h"
 #include <cmath>
 
@@ -32,6 +33,16 @@ int main() {
 		r2.set_fill_color(Graph_lib::Color::red);
 		r2.set_style(Graph_lib::Line_style(Graph_lib::Line_style::solid, 5));
 		win.attach(r2);
+
+		strpe_geo::Striped_circle c{{mid_x - 150, mid_y - 17}, 125, 10, 5};
+		c.set_color(Graph_lib::Color::invisible);
+		c.set_fill_color(Graph_lib::Color::yellow);
+		win.attach(c);
+
+		strpe_geo::Striped_circle c2{{mid_x + 160, mid_y - 130}, 64, 2, 4};
+		c2.set_color(Graph_lib::Color::invisible);
+		c2.set_fill_color(Graph_lib::Color::white);
+		win.attach(c2);
 
 		win.wait_for_button();
 	} catch (exception& e) {

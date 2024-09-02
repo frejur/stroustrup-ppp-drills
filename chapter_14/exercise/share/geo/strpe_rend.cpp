@@ -1,5 +1,6 @@
 #include "strpe_rend.h"
 #include "../help/helpers.h"
+#include "strpe_circ.h"
 #include "strpe_rec.h"
 
 strpe_geo::Striped_shape_renderer::Striped_shape_renderer(
@@ -66,4 +67,30 @@ int strpe_geo::Striped_rectangle_renderer::height() const
 {
 	// TODO: This seems a bit unsafe
 	return static_cast<Striped_rectangle&>(shp).height();
+}
+
+//------------------------------------------------------------------------------
+
+void strpe_geo::Striped_circle_renderer::draw_single_stripe(int row) const
+{
+	int rad = static_cast<int>(width() / 2);
+	int adj_row = (row > rad) ? row - rad : rad - row;
+	int offs_x = static_cast<int>(sqrt(rad * rad - adj_row * adj_row));
+	Graph_lib::Point min_xy = shp.point(0);
+	fl_line(min_xy.x + rad - offs_x,
+	        min_xy.y + row,
+	        min_xy.x + rad + offs_x,
+	        min_xy.y + row);
+}
+
+int strpe_geo::Striped_circle_renderer::width() const
+{
+	// TODO: This seems a bit unsafe
+	return static_cast<Striped_circle&>(shp).radius() * 2;
+}
+
+int strpe_geo::Striped_circle_renderer::height() const
+{
+	// TODO: This seems a bit unsafe
+	return static_cast<Striped_circle&>(shp).radius() * 2;
 }

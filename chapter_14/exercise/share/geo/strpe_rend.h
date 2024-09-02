@@ -59,6 +59,23 @@ private:
 	int height() const override;
 };
 
+//------------------------------------------------------------------------------
+
+class Striped_circle_renderer : public Striped_shape_renderer
+{
+public:
+	Striped_circle_renderer(int stripe_height,
+	                        int gap_height,
+	                        Graph_lib::Shape& rect,
+	                        Graph_lib::Color color = default_stripe_color)
+	    : Striped_shape_renderer(stripe_height, gap_height, rect, color){};
+
+private:
+	void draw_single_stripe(int row) const override;
+	int width() const override;
+	int height() const override;
+};
+
 } // namespace strpe_geo
 
 #endif // STRIPED_RENDERER_H
