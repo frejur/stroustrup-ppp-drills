@@ -13,6 +13,9 @@ add_executable(${T_THIS}
     ../../lib/std_lib_facilities.h
     ../../lib/Window.h
     ../../lib/Window.cpp
+    ../share/geo/strpe_rend.h ../share/geo/strpe_rend.cpp
+    ../share/geo/strpe_rec.h ../share/geo/strpe_rec.cpp
+    ../share/help/helpers.h ../share/help/helpers.cpp
 
     e05.cpp
 )

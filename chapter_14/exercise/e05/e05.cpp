@@ -1,5 +1,6 @@
 #include "../../lib/Debug_window.h"
 #include "../../lib/Graph.h"
+#include "../share/geo/strpe_rec.h"
 #include <cmath>
 
 // Exercise 5 & 6
@@ -15,8 +16,22 @@ int main() {
 
 		Debug_window win{{100, 100}, w, h, "Filling in the gaps"};
 
-		Graph_lib::Rectangle r{{mid_x, mid_y}, {mid_x + 100, mid_y + 200}};
+		strpe_geo::Striped_rectangle r{{mid_x - 200, mid_y - 100},
+		                               {mid_x + 40, mid_y + 50},
+		                               5,
+		                               10};
+		r.set_color(Graph_lib::Color::invisible);
+		r.set_fill_color(Graph_lib::Color::dark_green);
 		win.attach(r);
+
+		strpe_geo::Striped_rectangle r2{{mid_x - 50, mid_y - 50},
+		                                {mid_x + 200, mid_y + 200},
+		                                1,
+		                                1};
+		r2.set_color(Graph_lib::Color::black);
+		r2.set_fill_color(Graph_lib::Color::red);
+		r2.set_style(Graph_lib::Line_style(Graph_lib::Line_style::solid, 5));
+		win.attach(r2);
 
 		win.wait_for_button();
 	} catch (exception& e) {
