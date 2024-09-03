@@ -28,7 +28,7 @@ int ch14_hlp::val_from_f(int min_val, int max_val, double f)
 
 //------------------------------------------------------------------------------
 
-double apothem(int radius, int chord)
+double ch14_hlp::apothem(int radius, int chord)
 {
 	return sqrt(radius * radius - (chord * chord) / 4);
 }
@@ -112,6 +112,23 @@ Graph_lib::Point ch14_hlp::scanline_intersection_point(int scan_y,
 }
 
 std::vector<int> ch14_hlp::scanline_sorted_intersection_x_coords(
+    int scan_y, const std::vector<Graph_lib::Point>& points)
+{
+	std::vector<int> inters_x;
+
+	for (int i = 0; i < points.size(); ++i) {
+		int j = (i == points.size() - 1) ? 0 : i + 1;
+		ch14_hlp::Line_points ln{points[i], points[j]};
+		if (scanline_has_intersection(scan_y, ln)) {
+			inters_x.push_back(scanline_intersection_point(scan_y, ln).x);
+		}
+	}
+
+	std::sort(inters_x.begin(), inters_x.end());
+	return inters_x;
+}
+
+std::vector<int> ch14_hlp::scanline_sorted_intersection_x_coords(
     int scan_y, const Graph_lib::Closed_polyline& polyline)
 {
 	std::vector<int> inters_x;
@@ -126,4 +143,34 @@ std::vector<int> ch14_hlp::scanline_sorted_intersection_x_coords(
 
 	std::sort(inters_x.begin(), inters_x.end());
 	return inters_x;
+}
+
+//------------------------------------------------------------------------------
+
+ch14_hlp::Polyline_v_dir ch14_hlp::Polyline_vertical_direction(
+    const Graph_lib::Point& start,
+    const Graph_lib::Point& mid,
+    const Graph_lib::Point& end)
+{
+	Polyline_v_dir d = Polyline_v_dir::Flat;
+	if (start.y < mid.y && end.y < mid.y) {
+		d = Polyline_v_dir::Down;
+	} else if (start.y > mid.y && end.y > mid.y) {
+		d = Polyline_v_dir::Up;
+	}
+	return d;
+}
+
+ch14_hlp::Polyline_h_dir ch14_hlp::Polyline_horizontal_direction(
+    const Graph_lib::Point& start,
+    const Graph_lib::Point& mid,
+    const Graph_lib::Point& end)
+{
+	Polyline_h_dir d = Polyline_h_dir::Flat;
+	if (start.x < mid.x && end.x < mid.x) {
+		d = Polyline_h_dir::Right;
+	} else if (start.x > mid.x && end.x > mid.x) {
+		d = Polyline_h_dir::Left;
+	}
+	return d;
 }

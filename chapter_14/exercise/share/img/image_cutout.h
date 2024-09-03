@@ -6,10 +6,6 @@
 
 namespace imgcut {
 
-bool is_inside_polygon(int x,
-                       int y,
-                       const std::vector<Graph_lib::Point>& polygon);
-
 class Image_cutout : public Graph_lib::Image
 {
 public:

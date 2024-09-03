@@ -1,4 +1,5 @@
 #include "image_cutout.h"
+#include "../help/helpers.h"
 #include <stdexcept>
 
 imgcut::Image_cutout::Image_cutout(Graph_lib::Point xy,
@@ -18,6 +19,7 @@ imgcut::Image_cutout::Image_cutout(Graph_lib::Point xy,
 		p = new Graph_lib::Bad_image(30, 20); // the "error image"
 	}
 }
+
 void imgcut::Image_cutout::set_poly_mask(const Graph_lib::Closed_polyline& pm,
                                          int offset_x,
                                          int offset_y)
@@ -66,6 +68,11 @@ void imgcut::Image_cutout::set_poly_mask(const Graph_lib::Closed_polyline& pm,
 	    p->data()[0]);
 
 	for (int y = 0; y < img_h; ++y) {
+		std::vector<int> inters_x{
+		    ch14_hlp::scanline_sorted_intersection_x_coords(y, mask)};
+
+		bool toggle_fill = false; // Even Odd rule
+		int inters_count = 0;     // Increment for every processed intersection
 		for (int x = 0; x < img_w; ++x) {
 			int index_rgb = (y * img_w + x) * 3;
 			int index_rgba = (y * img_w + x) * 4;
@@ -74,11 +81,43 @@ void imgcut::Image_cutout::set_poly_mask(const Graph_lib::Closed_polyline& pm,
 			rgba_data[index_rgba + 1] = raw_data[index_rgb + 1];
 			rgba_data[index_rgba + 2] = raw_data[index_rgb + 2];
 
-			if (!is_inside_polygon(x, y, mask)) {
-				rgba_data[index_rgba + 3] = 0;
-			} else {
-				rgba_data[index_rgba + 3] = 255;
+			bool has_inters = (inters_count < inters_x.size())
+			                  && (x == inters_x[inters_count]);
+
+			if (has_inters) {
+				bool inters_is_on_mask_pt = false;
+				int inters_pt_idx = -1;
+				// Check if the intersection is on top of a mask point
+				for (int i = 0; i < mask.size(); ++i) {
+					if (mask[i].x != x || mask[i].y != y) {
+						continue;
+					}
+					inters_is_on_mask_pt = true;
+					inters_pt_idx = i;
+					break;
+				}
+
+				if (inters_is_on_mask_pt) {
+					int start_idx = (inters_pt_idx == 0) ? mask.size() - 1
+					                                     : inters_pt_idx - 1;
+					int end_idx = (inters_pt_idx == mask.size() - 1)
+					                  ? 0
+					                  : inters_pt_idx + 1;
+					ch14_hlp::Polyline_v_dir pt_dir
+					    = ch14_hlp::Polyline_vertical_direction(
+					        mask[start_idx], mask[inters_pt_idx], mask[end_idx]);
+					if (pt_dir == ch14_hlp::Polyline_v_dir::Flat) {
+						toggle_fill = !toggle_fill;
+					} else {
+						++inters_count; // Next inters. pt is a duplicate: Skip
+					}
+				} else {
+					toggle_fill = !toggle_fill;
+				}
+				++inters_count;
 			}
+
+			rgba_data[index_rgba + 3] = toggle_fill ? 255 : 0;
 		}
 	}
 
@@ -100,25 +139,4 @@ void imgcut::Image_cutout::draw_lines() const
 	} else {
 		p_masked->draw(point(0).x - offs_x, point(0).y - offs_y);
 	}
-}
-
-//------------------------------------------------------------------------------
-
-bool imgcut::is_inside_polygon(int x,
-                               int y,
-                               const std::vector<Graph_lib::Point>& polygon)
-{
-	int n = polygon.size();
-	bool inside = false;
-	for (int i = 0, j = n - 1; i < n; j = i++) {
-		int xi = polygon[i].x, yi = polygon[i].y;
-		int xj = polygon[j].x, yj = polygon[j].y;
-
-		bool intersect = ((yi > y) != (yj > y))
-		                 && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-		if (intersect) {
-			inside = !inside;
-		}
-	}
-	return inside;
 }

@@ -21,6 +21,9 @@ add_executable(${T_THIS}
     ../share/geo/star.h
     ../share/img/image_cutout.cpp
     ../share/img/image_cutout.h
+    ../share/help/helpers.h
+    ../share/help/helpers.cpp
+    
     
     emoticons.h emoticons.cpp
     attire.h attire.cpp

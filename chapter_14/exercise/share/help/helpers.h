@@ -6,6 +6,7 @@
 
 namespace ch14_hlp {
 
+double apothem(int radius, int chord);
 Graph_lib::Point point_at_angle(Graph_lib::Point center,
                                 double rotation,
                                 double distance);
@@ -29,8 +30,23 @@ struct Line_points
 	Graph_lib::Point end;
 };
 
+//------------------------------------------------------------------------------
+
+enum class Polyline_v_dir { Flat = -1, Up, Down };
+enum class Polyline_h_dir { Flat = -1, Left, Right };
+Polyline_v_dir Polyline_vertical_direction(const Graph_lib::Point& start,
+                                           const Graph_lib::Point& mid,
+                                           const Graph_lib::Point& end);
+Polyline_h_dir Polyline_horizontal_direction(const Graph_lib::Point& start,
+                                             const Graph_lib::Point& mid,
+                                             const Graph_lib::Point& end);
+
+//------------------------------------------------------------------------------
+
 bool scanline_has_intersection(int scan_y, Line_points line);
 Graph_lib::Point scanline_intersection_point(int scan_y, Line_points line);
+std::vector<int> scanline_sorted_intersection_x_coords(
+    int scan_y, const std::vector<Graph_lib::Point>& points);
 std::vector<int> scanline_sorted_intersection_x_coords(
     int scan_y, const Graph_lib::Closed_polyline& polyline);
 

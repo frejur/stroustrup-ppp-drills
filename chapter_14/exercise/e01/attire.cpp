@@ -1,8 +1,10 @@
 #define _USE_MATH_DEFINES
 #include "attire.h"
+#include "../share/help/helpers.h"
 #include "emoticons.h"
 #include <cmath>
 #include <string>
+
 //------------------------------------------------------------------------------
 
 Graph_lib::Point emot::point_at_angle(Graph_lib::Point center,
@@ -25,11 +27,6 @@ int emot::val_from_f(int min_val, int max_val, double f)
 		throw std::runtime_error("Min. val has to be less than max.");
 	}
 	return static_cast<int>(min_val + (max_val - min_val) * f);
-}
-
-double apothem(int radius, int chord)
-{
-	return sqrt(radius * radius - (chord * chord) / 4);
 }
 
 void emot::draw_mark(Graph_lib::Point xy,
@@ -93,7 +90,8 @@ emot::Conical_hat::Conical_hat(const Emoticon& head,
     , rot(rotation)
     , base_pt(point_at_angle(head.center(),
                              rotation,
-                             apothem(head.radius(), static_cast<int>(w * 0.9))))
+                             ch14_hlp::apothem(head.radius(),
+                                               static_cast<int>(w * 0.9))))
     , cone(base_pt, w, h, rot)
 {}
 
