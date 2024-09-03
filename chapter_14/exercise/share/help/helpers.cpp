@@ -84,9 +84,46 @@ Graph_lib::Point ch14_hlp::shape_max_xy(const Graph_lib::Shape& s)
 		if (s.point(i).x > max_xy.x) {
 			max_xy.x = s.point(i).x;
 		}
-		if (s.point(i).y < max_xy.y) {
+		if (s.point(i).y > max_xy.y) {
 			max_xy.y = s.point(i).y;
 		}
 	}
 	return max_xy;
+}
+
+//------------------------------------------------------------------------------
+
+bool ch14_hlp::scanline_has_intersection(int scan_y, Line_points line)
+{
+	if (scan_y == line.start.y && line.start.y == line.end.y) {
+		return false;
+	}
+	return (scan_y <= line.start.y && scan_y >= line.end.y)
+	       || (scan_y <= line.end.y && scan_y >= line.start.y);
+}
+
+Graph_lib::Point ch14_hlp::scanline_intersection_point(int scan_y,
+                                                       Line_points line)
+{
+	int x_delta = line.end.x - line.start.x;
+	int y_delta = line.end.y - line.start.y;
+	int xsect_x = line.start.x + (scan_y - line.start.y) * x_delta / y_delta;
+	return {xsect_x, scan_y};
+}
+
+std::vector<int> ch14_hlp::scanline_sorted_intersection_x_coords(
+    int scan_y, const Graph_lib::Closed_polyline& polyline)
+{
+	std::vector<int> inters_x;
+
+	for (int i = 0; i < polyline.number_of_points(); ++i) {
+		int j = (i == polyline.number_of_points() - 1) ? 0 : i + 1;
+		ch14_hlp::Line_points ln{polyline.point(i), polyline.point(j)};
+		if (scanline_has_intersection(scan_y, ln)) {
+			inters_x.push_back(scanline_intersection_point(scan_y, ln).x);
+		}
+	}
+
+	std::sort(inters_x.begin(), inters_x.end());
+	return inters_x;
 }

@@ -1,6 +1,8 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 #include "../../../lib/Graph.h"
+#include <algorithm>
+#include <vector>
 
 namespace ch14_hlp {
 
@@ -19,6 +21,18 @@ void draw_mark(Graph_lib::Point xy,
 Graph_lib::Point shape_min_xy(const Graph_lib::Shape& s);
 Graph_lib::Point shape_max_xy(const Graph_lib::Shape& s);
 
-} // namespace ch14_hlp
+//------------------------------------------------------------------------------
 
+struct Line_points
+{
+	Graph_lib::Point start;
+	Graph_lib::Point end;
+};
+
+bool scanline_has_intersection(int scan_y, Line_points line);
+Graph_lib::Point scanline_intersection_point(int scan_y, Line_points line);
+std::vector<int> scanline_sorted_intersection_x_coords(
+    int scan_y, const Graph_lib::Closed_polyline& polyline);
+
+} // namespace ch14_hlp
 #endif // HELPERS_H
