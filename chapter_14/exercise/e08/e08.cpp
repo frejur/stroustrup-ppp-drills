@@ -1,5 +1,6 @@
 #include "../../lib/Debug_window.h"
 #include "../../lib/Graph.h"
+#include "../share/anim/anim_shp.h"
 #include "../share/geo/regularpoly.h"
 #include <cmath>
 
@@ -15,9 +16,15 @@
 //   (e.g. Initial placement is now based on the center point)
 // - Test the above methods by creating an Octagon and animating it.
 
-const std::string& info_click()
+const std::string& info_start()
 {
-	static const std::string s{"Click anywhere to start the animation."};
+	static const std::string s{"Click to start the animation."};
+	return s;
+}
+
+const std::string& info_stop()
+{
+	static const std::string s{"Click to stop the animation."};
 	return s;
 }
 
@@ -40,21 +47,28 @@ void e08()
 
 	fl_color(0);
 
-	Graph_lib::Text info{{64, 32}, info_click()};
+	Graph_lib::Text info{{64, 32}, info_start()};
 	win.attach(info);
 
 	RPOL::RegularPolygon rp{{win_w / 2, win_h / 2}, 64, 8};
 	win.attach(rp);
 
-	RPOL::RegularPolygon rp2{{win_w / 2, win_h / 2}, 64, 8};
-	rp2.rotate(-362.5);
-	win.attach(rp2);
+	anim::Window_and_shape pass_to_callback{win, rp};
 
 	int count_logged = 0;
+	int is_animating = false;
 	while (win.shown()) {
 		if (win.click_has_been_registered()) {
-			win.log("Let's boogey!");
-			++count_logged;
+			if (is_animating) {
+				info.set_label(info_start());
+				is_animating = false;
+				anim::hacky_redraw_shape(pass_to_callback, true);
+			} else {
+				info.set_label(info_stop());
+				++count_logged;
+				is_animating = true;
+				anim::hacky_redraw_shape(pass_to_callback);
+			}
 		}
 		win.wait_for_click();
 	}

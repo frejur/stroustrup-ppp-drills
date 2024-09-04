@@ -15,8 +15,10 @@ add_executable(${T_THIS}
     ../../lib/Window.cpp
 
     ../share/geo/regularpoly.cpp ../share/geo/regularpoly.h
-    e08.cpp
     ../share/help/helpers.cpp ../share/help/helpers.h
+    ../share/anim/anim_shp.cpp ../share/anim/anim_shp.h
+    
+    e08.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
