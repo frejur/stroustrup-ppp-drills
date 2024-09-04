@@ -1,4 +1,4 @@
-message("Processing /exercise/e01...")
+message("Processing /exercise/e02...")
 
 set(T_THIS "Chapter_14_exercise_02")
 

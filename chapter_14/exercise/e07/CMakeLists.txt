@@ -1,6 +1,6 @@
-message("Processing /exercise/e05...")
+message("Processing /exercise/e07...")
 
-set(T_THIS "Chapter_14_exercise_05")
+set(T_THIS "Chapter_14_exercise_07")
 
 add_executable(${T_THIS}
     ../../lib/Graph.h
