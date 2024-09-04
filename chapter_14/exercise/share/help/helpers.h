@@ -1,7 +1,6 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 #include "../../../lib/Graph.h"
-#include <algorithm>
 #include <vector>
 
 namespace ch14_hlp {
@@ -10,6 +9,8 @@ double apothem(int radius, int chord);
 Graph_lib::Point point_at_angle(Graph_lib::Point center,
                                 double rotation,
                                 double distance);
+
+double wrap_angle(double angle);
 
 int val_from_f(int min_val, int max_val, double f);
 

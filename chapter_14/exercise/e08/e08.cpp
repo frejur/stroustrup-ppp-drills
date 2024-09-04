@@ -7,8 +7,7 @@
 
 // Notes:
 // - Reused Regular_polygon code from the previous chapters as the base class.
-// - Changed Regular_polygon class into an abstract class that forces any
-//   concrete derivations to implement the following methods:
+// - Changed Regular_polygon class, implemented the following methods:
 //   + move(int offset_x, int offset_y)
 //   + scale(double scale_factor)
 //   + rotate(double offset_degrees)
@@ -35,7 +34,7 @@ void e08()
 	Debug_window win{{10, 10},
 	                 win_w,
 	                 win_h,
-	                 "Playpen for brutes",
+	                 "Playpen",
 	                 ENABLE_DEBUG,
 	                 ENABLE_CLICK};
 
@@ -46,6 +45,10 @@ void e08()
 
 	RPOL::RegularPolygon rp{{win_w / 2, win_h / 2}, 64, 8};
 	win.attach(rp);
+
+	RPOL::RegularPolygon rp2{{win_w / 2, win_h / 2}, 64, 8};
+	rp2.rotate(-362.5);
+	win.attach(rp2);
 
 	int count_logged = 0;
 	while (win.shown()) {

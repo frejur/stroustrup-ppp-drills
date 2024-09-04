@@ -1,5 +1,6 @@
 #define _USE_MATH_DEFINES
 #include "helpers.h"
+#include <algorithm>
 #include <cmath>
 
 Graph_lib::Point ch14_hlp::point_at_angle(Graph_lib::Point center,
@@ -24,6 +25,19 @@ int ch14_hlp::val_from_f(int min_val, int max_val, double f)
 		throw std::runtime_error("Min. val has to be less than max.");
 	}
 	return static_cast<int>(min_val + (max_val - min_val) * f);
+}
+
+//------------------------------------------------------------------------------
+
+double ch14_hlp::wrap_angle(double angle)
+{
+	angle = fmod(angle, 2 * M_PI);
+
+	if (angle < 0) {
+		angle += 2 * M_PI;
+	}
+
+	return angle;
 }
 
 //------------------------------------------------------------------------------
