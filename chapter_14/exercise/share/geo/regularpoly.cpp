@@ -67,4 +67,11 @@ void RegularPolygon::rotate(double offset_degrees)
 	update_poly_points();
 }
 
+void RegularPolygon::move(int offset_x, int offset_y)
+{
+	Graph_lib::Shape::move(offset_x, offset_y);
+	c.x += offset_x;
+	c.y += offset_y;
+}
+
 } // namespace RPOL

@@ -15,6 +15,7 @@ public:
 	int radius() const { return r; };
 	Graph_lib::Point center() const { return c; };
 	void rotate(double offset_degrees);
+	void move(int offset_x, int offset_y) override;
 
 private:
 	Graph_lib::Point c;

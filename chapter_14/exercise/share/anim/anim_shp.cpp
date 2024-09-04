@@ -19,7 +19,19 @@ static void anim::transform_shape_cb(void* data)
 		time = 0;
 		Fl::remove_timeout(transform_shape_cb, data);
 	} else {
-		dynamic_cast<RPOL::RegularPolygon&>(ws->shape).rotate(10);
+		RPOL::RegularPolygon& p = dynamic_cast<RPOL::RegularPolygon&>(ws->shape);
+
+		p.rotate(10); // Spin
+
+		// Move in circular pattern
+		double time_f = time / refresh_time_out;
+		double move_angle = M_PI * 2 * time_f - M_PI;
+		double move_dist = 4 * p.radius() / (refresh_time_out / refresh_rate);
+		double move_x = cos(move_angle) * move_dist;
+		move_x += (move_x > 0) ? 0.5 : -0.5;
+		double move_y = sin(move_angle) * move_dist;
+		move_y += (move_y > 0) ? 0.5 : -0.5;
+		p.move(static_cast<int>(move_x), static_cast<int>(move_y));
 		Fl::repeat_timeout(refresh_rate, transform_shape_cb, data);
 	}
 	ws->win.redraw();
