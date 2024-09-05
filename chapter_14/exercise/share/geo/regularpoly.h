@@ -5,6 +5,9 @@
 
 namespace RPOL {
 
+constexpr int min_radius{10};
+constexpr int max_radius{1280};
+
 class RegularPolygon : public Graph_lib::Closed_polyline
 {
 public:
@@ -16,6 +19,7 @@ public:
 	Graph_lib::Point center() const { return c; };
 	void rotate(double offset_degrees);
 	void move(int offset_x, int offset_y) override;
+	void scale(double scale_f);
 
 private:
 	Graph_lib::Point c;

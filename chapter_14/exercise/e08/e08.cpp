@@ -2,7 +2,6 @@
 #include "../../lib/Graph.h"
 #include "../share/anim/anim_shp.h"
 #include "../share/geo/regularpoly.h"
-#include <cmath>
 
 // Exercise 8. Create a (Regular) 'Octagon' Shape class and test its functions.
 
@@ -14,7 +13,7 @@
 //   + rotate(double offset_degrees)
 // - Changes to some of Regular_poly's interface and implementation logic,
 //   (e.g. Initial placement is now based on the center point)
-// - Test the above methods by creating an Octagon and animating it.
+// - Test the above methods by creating an Octagon object and animating it.
 
 const std::string& info_start()
 {
@@ -24,7 +23,24 @@ const std::string& info_start()
 
 const std::string& info_stop()
 {
-	static const std::string s{"Click to stop the animation."};
+	static const std::string s{"Click to STOP."};
+	return s;
+}
+const std::vector<Graph_lib::Color>& colors()
+{
+	static const std::vector<Graph_lib::Color>& c{Graph_lib::Color::dark_magenta,
+	                                              Graph_lib::Color::yellow,
+	                                              Graph_lib::Color::dark_green,
+	                                              Graph_lib::Color::white};
+	return c;
+}
+
+const std::vector<Graph_lib::Line_style>& styles()
+{
+	static const std::vector<Graph_lib::Line_style>
+	    s{Graph_lib::Line_style(Graph_lib::Line_style::dash, 5),
+	      Graph_lib::Line_style(Graph_lib::Line_style::solid, 10),
+	      Graph_lib::Line_style(Graph_lib::Line_style::dot, 3)};
 	return s;
 }
 
@@ -50,30 +66,35 @@ void e08()
 	Graph_lib::Text info{{64, 32}, info_start()};
 	win.attach(info);
 
-	RPOL::RegularPolygon rp{{win_w / 2, win_h / 2}, 64, 8};
+	RPOL::RegularPolygon rp{c, 64, 8};
+	rp.set_fill_color(Graph_lib::Color::invisible);
+
 	win.attach(rp);
 
 	anim::Window_and_shape pass_to_callback{win, rp};
 
-	int count_logged = 0;
+	int count_clicks = 0;
 	int is_animating = false;
 	while (win.shown()) {
 		if (win.click_has_been_registered()) {
-			if (is_animating) {
+			if (!is_animating) {
+				// Start
+				rp.set_fill_color(colors()[count_clicks++ % colors().size()]);
+				rp.set_color(colors()[count_clicks % colors().size()]);
+				rp.set_style(styles()[(count_clicks + 1) % styles().size()]);
+				info.set_label(info_stop());
+				is_animating = true;
+				anim::hacky_redraw_shape(pass_to_callback);
+			} else {
+				// Stop
 				info.set_label(info_start());
 				is_animating = false;
 				anim::hacky_redraw_shape(pass_to_callback, true);
-			} else {
-				info.set_label(info_stop());
-				++count_logged;
-				is_animating = true;
-				anim::hacky_redraw_shape(pass_to_callback);
 			}
 		}
 		win.wait_for_click();
 	}
 }
-
 
 int main() {
 	try {

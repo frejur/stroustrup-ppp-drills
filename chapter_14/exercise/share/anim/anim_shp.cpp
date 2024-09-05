@@ -32,6 +32,22 @@ static void anim::transform_shape_cb(void* data)
 		double move_y = sin(move_angle) * move_dist;
 		move_y += (move_y > 0) ? 0.5 : -0.5;
 		p.move(static_cast<int>(move_x), static_cast<int>(move_y));
+
+		// Grow / shrink
+		double cycles = 4;
+		double adj_time_f = (sin(cycles * 2 * M_PI * time_f - 0.5 * M_PI) + 1)
+		                    / 2;
+		double cycle_div = (1.0 / cycles) * 0.5;
+		int current_cycle = static_cast<int>(time_f / cycle_div);
+		double adj_time_f2 = adj_time_f;
+		if (current_cycle % 2 == 1) {
+			adj_time_f2 = (adj_time_f - 1) * 0.55;
+			adj_time_f2 *= -adj_time_f2;
+		} else {
+			adj_time_f2 *= adj_time_f2;
+		}
+		p.scale(1 + adj_time_f2 * 0.05);
+
 		Fl::repeat_timeout(refresh_rate, transform_shape_cb, data);
 	}
 	ws->win.redraw();

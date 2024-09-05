@@ -17,8 +17,8 @@ RPOL::RegularPolygon::RegularPolygon(Graph_lib::Point center,
     , angle{ch14_hlp::wrap_angle(angle_degrees * M_PI / 180)}
 {
     // guard against incompatible numbers
-    r = min(1280, max(10, r));
-    num_sides = min(16, max(3, num_sides));
+	r = min(max_radius, max(min_radius, r));
+	num_sides = min(16, max(3, num_sides));
 
 	add_poly_points();
 }
@@ -72,6 +72,16 @@ void RegularPolygon::move(int offset_x, int offset_y)
 	Graph_lib::Shape::move(offset_x, offset_y);
 	c.x += offset_x;
 	c.y += offset_y;
+}
+
+void RegularPolygon::scale(double scale_f)
+{
+	if (scale_f <= 0) {
+		throw std::runtime_error(
+		    "Invalid scaling factor, expected a value > 0");
+	}
+	double new_r{scale_f * r};
+	r = min(max_radius, max(min_radius, new_r));
 }
 
 } // namespace RPOL
