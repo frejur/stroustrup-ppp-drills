@@ -1,7 +1,9 @@
+#define _USE_MATH_DEFINES
 #include "../../lib/Debug_window.h"
 #include "../../lib/Graph.h"
 #include "../share/anim/anim_shp.h"
 #include "../share/geo/regularpoly.h"
+#include <cmath>
 
 // Exercise 8. Create a (Regular) 'Octagon' Shape class and test its functions.
 
@@ -46,6 +48,47 @@ const std::vector<Graph_lib::Line_style>& styles()
 
 //------------------------------------------------------------------------------
 
+class Octagon_animator : public anim::Shape_animator
+{
+public:
+	using anim::Shape_animator::Shape_animator;
+
+private:
+	void animate() override
+	{
+		RPOL::RegularPolygon& p = dynamic_cast<RPOL::RegularPolygon&>(ws.shape);
+
+		p.rotate(10); // Spin
+
+		// Move in circular pattern
+		double time_f = time() / time_out();
+		double move_angle = M_PI * 2 * time_f - M_PI;
+		double move_dist = 4 * p.radius() / (time_out() / refresh_rate());
+		double move_x = cos(move_angle) * move_dist;
+		move_x += (move_x > 0) ? 0.5 : -0.5;
+		double move_y = sin(move_angle) * move_dist;
+		move_y += (move_y > 0) ? 0.5 : -0.5;
+		p.move(static_cast<int>(move_x), static_cast<int>(move_y));
+
+		// Grow / shrink
+		double cycles = 4;
+		double adj_time_f = (sin(cycles * 2 * M_PI * time_f - 0.5 * M_PI) + 1)
+		                    / 2;
+		double cycle_div = (1.0 / cycles) * 0.5;
+		int current_cycle = static_cast<int>(time_f / cycle_div);
+		double adj_time_f2 = adj_time_f;
+		if (current_cycle % 2 == 1) {
+			adj_time_f2 = (adj_time_f - 1) * 0.55;
+			adj_time_f2 *= -adj_time_f2;
+		} else {
+			adj_time_f2 *= adj_time_f2;
+		}
+		p.scale(1 + adj_time_f2 * 0.05);
+	};
+};
+
+//------------------------------------------------------------------------------
+
 void e08()
 {
 	constexpr bool ENABLE_DEBUG{false};
@@ -71,7 +114,7 @@ void e08()
 
 	win.attach(rp);
 
-	anim::Window_and_shape pass_to_callback{win, rp};
+	Octagon_animator anim{win, rp};
 
 	int count_clicks = 0;
 	int is_animating = false;
@@ -84,12 +127,12 @@ void e08()
 				rp.set_style(styles()[(count_clicks + 1) % styles().size()]);
 				info.set_label(info_stop());
 				is_animating = true;
-				anim::hacky_redraw_shape(pass_to_callback);
+				anim.start();
 			} else {
 				// Stop
 				info.set_label(info_start());
 				is_animating = false;
-				anim::hacky_redraw_shape(pass_to_callback, true);
+				anim.stop();
 			}
 		}
 		win.wait_for_click();
