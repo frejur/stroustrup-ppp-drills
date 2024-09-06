@@ -3,6 +3,7 @@
 #include "../../lib/Graph.h"
 #include "../share/anim/anim_shp.h"
 #include "../share/geo/regularpoly.h"
+#include "../share/grp/grp_shp.h"
 #include <cmath>
 
 // Exercise 9. Define class "Group" that stores 'Shape's in a Vector_ref and
@@ -20,6 +21,7 @@
 //     + Container operations (Wrapper methods for Vector_ref):
 //         > add(Graph_lib::Shape& shape)
 //         > add(Graph_lib::Shape* shape)
+//         > number_of_elements()
 //     + Individual element operations:
 //         > (All of the global operations with the addition of an 'index' parameter)
 //     + Uniquely for 'R_poly_group':
@@ -107,8 +109,8 @@ public:
 private:
 	void animate() override
 	{
-		RPOL::Regular_polygon& p = dynamic_cast<RPOL::Regular_polygon&>(
-		    ws.shape);
+		grp_shp::Shape_group& p = dynamic_cast<grp_shp::Shape_group&>(ws.shape);
+		p.move(10, 10);
 	};
 };
 
@@ -134,12 +136,21 @@ void e09()
 	Graph_lib::Text info{{64, 32}, info_start()};
 	win.attach(info);
 
-	RPOL::Regular_polygon rp{c, static_cast<int>(win_w * 0.45), 4};
+	grp_shp::Shape_group grp{c};
+	RPOL::Regular_polygon rp{{c.x - 100, c.x},
+	                         static_cast<int>(win_w * 0.25),
+	                         4};
 	rp.set_fill_color(Graph_lib::Color::invisible);
+	grp.add(rp);
+	RPOL::Regular_polygon rp2{{c.x + 100, c.x},
+	                          static_cast<int>(win_w * 0.25),
+	                          4};
+	rp2.set_fill_color(Graph_lib::Color::invisible);
+	grp.add(rp2);
 
-	win.attach(rp);
+	win.attach(grp);
 
-	Board_animator anim{win, rp};
+	Board_animator anim{win, grp};
 
 	int count_clicks = 0;
 	int is_animating = false;
