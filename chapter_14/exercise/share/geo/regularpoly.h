@@ -8,13 +8,13 @@ namespace RPOL {
 constexpr int min_radius{10};
 constexpr int max_radius{1280};
 
-class RegularPolygon : public Graph_lib::Closed_polyline
+class Regular_polygon : public Graph_lib::Closed_polyline
 {
 public:
-	RegularPolygon(Graph_lib::Point origin,
-	               int radius,
-	               int number_of_sides,
-	               double angle_degrees = 0);
+	Regular_polygon(Graph_lib::Point origin,
+	                int radius,
+	                int number_of_sides,
+	                double angle_degrees = 0);
 	int radius() const { return r; };
 	Graph_lib::Point center() const { return c; };
 	void rotate(double offset_degrees);

@@ -7,10 +7,10 @@
 
 namespace RPOL {
 
-RPOL::RegularPolygon::RegularPolygon(Graph_lib::Point center,
-                                     int radius,
-                                     int number_of_sides,
-                                     double angle_degrees)
+RPOL::Regular_polygon::Regular_polygon(Graph_lib::Point center,
+                                       int radius,
+                                       int number_of_sides,
+                                       double angle_degrees)
     : c(center)
     , r(radius)
     , num_sides(number_of_sides)
@@ -25,7 +25,7 @@ RPOL::RegularPolygon::RegularPolygon(Graph_lib::Point center,
 
 //------------------------------------------------------------------------------
 
-std::vector<Graph_lib::Point> RegularPolygon::new_poly_points()
+std::vector<Graph_lib::Point> Regular_polygon::new_poly_points()
 {
 	std::vector<Graph_lib::Point> pts;
 	double ang_incr{M_PI * 2.0 / num_sides};
@@ -41,14 +41,14 @@ std::vector<Graph_lib::Point> RegularPolygon::new_poly_points()
 	return pts;
 }
 
-void RPOL::RegularPolygon::add_poly_points()
+void RPOL::Regular_polygon::add_poly_points()
 {
 	for (const Graph_lib::Point& pt : new_poly_points()) {
 		add(pt);
 	}
 }
 
-void RPOL::RegularPolygon::update_poly_points()
+void RPOL::Regular_polygon::update_poly_points()
 {
 	std::vector<Graph_lib::Point> pts = new_poly_points();
 	if (pts.size() < 1 || pts.size() != number_of_points()) {
@@ -61,20 +61,20 @@ void RPOL::RegularPolygon::update_poly_points()
 
 //------------------------------------------------------------------------------
 
-void RegularPolygon::rotate(double offset_degrees)
+void Regular_polygon::rotate(double offset_degrees)
 {
 	angle = ch14_hlp::wrap_angle(angle + offset_degrees * M_PI / 180);
 	update_poly_points();
 }
 
-void RegularPolygon::move(int offset_x, int offset_y)
+void Regular_polygon::move(int offset_x, int offset_y)
 {
 	Graph_lib::Shape::move(offset_x, offset_y);
 	c.x += offset_x;
 	c.y += offset_y;
 }
 
-void RegularPolygon::scale(double scale_f)
+void Regular_polygon::scale(double scale_f)
 {
 	if (scale_f <= 0) {
 		throw std::runtime_error(

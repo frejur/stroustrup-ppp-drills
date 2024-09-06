@@ -56,7 +56,8 @@ public:
 private:
 	void animate() override
 	{
-		RPOL::RegularPolygon& p = dynamic_cast<RPOL::RegularPolygon&>(ws.shape);
+		RPOL::Regular_polygon& p = dynamic_cast<RPOL::Regular_polygon&>(
+		    ws.shape);
 
 		p.rotate(10); // Spin
 
@@ -109,7 +110,7 @@ void e08()
 	Graph_lib::Text info{{64, 32}, info_start()};
 	win.attach(info);
 
-	RPOL::RegularPolygon rp{c, 64, 8};
+	RPOL::Regular_polygon rp{c, 64, 8};
 	rp.set_fill_color(Graph_lib::Color::invisible);
 
 	win.attach(rp);
