@@ -4,10 +4,10 @@
 #include "../help/helpers.h"
 #include <cmath>
 
-void grp_shp::R_poly_group::scale(double scale_factor)
+void grp_shp::R_poly_group::scale(double new_scale_f)
 {
 	for (int i = 0; i < elem.size(); ++i) {
-		scale(scale_factor, i);
+		scale(new_scale_f, i);
 	}
 }
 
@@ -24,21 +24,49 @@ void grp_shp::R_poly_group::rotate_around_origin(double offset_degrees)
 		return;
 	}
 	for (int i = 0; i < elem.size(); ++i) {
-		if (i > 1) {
-			return;
-		}
 		move_elem_to_rot_pos(offset_degrees, i);
 		rotate(offset_degrees, i);
 	}
 }
 
+void grp_shp::R_poly_group::scale_uniformly(double new_scale_f)
+{
+	if (new_scale_f <= 0) {
+		throw std::runtime_error("Invalid scale factor, expected a value > 0");
+	}
+	if (new_scale_f == 1) {
+		return;
+	}
+
+	scale_f *= new_scale_f;
+
+	for (int i = 0; i < elem.size(); ++i) {
+		set_relative_distance(i, relative_distance(i) * new_scale_f);
+		move_elem_to_rot_pos(0, i);
+		scale(new_scale_f, i);
+	}
+}
+
 //------------------------------------------------------------------------------
 
-void grp_shp::R_poly_group::scale(double scale_factor, int element_index)
+void grp_shp::R_poly_group::move(int offset_x, int offset_y, int element_index)
 {
 	Relative_r_poly& p{
 	    dynamic_cast<Relative_r_poly&>(elem[valid_index(element_index)])};
-	p.scale(scale_factor);
+	p.move(offset_x, offset_y);
+	p.update_relative_angle(o);
+	p.update_relative_distance(o);
+}
+
+void grp_shp::R_poly_group::scale(double new_scale_f, int element_index)
+{
+	Relative_r_poly& p{
+	    dynamic_cast<Relative_r_poly&>(elem[valid_index(element_index)])};
+	double upd_scale_f{scale_factor(element_index) * new_scale_f};
+	int old_r{radius(element_index)};
+	double target_r{initital_radius(element_index) * upd_scale_f};
+	p.scale(target_r / old_r);
+	set_scale_factor(upd_scale_f, element_index);
 }
 
 void grp_shp::R_poly_group::rotate(double offset_degrees, int element_index)
@@ -53,6 +81,20 @@ int grp_shp::R_poly_group::radius(int element_index) const
 	const Relative_r_poly& p{
 	    dynamic_cast<const Relative_r_poly&>(elem[valid_index(element_index)])};
 	return p.radius();
+}
+
+int grp_shp::R_poly_group::initital_radius(int element_index) const
+{
+	const Relative_r_poly& p{
+	    dynamic_cast<const Relative_r_poly&>(elem[valid_index(element_index)])};
+	return p.initial_radius();
+}
+
+double grp_shp::R_poly_group::scale_factor(int element_index) const
+{
+	const Relative_r_poly& p{
+	    dynamic_cast<const Relative_r_poly&>(elem[valid_index(element_index)])};
+	return p.scale_factor();
 }
 
 Graph_lib::Point grp_shp::R_poly_group::center(int element_index) const
@@ -127,10 +169,17 @@ void grp_shp::R_poly_group::set_position(int x, int y, int element_index)
 	p.move(x - p.center().x, y - p.center().y);
 }
 
+void grp_shp::R_poly_group::set_scale_factor(double new_scale_f,
+                                             int element_index)
+{
+	Relative_r_poly& p{
+	    dynamic_cast<Relative_r_poly&>(elem[valid_index(element_index)])};
+	p.set_scale_factor(new_scale_f);
+}
+
 void grp_shp::R_poly_group::move_elem_to_rot_pos(double offset_degrees,
                                                  int element_index)
 {
-	Graph_lib::Point old_pos = center(element_index);
 	double old_a{relative_angle(element_index)};
 	double new_a{old_a + offset_degrees};
 	double new_a_rad{new_a * M_PI / 180};

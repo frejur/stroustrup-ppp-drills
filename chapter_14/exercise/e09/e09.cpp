@@ -2,7 +2,6 @@
 #include "../../lib/Debug_window.h"
 #include "../../lib/Graph.h"
 #include "../share/anim/anim_shp.h"
-#include "../share/geo/regularpoly.h"
 #include "../share/grp/grp_rpoly.h"
 #include <cmath>
 
@@ -112,13 +111,36 @@ private:
 	{
 		grp_shp::R_poly_group& p = dynamic_cast<grp_shp::R_poly_group&>(
 		    ws.shape);
-		p.move(1, 1);
-		// p.rotate(10);
-		p.rotate_around_origin(1);
+		static bool grow_uniform = true;
+		static bool grow_piece = true;
 		if (std::fmod(time(), 0.5) <= refresh_rate()) {
-			// p.add(p.center(0), 10, 8);
+			grow_uniform = !grow_uniform;
 		}
-		// p.rotate(-10, 1);
+		if (grow_uniform) {
+			p.scale_uniformly(1.01);
+		} else {
+			p.scale_uniformly(0.99);
+		}
+		if (std::fmod(time(), 1.0) <= refresh_rate()) {
+			grow_piece = !grow_piece;
+		}
+		if (grow_piece) {
+			p.scale(1.05, p.number_of_elements() - 1);
+		} else {
+			p.scale(0.95, p.number_of_elements() - 1);
+		}
+		p.rotate_around_origin(1);
+
+		int last_idx{p.number_of_elements() - 1};
+		double time_f = time() / time_out();
+		double move_angle = M_PI * 2 * time_f * 2 - M_PI;
+		double move_dist = 10 * p.radius(last_idx)
+		                   / (time_out() / refresh_rate());
+		double move_x = cos(move_angle) * move_dist;
+		move_x += (move_x > 0) ? 0.5 : -0.5;
+		double move_y = sin(move_angle) * move_dist;
+		move_y += (move_y > 0) ? 0.5 : -0.5;
+		p.move(static_cast<int>(move_x), static_cast<int>(move_y), last_idx);
 	};
 };
 
@@ -145,8 +167,23 @@ void e09()
 	win.attach(info);
 
 	grp_shp::R_poly_group grp{c};
-	grp.add({c.x - 100, c.y}, static_cast<int>(win_w * 0.25), 4);
-	grp.add({c.x + 100, c.y}, static_cast<int>(win_w * 0.25), 4);
+	int tile_sz_half{16};
+	int tile_sz{tile_sz_half * 2};
+	int tile_top_l_x{c.x - tile_sz * 4 - tile_sz_half};
+	int tile_top_l_y{c.y - tile_sz * 4 - tile_sz_half};
+	for (int row = 0; row < 10; ++row) {
+		for (int col = 0; col < 10; ++col) {
+			if ((row + col) % 2) {
+				continue;
+			}
+			grp.add({tile_top_l_x + tile_sz * col, tile_top_l_y + tile_sz * row},
+			        static_cast<int>(std::round(
+			            sqrt(tile_sz * tile_sz + tile_sz * tile_sz) * 0.5)),
+			        4,
+			        45);
+		}
+	}
+	grp.add(c, 32, 8);
 
 	win.attach(grp);
 

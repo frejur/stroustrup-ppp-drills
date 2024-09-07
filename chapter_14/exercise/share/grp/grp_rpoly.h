@@ -24,9 +24,12 @@ public:
 	    , init_radius(radius)
 	    , init_angle(angle_degrees)
 	    , rel_dist(calc_rel_dist(global_origin))
-	    , rel_angle(calc_rel_angle(global_origin)){};
+	    , rel_angle(calc_rel_angle(global_origin))
+	    , scale_f(1){};
 	double relative_distance() const { return rel_dist; };
 	double relative_angle() const { return rel_angle; };
+	double scale_factor() const { return scale_f; };
+	int initial_radius() const { return init_radius; };
 	void update_relative_distance(Graph_lib::Point new_global_origin)
 	{
 		rel_dist = calc_rel_dist(new_global_origin);
@@ -37,6 +40,7 @@ public:
 		rel_angle = calc_rel_angle(new_global_origin);
 	}
 	void set_relative_angle(double new_angle) { rel_angle = new_angle; }
+	void set_scale_factor(double new_scale_f) { scale_f = new_scale_f; }
 
 private:
 	// Initial values
@@ -46,14 +50,16 @@ private:
 	// Values relative to the global origin
 	double rel_dist;
 	double rel_angle;
+	// Scale
+	double scale_f;
 	// Calculate
 	double calc_rel_dist(Graph_lib::Point new_global_origin)
 	{
-		return ch14_hlp::distance_between(center(), new_global_origin);
+		return ch14_hlp::distance_between(new_global_origin, center());
 	};
 	double calc_rel_angle(Graph_lib::Point new_global_origin)
 	{
-		return ch14_hlp::angle_between(center(), new_global_origin) * 180
+		return ch14_hlp::angle_between(new_global_origin, center()) * 180
 		       / M_PI;
 	};
 };
@@ -66,11 +72,15 @@ public:
 	void scale(double scale_factor);
 	void rotate(double offset_degrees);
 	void rotate_around_origin(double offset_degrees);
+	void scale_uniformly(double scale_factor);
 
 	// Element-wise
+	void move(int offset_x, int offset_y, int elem_index) override;
 	void scale(double scale_factor, int element_index);
 	void rotate(double offset_degrees, int element_index);
 	int radius(int elem_index) const;
+	int initital_radius(int elem_index) const;
+	double scale_factor(int elem_index) const;
 	Graph_lib::Point center(int elem_index) const;
 
 	// Container
@@ -80,6 +90,7 @@ public:
 	         double angle_degrees = 0);
 
 private:
+	double scale_f{1};
 	void add(Graph_lib::Shape& shape){}; // Hide
 	void add(Graph_lib::Shape* shape){}; // Hide
 
@@ -93,6 +104,9 @@ private:
 
 	// Set local attributes without updating relative attributes
 	void set_position(int x, int y, int elem_index);
+
+	// Set relative attributes without updating local attributes
+	void set_scale_factor(double new_scale_f, int elem_index);
 
 	void move_elem_to_rot_pos(double offset_degrees, int element_index);
 };

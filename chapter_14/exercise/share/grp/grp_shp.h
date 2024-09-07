@@ -15,7 +15,7 @@ public:
 	void set_style(Graph_lib::Line_style sty);
 	void set_fill_color(Graph_lib::Color col);
 	// Element-wise
-	void move(int offset_x, int offset_y, int elem_index);
+	virtual void move(int offset_x, int offset_y, int elem_index);
 	void set_color(Graph_lib::Color col, int elem_index);
 	void set_style(Graph_lib::Line_style sty, int elem_index);
 	void set_fill_color(Graph_lib::Color col, int elem_index);
