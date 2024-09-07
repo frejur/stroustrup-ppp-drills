@@ -3,7 +3,7 @@
 #include "../../lib/Graph.h"
 #include "../share/anim/anim_shp.h"
 #include "../share/geo/regularpoly.h"
-#include "../share/grp/grp_shp.h"
+#include "../share/grp/grp_rpoly.h"
 #include <cmath>
 
 // Exercise 9. Define class "Group" that stores 'Shape's in a Vector_ref and
@@ -25,14 +25,15 @@
 //     + Individual element operations:
 //         > (All of the global operations with the addition of an 'index' parameter)
 //     + Uniquely for 'R_poly_group':
-//         > add(Graph_lib::Point origin, int radius, int number_of_sides, double angle_degrees)
+//         > add(Graph_lib::Point center, int radius, int number_of_sides, double angle_degrees)
 //         > (Redefine the add() methods defined in 'Shape_group' as empty private methods to prevent their use)
 //     + Also uniquely for 'R_poly_group':
 //         > scale(double scale_factor)
 //         > rotate(double offset_degrees)
-//         > radius()
-//         > center()
-//         > (Corresponding individual element operations for the above)
+//         > scale(double scale_factor, int element_index)
+//         > rotate(double offset_degrees, int element_index)
+//         > radius(int element_index)
+//         > center(int element_index)
 // - Define class 'Checker_board' that contains
 //     + A single 4-sided Regular_polygon 'frame'.
 //     + Four 'R_poly_groups':
@@ -109,8 +110,15 @@ public:
 private:
 	void animate() override
 	{
-		grp_shp::Shape_group& p = dynamic_cast<grp_shp::Shape_group&>(ws.shape);
-		p.move(10, 10);
+		grp_shp::R_poly_group& p = dynamic_cast<grp_shp::R_poly_group&>(
+		    ws.shape);
+		p.move(1, 1);
+		// p.rotate(10);
+		p.rotate_around_origin(1);
+		if (std::fmod(time(), 0.5) <= refresh_rate()) {
+			// p.add(p.center(0), 10, 8);
+		}
+		// p.rotate(-10, 1);
 	};
 };
 
@@ -136,17 +144,9 @@ void e09()
 	Graph_lib::Text info{{64, 32}, info_start()};
 	win.attach(info);
 
-	grp_shp::Shape_group grp{c};
-	RPOL::Regular_polygon rp{{c.x - 100, c.x},
-	                         static_cast<int>(win_w * 0.25),
-	                         4};
-	rp.set_fill_color(Graph_lib::Color::invisible);
-	grp.add(rp);
-	RPOL::Regular_polygon rp2{{c.x + 100, c.x},
-	                          static_cast<int>(win_w * 0.25),
-	                          4};
-	rp2.set_fill_color(Graph_lib::Color::invisible);
-	grp.add(rp2);
+	grp_shp::R_poly_group grp{c};
+	grp.add({c.x - 100, c.y}, static_cast<int>(win_w * 0.25), 4);
+	grp.add({c.x + 100, c.y}, static_cast<int>(win_w * 0.25), 4);
 
 	win.attach(grp);
 
@@ -158,8 +158,8 @@ void e09()
 		if (win.click_has_been_registered()) {
 			if (!is_animating) {
 				// Start
-				rp.set_fill_color(colors()[count_clicks++ % colors().size()]);
-				rp.set_color(colors()[count_clicks % colors().size()]);
+				grp.set_fill_color(colors()[count_clicks++ % colors().size()]);
+				grp.set_color(colors()[count_clicks % colors().size()]);
 				info.set_label(info_stop());
 				is_animating = true;
 				anim.start();

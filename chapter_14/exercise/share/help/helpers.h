@@ -10,15 +10,24 @@ Graph_lib::Point point_at_angle(Graph_lib::Point center,
                                 double rotation,
                                 double distance);
 
+double distance_between(Graph_lib::Point a, Graph_lib::Point b);
+double angle_between(Graph_lib::Point a, Graph_lib::Point b);
+
+//------------------------------------------------------------------------------
+
 double wrap_angle(double angle);
 
 int val_from_f(int min_val, int max_val, double f);
+
+//------------------------------------------------------------------------------
 
 void draw_mark(Graph_lib::Point xy,
                char c,
                Graph_lib::Font fnt = fl_font(),
                int fnt_sz = fl_size(),
                Graph_lib::Color color = Graph_lib::Color::black);
+
+//------------------------------------------------------------------------------
 
 Graph_lib::Point shape_min_xy(const Graph_lib::Shape& s);
 Graph_lib::Point shape_max_xy(const Graph_lib::Shape& s);

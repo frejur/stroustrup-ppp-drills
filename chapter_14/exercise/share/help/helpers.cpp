@@ -12,6 +12,18 @@ Graph_lib::Point ch14_hlp::point_at_angle(Graph_lib::Point center,
 	        center.y + static_cast<int>(sin(radians) * distance)};
 }
 
+double ch14_hlp::distance_between(Graph_lib::Point a, Graph_lib::Point b)
+{
+	double tmp{static_cast<double>(a.x - b.x) * (a.x - b.x)
+	           + (a.y - b.y) * (a.y - b.y)};
+	return tmp == 0 ? 0 : sqrt(tmp);
+}
+
+double ch14_hlp::angle_between(Graph_lib::Point a, Graph_lib::Point b)
+{
+	return atan2(static_cast<double>(a.y - b.y), static_cast<double>(a.x - b.x));
+}
+
 //------------------------------------------------------------------------------
 
 int ch14_hlp::val_from_f(int min_val, int max_val, double f)

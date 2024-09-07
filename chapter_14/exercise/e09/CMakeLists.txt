@@ -18,6 +18,7 @@ add_executable(${T_THIS}
     ../share/help/helpers.cpp ../share/help/helpers.h
     ../share/anim/anim_shp.cpp ../share/anim/anim_shp.h
     ../share/grp/grp_shp.cpp ../share/grp/grp_shp.h
+    ../share/grp/grp_rpoly.cpp ../share/grp/grp_rpoly.h
     
     e09.cpp
 )

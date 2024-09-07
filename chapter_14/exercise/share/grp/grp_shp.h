@@ -28,11 +28,10 @@ protected:
 	Graph_lib::Point o;
 	Graph_lib::Vector_ref<Graph_lib::Shape> elem;
 	virtual void draw_lines() const override;
+	int valid_index(int idx) const;
 
 private:
 	virtual Graph_lib::Point point(int i) const override { return {0, 0}; };
-	int valid_index(int idx) const;
-	;
 };
 
 } // namespace grp_shp
