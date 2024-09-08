@@ -13,6 +13,7 @@ add_executable(${T_THIS}
     ../../lib/std_lib_facilities.h
     ../../lib/Window.h
     ../../lib/Window.cpp
+    ../../lib/Debug_window.h
     ../share/geo/arc.h
     ../share/geo/arc.cpp
     ../share/geo/isoscelestriangle.cpp

@@ -13,6 +13,7 @@ add_executable(${T_THIS}
     ../../lib/std_lib_facilities.h
     ../../lib/Window.h
     ../../lib/Window.cpp
+    ../../lib/Debug_window.h
 
     ../share/geo/regularpoly.cpp ../share/geo/regularpoly.h
     ../share/help/helpers.cpp ../share/help/helpers.h
