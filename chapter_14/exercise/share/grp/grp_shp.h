@@ -24,6 +24,8 @@ public:
 	void add(Graph_lib::Shape* shape) { elem.push_back(shape); };
 	int number_of_elements() const { return elem.size(); };
 
+	Graph_lib::Point origin() const { return o; };
+
 protected:
 	Graph_lib::Point o;
 	Graph_lib::Vector_ref<Graph_lib::Shape> elem;

@@ -17,6 +17,7 @@ public:
 	                double angle_degrees = 0);
 	int radius() const { return r; };
 	Graph_lib::Point center() const { return c; };
+	double angle_radians() const { return angle; };
 	void rotate(double offset_degrees);
 	void move(int offset_x, int offset_y) override;
 	void scale(double scale_f);

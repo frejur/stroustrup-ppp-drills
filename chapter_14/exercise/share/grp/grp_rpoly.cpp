@@ -114,6 +114,13 @@ void grp_shp::R_poly_group::add(Graph_lib::Point center,
 	elem.push_back(
 	    new Relative_r_poly{o, center, radius, number_of_sides, angle_degrees});
 }
+
+void grp_shp::R_poly_group::reset()
+{
+	for (int i = 0; i < elem.size(); ++i) {
+		dynamic_cast<Relative_r_poly&>(elem[valid_index(i)]).reset(o);
+	}
+}
 //------------------------------------------------------------------------------
 
 double grp_shp::R_poly_group::relative_distance(int element_index) const
@@ -192,4 +199,15 @@ void grp_shp::R_poly_group::move_elem_to_rot_pos(double offset_degrees,
 	                         : static_cast<int>(new_y - 0.5);
 	set_position(rnd_x, rnd_y, element_index);
 	set_relative_angle(element_index, new_a);
+}
+//------------------------------------------------------------------------------
+
+void grp_shp::Relative_r_poly::reset(Graph_lib::Point new_global_origin)
+{
+	move(init_origin.x - center().x, init_origin.y - center().y);
+	scale(static_cast<double>(init_radius) / radius());
+	rotate(init_angle - angle_radians() * 180 / M_PI);
+	update_relative_distance(new_global_origin);
+	update_relative_angle(new_global_origin);
+	scale_f = 1;
 }

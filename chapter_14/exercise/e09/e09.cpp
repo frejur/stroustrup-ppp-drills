@@ -142,6 +142,12 @@ private:
 		move_y += (move_y > 0) ? 0.5 : -0.5;
 		p.move(static_cast<int>(move_x), static_cast<int>(move_y), last_idx);
 	};
+	void finish() override
+	{
+		grp_shp::R_poly_group& p = dynamic_cast<grp_shp::R_poly_group&>(
+		    ws.shape);
+		p.reset();
+	}
 };
 
 //------------------------------------------------------------------------------

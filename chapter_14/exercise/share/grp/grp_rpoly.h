@@ -41,6 +41,7 @@ public:
 	}
 	void set_relative_angle(double new_angle) { rel_angle = new_angle; }
 	void set_scale_factor(double new_scale_f) { scale_f = new_scale_f; }
+	void reset(Graph_lib::Point new_global_origin);
 
 private:
 	// Initial values
@@ -88,6 +89,8 @@ public:
 	         int radius,
 	         int number_of_sides,
 	         double angle_degrees = 0);
+
+	void reset();
 
 private:
 	double scale_f{1};
