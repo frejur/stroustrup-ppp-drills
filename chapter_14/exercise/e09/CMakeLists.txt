@@ -21,6 +21,10 @@ add_executable(${T_THIS}
     ../share/grp/grp_rpoly.cpp ../share/grp/grp_rpoly.h
     
     e09.cpp
+    e09_notes.md
+    e09.h
+    e09_anim.cpp
+    e09_board.h e09_board.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)

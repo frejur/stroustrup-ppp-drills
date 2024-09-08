@@ -4,7 +4,7 @@
 #include "../geo/regularpoly.h"
 #include "../help/helpers.h"
 #include "grp_shp.h"
-#include <cmath>
+#include "math.h"
 
 namespace grp_shp {
 
@@ -70,12 +70,14 @@ class R_poly_group : public Shape_group
 public:
 	using Shape_group::Shape_group;
 	// Global
+	using Shape_group::move;
 	void scale(double scale_factor);
 	void rotate(double offset_degrees);
 	void rotate_around_origin(double offset_degrees);
 	void scale_uniformly(double scale_factor);
 
 	// Element-wise
+	// void move(int x, int y) override;
 	void move(int offset_x, int offset_y, int elem_index) override;
 	void scale(double scale_factor, int element_index);
 	void rotate(double offset_degrees, int element_index);
