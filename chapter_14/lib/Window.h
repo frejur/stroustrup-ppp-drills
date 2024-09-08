@@ -7,11 +7,11 @@
 #ifndef WINDOW_GUARD
 #define WINDOW_GUARD
 
+#include "Point.h"
+#include <FL/Fl.H>
+#include <FL/Fl_Double_Window.H>
 #include <string>
 #include <vector>
-#include <FL/Fl.H>
-#include <FL/Fl_Window.H>
-#include "Point.h"
 
 using std::string;
 using std::vector;
@@ -23,8 +23,9 @@ namespace Graph_lib
 
 //------------------------------------------------------------------------------
 
-    class Window : public Fl_Window { 
-    public:
+    class Window : public Fl_Double_Window
+    {
+	public:
         // let the system pick the location:
         Window(int w, int h, const string& title);
         // top left corner in xy
