@@ -36,7 +36,7 @@ void ch14_e09::e09()
 
 	win.attach(b);
 
-	Board_animator anim{win, b};
+	Board_animator anim{win, b, 0.05, 20};
 
 	int count_clicks = 0;
 	int is_animating = false;

@@ -44,10 +44,16 @@ struct Color {
 
     Color(Color_type cc) : v(visible), c(Fl_Color(cc)) { }
     Color(Color_type cc, Transparency vv) : v(vv), c(Fl_Color(cc)) { }
-    Color(int cc) :v(visible), c(Fl_Color(cc))  { }
-    Color(Transparency vv) : v(vv), c(Fl_Color{}) { }    // default color
+	Color(int cc)
+	    : v(visible)
+	    , c(Fl_Color(cc))
+	{}
+	Color(Transparency vv)
+	    : v(vv)
+	    , c(Fl_Color{})
+	{} // default color
 
-    int as_int() const { return c; }
+	int as_int() const { return c; }
 
     char visibility() const { return v; } 
     void set_visibility(Transparency vv) { v=vv; }
