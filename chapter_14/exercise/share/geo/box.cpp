@@ -5,11 +5,17 @@
 
 using namespace BOX;
 
-Box::Box(
-    Graph_lib::Point o, Graph_lib::Point e, double ratio,
-    CrvMethod m
-    ) : crv_method{ m }, crv_ratio{ ratio },
-        crv_radius { 0 }, w{ 0 }, h{ 0 }
+Box::Box(Graph_lib::Point o,
+         Graph_lib::Point e,
+         double ratio,
+         CrvMethod m,
+         Flatten_side fl)
+    : crv_method{m}
+    , crv_ratio{ratio}
+    , crv_radius{0}
+    , w{0}
+    , h{0}
+    , flat_s{fl}
 {
     errorIfZeroArea(o, e);
 
@@ -21,10 +27,13 @@ Box::Box(
 }
 
 Box::Box(
-    Graph_lib::Point o, int w, int h, double ratio,
-    CrvMethod m
-    ) : crv_method{ m }, crv_ratio{ ratio },
-        crv_radius { 0 }, w{ 0 }, h { 0 }
+    Graph_lib::Point o, int w, int h, double ratio, CrvMethod m, Flatten_side fl)
+    : crv_method{m}
+    , crv_ratio{ratio}
+    , crv_radius{0}
+    , w{0}
+    , h{0}
+    , flat_s{fl}
 {
     errorIfZeroArea(w, h);
 
@@ -36,8 +45,7 @@ Box::Box(
     initRadius(m, crv_ratio, radius_max);
 }
 
-void Box::initRadius(
-    CrvMethod m, double ratio_or_radius, double radius_max)
+void Box::initRadius(CrvMethod m, double ratio_or_radius, double radius_max)
 {
     if (m == CrvMethod::Ratio) {
         crv_ratio = (std::max)(
@@ -121,7 +129,7 @@ void Box::draw_box(Box::Drawing_mode mode) const
 			0.5 * (point((j+3)%4).x + point((j+0)%4).x),
 			0.5 * (point((j+3)%4).y + point((j+0)%4).y));
 
-		if (crv_radius > 0) {
+		if (crv_radius > 0 && !corner_is_flat(d.first)) {
 			fl_arc(
 				float(point(j%4).x +
 					crv_radius * dir_x -
@@ -218,7 +226,24 @@ void Box::updateCornerPoints(
 }
 
 bool Box::areaIsZero() const {
-    return (w<=0 || h<=0);
+	return (w <= 0 || h <= 0);
+}
+
+bool Box::corner_is_flat(Corner c) const
+{
+	switch (flat_s) {
+	case Flatten_side::Top:
+		return (c == Corner::NE || c == Corner::NW);
+	case Flatten_side::Right:
+		return (c == Corner::NE || c == Corner::SE);
+	case Flatten_side::Bottom:
+		return (c == Corner::SE || c == Corner::SW);
+	case Flatten_side::Left:
+		return (c == Corner::NW || c == Corner::SW);
+	case Flatten_side::None:
+	default:
+		return false;
+	}
 }
 
 void Box::errorIfZeroArea(int ww, int hh) const

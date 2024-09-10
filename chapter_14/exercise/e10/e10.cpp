@@ -43,8 +43,9 @@ void ch14_e10::e10()
 	BOX::Box b{{c.x - ps_win_w / 2, c.y - ps_win_h / 2},
 	           ps_win_w,
 	           ps_win_h,
-	           8,
-	           BOX::CrvMethod::Radius};
+	           6,
+	           BOX::CrvMethod::Radius,
+	           BOX::Flatten_side::Bottom};
 	b.set_fill_color(Graph_lib::Color::blue);
 
 	win.attach(b);
