@@ -67,6 +67,11 @@ public:
 	               Graph_lib::Color color = default_button_color(),
 	               Graph_lib::Color fill_color = default_button_fill_color(),
 	               int corner_radius = default_button_corner_radius);
+	void move(int offset_x, int offset_y) override
+	{
+		grp_shp::Shape_group::move(offset_x, offset_y);
+		btn.move(offset_x, offset_y);
+	};
 
 protected:
 	int w;
@@ -136,6 +141,8 @@ class Pseudo_window : public Graph_lib::Shape
 {
 public:
 	Pseudo_window(Graph_lib::Point origin, int width, int height);
+	void attach(Graph_lib::Shape& s) { content.add(s); };
+	void move(int offset_x, int offset_y) override;
 
 private:
 	BOX::Box frame;

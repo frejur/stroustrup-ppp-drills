@@ -173,6 +173,18 @@ ch14_e10::Pseudo_window::Pseudo_window(Point origin, int width, int height)
 	canvas.set_fill_color(default_canvas_color());
 }
 
+void ch14_e10::Pseudo_window::move(int offset_x, int offset_y)
+{
+	frame.move(offset_x, offset_y);
+	icon.move(offset_x, offset_y);
+	title.move(offset_x, offset_y);
+	btn_min.move(offset_x, offset_y);
+	btn_max.move(offset_x, offset_y);
+	btn_close.move(offset_x, offset_y);
+	canvas.move(offset_x, offset_y);
+	content.move(offset_x, offset_y);
+}
+
 void ch14_e10::Pseudo_window::draw_lines() const
 {
 	frame.draw();
@@ -182,5 +194,10 @@ void ch14_e10::Pseudo_window::draw_lines() const
 	btn_max.draw();
 	btn_close.draw();
 	canvas.draw();
+	fl_clip(canvas.point(0).x + 1,
+	        canvas.point(0).y + 1,
+	        canvas.width() - 2,
+	        canvas.height() - 1);
 	content.draw();
+	fl_pop_clip();
 }

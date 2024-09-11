@@ -23,6 +23,26 @@ static const std::string& info_stop()
 	return s;
 }
 
+static const Graph_lib::Color inactive_color()
+{
+	static const Graph_lib::Color& c{static_cast<int>(fl_rgb_color(90, 90, 90))};
+	return c;
+}
+
+//------------------------------------------------------------------------------
+
+class Pacman_animator : public anim::Shape_animator
+{
+public:
+	using anim::Shape_animator::Shape_animator;
+
+private:
+	int pill_count;
+	bool jaw_open;
+	void animate() override;
+	void finish() override;
+};
+
 //------------------------------------------------------------------------------
 
 class Window_animator : public anim::Shape_animator
