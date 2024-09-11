@@ -53,15 +53,18 @@ public:
 	int height() const { return h; };
 	int corner_radius() const { return crv_radius; };
 	Graph_lib::Point bbox_origin() const;
+
+	int dir_idx(const Graph_lib::Point& o, const Graph_lib::Point& e) const;
+
 private:
 	void draw_box(Drawing_mode mode = DRAW_STROKE) const;
     CrvMethod crv_method;
     double crv_ratio{ 0 };  // Used to set crv_radius
-    int crv_radius{ 0 };    // Controls corner curvature
-    int w{ 0 }, h{ 0 };		// Size
+	double crv_radius{0};   // Controls corner curvature
+	int w{0}, h{0};         // Size
 	Flatten_side flat_s;
 
-	const std::map<Corner, std::pair<int, int>>
+	const std::vector<std::pair<Corner, std::pair<int, int>>>
 	    dir_to_next_pt // Clockwise, order must remain
 	    {{Corner::NW, {1, 0}},
 	     {Corner::NE, {0, 1}},
@@ -73,17 +76,15 @@ private:
 	void setSize(const Graph_lib::Point& o, const Graph_lib::Point& e);
 	void setSize(int hh, int ww);
 
-	void updateCornerPoints(
-        const Graph_lib::Point& o, const Graph_lib::Point& e
-    );
+	void updateCornerPoints(const Graph_lib::Point& o,
+	                        const Graph_lib::Point& e);
 
-    int getIterDistToNW_Corner(
-        const Graph_lib::Point& o, const Graph_lib::Point& e
-    ) const;
+	int getIterDistToNW_Corner(const Graph_lib::Point& o,
+	                           const Graph_lib::Point& e) const;
 
-    // Given a rectangle: get the name of corner point p1,
-    // with p2 being the opposite corner point.
-    inline Corner getCorner(
+	// Given a rectangle: get the name of corner point p1,
+	// with p2 being the opposite corner point.
+	inline Corner getCorner(
         const Graph_lib::Point& p1,
         const Graph_lib::Point& p2
     ) const;

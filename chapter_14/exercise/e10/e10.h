@@ -1,3 +1,4 @@
+#define NOMINMAX
 #ifndef E10_H
 #define E10_H
 #include "../../lib/Graph.h"

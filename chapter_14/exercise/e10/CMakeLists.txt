@@ -26,6 +26,7 @@ add_executable(${T_THIS}
     e10.h
     e10_anim.cpp
     e10_pswin.h e10_pswin.cpp
+    e10_pac.h e10_pac.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)

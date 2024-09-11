@@ -1,9 +1,8 @@
+#include "e10_pac.h"
 #include "e10_pswin.h"
 #define _USE_MATH_DEFINES
 #include "../../lib/Debug_window.h"
 #include "../../lib/Graph.h"
-#include "../share/geo/box.h"
-#include "../share/grp/grp_rpoly.h"
 #include "e10.h"
 #include <cmath>
 
@@ -40,15 +39,40 @@ void ch14_e10::e10()
 	Graph_lib::Text info{{64, 32}, info_start()};
 	win.attach(info);
 
-	BOX::Box b{{c.x - ps_win_w / 2, c.y - ps_win_h / 2},
-	           ps_win_w,
-	           ps_win_h,
-	           6,
-	           BOX::CrvMethod::Radius,
-	           BOX::Flatten_side::Bottom};
-	b.set_fill_color(Graph_lib::Color::blue);
+	constexpr int btn_sz{21};
+	Minimize_button btn_min{{c.x - btn_sz * 2, c.y - btn_sz / 2},
+	                        btn_sz,
+	                        btn_sz};
+	Maximize_button btn_max{{c.x - btn_sz / 2, c.y - btn_sz / 2},
+	                        btn_sz,
+	                        btn_sz};
+	Close_button btn_close{{c.x + btn_sz * 2, c.y - btn_sz / 2}, btn_sz, btn_sz};
 
-	win.attach(b);
+	win.attach(btn_min);
+	win.attach(btn_max);
+	win.attach(btn_close);
+
+	Pacman pac_l{{c.x - 128, c.y + 75}, 32, 1, Pacman_dir::Left};
+	Pacman pac_u{{c.x - 64, c.y + 75}, 32, 1, Pacman_dir::Up};
+	Pacman pac_r{{c.x, c.y + 75}, 32, 1};
+	Pacman pac_d{{c.x + 64, c.y + 75}, 32, 1, Pacman_dir::Down};
+	// pac_l.set_color(Graph_lib::Color::invisible);
+	pac_l.set_fill_color(Graph_lib::Color::yellow);
+	win.attach(pac_l);
+	// pac_u.set_color(Graph_lib::Color::invisible);
+	pac_u.set_fill_color(Graph_lib::Color::yellow);
+	win.attach(pac_u);
+	// pac_r.set_color(Graph_lib::Color::invisible);
+	pac_r.set_fill_color(Graph_lib::Color::yellow);
+	win.attach(pac_r);
+	// pac_d.set_color(Graph_lib::Color::invisible);
+	pac_d.set_fill_color(Graph_lib::Color::yellow);
+	win.attach(pac_d);
+
+	Pseudo_window ps{{c.x - ps_win_w / 2, c.y - ps_win_h / 2},
+	                 ps_win_w,
+	                 ps_win_h};
+	win.attach(ps);
 
 	int is_animating = false;
 	while (win.shown()) {

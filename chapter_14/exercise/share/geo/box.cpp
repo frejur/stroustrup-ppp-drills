@@ -118,38 +118,47 @@ void Box::draw_box(Box::Drawing_mode mode) const
 		fl_begin_loop();
 	}
 
-	int i{ 0 };
 	double start_a{ 90 };
-	for (const auto& d : dir_to_next_pt) {
-		int j { i + i_dist };
-		int dir_x{ d.second.first};
-		int dir_y{ d.second.second};
+	std::vector<std::pair<int, int>> temp;
+	for (int i = 0; i < dir_to_next_pt.size(); ++i) {
+		int j{static_cast<int>((i + i_dist) % dir_to_next_pt.size())};
+		int dir_x{dir_to_next_pt[i].second.first};
+		int dir_y{dir_to_next_pt[i].second.second};
 
-		fl_vertex(
-			0.5 * (point((j+3)%4).x + point((j+0)%4).x),
-			0.5 * (point((j+3)%4).y + point((j+0)%4).y));
+		int mid_x = static_cast<int>(
+		    0.5 * (point((j + 3) % 4).x + point((j + 0) % 4).x));
+		int mid_y = static_cast<int>(
+		    0.5 * (point((j + 3) % 4).y + point((j + 0) % 4).y));
+		temp.push_back({mid_x, mid_y});
 
-		if (crv_radius > 0 && !corner_is_flat(d.first)) {
-			fl_arc(
-				float(point(j%4).x +
-					crv_radius * dir_x -
-					crv_radius * dir_y),
-				float(point(j%4).y +
-					crv_radius * dir_y +
-					crv_radius * dir_x),
-				crv_radius,
-				start_a - (i-1) * 90,start_a - i * 90
-			);
+		// Pixel fuckery -------------------------------------------------------
+		using CR = Corner;
+		const CR dir = dir_to_next_pt[i].first;
+		float r_nudge = (dir == CR::NE || dir == CR::SE || dir == CR::SW)
+		                    ? -0.01
+		                    : 0;
+		int x_nudge = (dir == CR::NE || dir == CR::SE) ? -1 : 0;
+		int y_nudge = (dir == CR::SE || dir == CR::SW) ? -1 : 0;
+		// ---------------------------------------------------------------------
+
+		fl_vertex(mid_x + x_nudge, mid_y + y_nudge);
+
+		if (crv_radius > 0 && !corner_is_flat(dir)) {
+			fl_arc(point(j % 4).x + crv_radius * dir_x - crv_radius * dir_y,
+			       point(j % 4).y + crv_radius * dir_y + crv_radius * dir_x,
+			       crv_radius + r_nudge,
+			       start_a - (i - 1) * 90,
+			       start_a - i * 90);
 		} else {
-			fl_vertex(point(j%4).x, point(j%4).y);
+			fl_vertex(point(j % 4).x + x_nudge, point(j % 4).y + y_nudge);
 		}
-		++i;
 	}
 	if (mode==DRAW_FILL) {
 		fl_end_complex_polygon();
 	} else {
 		fl_end_loop();
 	}
+	fl_end_loop();
 }
 
 void Box::draw_lines() const
@@ -179,19 +188,29 @@ Corner Box::getCorner(
     return Corner::SE;
 }
 
-int Box::getIterDistToNW_Corner(
-    const Graph_lib::Point& o, const Graph_lib::Point& e
-) const {
-    return(
-        (std::max)(
-            0,
-            (4 -
-            (int)std::distance(
-                dir_to_next_pt.begin(),
-                dir_to_next_pt.find(getCorner(o, e))
-            )) % 4
-        )
-    );
+int BOX::Box::dir_idx(const Graph_lib::Point& o, const Graph_lib::Point& e) const
+{
+	int idx = -1;
+	for (int i = 0; i < dir_to_next_pt.size(); ++i) {
+		if (dir_to_next_pt[i].first == getCorner(o, e)) {
+			idx = i;
+			break;
+		}
+	}
+
+	if (idx == -1) {
+		throw std::runtime_error("No direction found");
+	}
+
+	return idx;
+}
+
+int Box::getIterDistToNW_Corner(const Graph_lib::Point& o,
+                                const Graph_lib::Point& e) const
+{
+	int idx = dir_idx(o, e);
+
+	return ((std::max)(0, (4 - idx) % 4));
 }
 
 void Box::updateCornerPoints(
@@ -204,25 +223,21 @@ void Box::updateCornerPoints(
     }
 
     Graph_lib::Point p{ o };
-    auto it { dir_to_next_pt.find(getCorner(o, e)) };
-    if (it == dir_to_next_pt.end()) {
-        throw std::runtime_error(
-            "No direction linked to given corner");
-    }
-    for (int i = 0; i < 3; ++i) {
-        if (it == dir_to_next_pt.end()) {
-            it = dir_to_next_pt.begin();
-        }
-        std::pair<int, int> dir { it->second };
-        p.x += w * dir.first;
-        p.y += h * dir.second;
-        if ((i+1) >= number_of_points()) {
-            add({ p });
-        } else {
-            set_point(number_of_points(), { p });
-        }
-        ++it;
-    }
+	int idx{dir_idx(o, e)};
+
+	for (int i = 0; i < 3; ++i) {
+		std::pair<int, int> dir = dir_to_next_pt[idx].second;
+
+		p.x += w * dir.first;
+		p.y += h * dir.second;
+
+		if ((i + 1) >= number_of_points()) {
+			add({p});
+		} else {
+			set_point(i + 1, {p});
+		}
+		idx = (idx + 1) % dir_to_next_pt.size();
+	}
 }
 
 bool Box::areaIsZero() const {

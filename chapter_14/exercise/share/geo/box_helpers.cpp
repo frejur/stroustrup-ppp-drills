@@ -1,9 +1,8 @@
+#define _USE_MATH_DEFINES
 #include "box_helpers.h"
+#include <cmath>
 #include <map>
 #include <utility>
-#include <cmath>
-#define _USE_MATH_DEFINES
-#include <math.h>
 
 using HLP = BOX::ConnectionPointHelper;
 
