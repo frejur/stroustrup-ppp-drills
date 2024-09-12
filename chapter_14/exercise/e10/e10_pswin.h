@@ -2,48 +2,47 @@
 #define PSWIN_H
 #include "../share/geo/box.h"
 #include "../share/grp/grp_shp.h"
-#include "e10.h"
 #include "e10_pac.h"
 
 namespace ch14_e10 {
 
 constexpr int default_button_corner_radius{4};
 
-static const Graph_lib::Color default_button_color()
+inline const Graph_lib::Color& default_button_color()
 {
-	static const Graph_lib::Color& c{Graph_lib::Color::white};
+	static const Graph_lib::Color c{Graph_lib::Color::white};
 	return c;
 }
 
-static const Graph_lib::Color default_button_fill_color()
+inline const Graph_lib::Color& default_button_fill_color()
 {
-	static const Graph_lib::Color& c{
+	static const Graph_lib::Color c{
 	    static_cast<int>(fl_rgb_color(40, 110, 240))};
 	return c;
 }
 
-static const Graph_lib::Color default_close_button_fill_color()
+inline const Graph_lib::Color& default_close_button_fill_color()
 {
-	static const Graph_lib::Color& c{
+	static const Graph_lib::Color c{
 	    static_cast<int>(fl_rgb_color(230, 100, 75))};
 	return c;
 }
 
-static const Graph_lib::Color default_window_fill_color()
+inline const Graph_lib::Color& default_window_fill_color()
 {
-	static const Graph_lib::Color& c{static_cast<int>(fl_rgb_color(0, 85, 230))};
+	static const Graph_lib::Color c{static_cast<int>(fl_rgb_color(0, 85, 230))};
 	return c;
 }
 
-static const Graph_lib::Color default_window_stroke_color()
+inline const Graph_lib::Color& default_window_stroke_color()
 {
-	static const Graph_lib::Color& c{static_cast<int>(fl_rgb_color(0, 30, 275))};
+	static const Graph_lib::Color c{static_cast<int>(fl_rgb_color(0, 30, 255))};
 	return c;
 }
 
-static const Graph_lib::Color default_canvas_color()
+inline const Graph_lib::Color& default_canvas_color()
 {
-	static const Graph_lib::Color& c{
+	static const Graph_lib::Color c{
 	    static_cast<int>(fl_rgb_color(115, 115, 115))};
 	return c;
 }
@@ -143,6 +142,7 @@ public:
 	Pseudo_window(Graph_lib::Point origin, int width, int height);
 	void attach(Graph_lib::Shape& s) { content.add(s); };
 	void move(int offset_x, int offset_y) override;
+	Graph_lib::Point origin() const { return point(0); };
 
 private:
 	BOX::Box frame;

@@ -1,7 +1,5 @@
 #define _USE_MATH_DEFINES
 #include "anim_shp.h"
-#include "../geo/regularpoly.h"
-#include <cmath>
 
 void anim::Shape_animator::transform_shape_cb(void* data)
 {

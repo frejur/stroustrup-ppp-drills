@@ -1,8 +1,10 @@
-#define NOMINMAX
 #ifndef E10_H
 #define E10_H
 #include "../../lib/Graph.h"
-#include "../share/anim/anim_shp.h"
+#include "e10_anim.h"
+#include "e10_pac.h"
+#include "e10_pnp.h"
+#include "e10_pswin.h"
 #include <string>
 
 namespace ch14_e10 {
@@ -11,49 +13,27 @@ void e10();
 
 //------------------------------------------------------------------------------
 
-static const std::string& info_start()
+inline const std::string& info_start()
 {
-	static const std::string s{"Click to play animation inside the window."};
+	static const std::string s{"Click to play animation."};
 	return s;
 }
 
-static const std::string& info_stop()
+inline const std::string& info_stop()
 {
 	static const std::string s{"Click to STOP."};
 	return s;
 }
 
-static const Graph_lib::Color inactive_color()
+inline const Graph_lib::Color& inactive_color()
 {
-	static const Graph_lib::Color& c{static_cast<int>(fl_rgb_color(90, 90, 90))};
+	static const Graph_lib::Color c{static_cast<int>(fl_rgb_color(90, 90, 90))};
 	return c;
 }
 
 //------------------------------------------------------------------------------
 
-class Pacman_animator : public anim::Shape_animator
-{
-public:
-	using anim::Shape_animator::Shape_animator;
-
-private:
-	int pill_count;
-	bool jaw_open;
-	void animate() override;
-	void finish() override;
-};
-
-//------------------------------------------------------------------------------
-
-class Window_animator : public anim::Shape_animator
-{
-public:
-	using anim::Shape_animator::Shape_animator;
-
-private:
-	void animate() override;
-	void finish() override;
-};
+enum class Pacman_dir;
 
 } // namespace ch14_e10
 #endif // E10_H

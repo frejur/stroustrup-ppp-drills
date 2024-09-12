@@ -1,7 +1,6 @@
 #include "box.h"
 #include <algorithm>
 #include <stdexcept>
-#include <iostream>
 
 using namespace BOX;
 

@@ -1,11 +1,10 @@
-#define NOMINMAX
 #include "e10_pswin.h"
 
-ch14_e10::Control_button::Control_button(Point origin,
+ch14_e10::Control_button::Control_button(Graph_lib::Point origin,
                                          int width,
                                          int height,
-                                         Color color,
-                                         Color fill_color,
+                                         Graph_lib::Color color,
+                                         Graph_lib::Color fill_color,
                                          int corner_radius)
     : grp_shp::Shape_group(origin)
     , w(width)
@@ -40,11 +39,11 @@ int ch14_e10::Control_button::calc_padding(int width, int height) const
 
 //------------------------------------------------------------------------------
 
-ch14_e10::Close_button::Close_button(Point origin,
+ch14_e10::Close_button::Close_button(Graph_lib::Point origin,
                                      int width,
                                      int height,
-                                     Color color,
-                                     Color fill_color,
+                                     Graph_lib::Color color,
+                                     Graph_lib::Color fill_color,
                                      int corner_radius)
     : Control_button::Control_button(origin,
                                      width,
@@ -86,11 +85,11 @@ ch14_e10::Button_padding ch14_e10::Close_button::padded_corners() const
 
 //------------------------------------------------------------------------------
 
-ch14_e10::Maximize_button::Maximize_button(Point origin,
+ch14_e10::Maximize_button::Maximize_button(Graph_lib::Point origin,
                                            int width,
                                            int height,
-                                           Color color,
-                                           Color fill_color,
+                                           Graph_lib::Color color,
+                                           Graph_lib::Color fill_color,
                                            int corner_radius)
     : Control_button::Control_button(origin,
                                      width,
@@ -120,11 +119,11 @@ void ch14_e10::Maximize_button::init_symbol()
 
 //------------------------------------------------------------------------------
 
-ch14_e10::Minimize_button::Minimize_button(Point origin,
+ch14_e10::Minimize_button::Minimize_button(Graph_lib::Point origin,
                                            int width,
                                            int height,
-                                           Color color,
-                                           Color fill_color,
+                                           Graph_lib::Color color,
+                                           Graph_lib::Color fill_color,
                                            int corner_radius)
     : Control_button::Control_button(origin,
                                      width,
@@ -140,8 +139,8 @@ void ch14_e10::Minimize_button::init_symbol()
 {
 	Button_padding padc = Minimize_button::padded_corners();
 
-	int btm_stripe_w = std::max(1, static_cast<int>(std::round(w * 0.3)));
-	int btm_stripe_h = std::max(1, static_cast<int>(std::round(w * 0.15)));
+	int btm_stripe_w = (std::max)(1, static_cast<int>(std::round(w * 0.3)));
+	int btm_stripe_h = (std::max)(1, static_cast<int>(std::round(w * 0.15)));
 	add(new Graph_lib::Rectangle{{padc.btm_left.x + o.x,
 	                              -padc.btm_left.y + o.y + h - btm_stripe_h},
 	                             {padc.btm_left.x + o.x + btm_stripe_w,
@@ -150,7 +149,9 @@ void ch14_e10::Minimize_button::init_symbol()
 	set_color(sym_color);
 }
 
-ch14_e10::Pseudo_window::Pseudo_window(Point origin, int width, int height)
+ch14_e10::Pseudo_window::Pseudo_window(Graph_lib::Point origin,
+                                       int width,
+                                       int height)
     : frame(origin,
             width,
             height,
@@ -165,6 +166,7 @@ ch14_e10::Pseudo_window::Pseudo_window(Point origin, int width, int height)
     , canvas({origin.x + 4, origin.y + 26}, width - 8, height - 30)
     , content({origin.x + 2, origin.y + 26})
 {
+	add(origin);
 	icon.set_color(Graph_lib::Color::invisible);
 	icon.set_fill_color(Graph_lib::Color::yellow);
 	title.set_color(Graph_lib::Color::white);
@@ -175,6 +177,7 @@ ch14_e10::Pseudo_window::Pseudo_window(Point origin, int width, int height)
 
 void ch14_e10::Pseudo_window::move(int offset_x, int offset_y)
 {
+	Shape::move(offset_x, offset_y);
 	frame.move(offset_x, offset_y);
 	icon.move(offset_x, offset_y);
 	title.move(offset_x, offset_y);

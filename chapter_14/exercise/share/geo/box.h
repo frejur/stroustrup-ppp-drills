@@ -2,8 +2,6 @@
 #define BOX_H
 
 #include "../../../lib/Graph.h"
-#include <exception>
-#include <map>
 
 namespace BOX { //------------------------------------------
 

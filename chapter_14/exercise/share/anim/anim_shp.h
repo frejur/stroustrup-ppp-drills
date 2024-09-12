@@ -2,7 +2,6 @@
 #define ANIM_H
 #include "../../../lib/Debug_window.h"
 #include "../../../lib/Graph.h"
-#include <memory>
 
 namespace anim {
 
