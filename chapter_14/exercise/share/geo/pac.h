@@ -1,11 +1,11 @@
 #ifndef PACMAN_H
 #define PACMAN_H
-#include "../share/grp/grp_shp.h"
+#include "../grp/grp_shp.h"
 #include <algorithm>
 
 constexpr float pacman_open_jaw_angle{75};
 
-namespace ch14_e10 {
+namespace pac {
 
 enum class Pacman_dir { Up = -1, Right, Down, Left };
 
@@ -53,6 +53,6 @@ public:
 
 //------------------------------------------------------------------------------
 
-} // namespace ch14_e10
+} // namespace pac
 
 #endif // PACMAN_H

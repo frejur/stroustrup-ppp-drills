@@ -1,6 +1,6 @@
 #ifndef PNP_H
 #define PNP_H
-#include "e10_pac.h"
+#include "../share/geo/pac.h"
 
 namespace ch14_e10 {
 
@@ -12,14 +12,14 @@ public:
 	Pac_and_pills(GLP start_pos,
 	              int radius,
 	              int jaw_state,
-	              Pacman_dir direction,
+	              pac::Pacman_dir direction,
 	              GLC pacman_color,
 	              GLC color);
 	;
 	void move(int offset_x, int offset_y) override;
 	int number_of_pills() const { return pills.number_of_elements(); };
 	void move_pacman(int offs_x, int offs_y) { pac.move(offs_x, offs_y); };
-	void set_pacman_direction(Pacman_dir ndir) { pac.set_direction(ndir); }
+	void set_pacman_direction(pac::Pacman_dir ndir) { pac.set_direction(ndir); }
 	void set_jaw_state(float jaw_state) { pac.set_jaw_state(jaw_state); };
 	float jaw_state() const { return pac.jaw_state(); }
 
@@ -40,10 +40,10 @@ public:
 private:
 	Graph_lib::Point start_p;
 	float start_jaw;
-	Pacman_dir start_dir;
+	pac::Pacman_dir start_dir;
 	bool pac_attached;
-	Pacman pac;
-	Pills pills;
+	pac::Pacman pac;
+	pac::Pills pills;
 };
 } // namespace ch14_e10
 

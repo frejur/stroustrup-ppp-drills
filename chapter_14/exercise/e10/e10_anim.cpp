@@ -6,16 +6,16 @@
 
 //------------------------------------------------------------------------------
 
-void ch14_e10::Pacman_animator::add_move(int pill_index, Pacman_dir dir)
+void ch14_e10::Pacman_animator::add_move(int pill_index, pac::Pacman_dir dir)
 {
 	moves.push_back({pill_index, dir});
 }
 
-std::pair<int, ch14_e10::Pacman_dir> ch14_e10::Pacman_animator::get_move(
+std::pair<int, pac::Pacman_dir> ch14_e10::Pacman_animator::get_move(
     int pill_index)
 {
 	int idx = -1; // Returns {-1, dir} if no move is found
-	Pacman_dir dir = static_cast<Pacman_dir>(0);
+	pac::Pacman_dir dir = static_cast<pac::Pacman_dir>(0);
 	for (int i = 0; i < moves.size(); ++i) {
 		if (moves[i].first == pill_index) {
 			idx = i;
@@ -73,7 +73,7 @@ void ch14_e10::Pacman_animator::animate()
 	}
 
 	if (ontop_of_pill || passes_pill) {
-		std::pair<int, Pacman_dir> m = get_move(pill_count);
+		std::pair<int, pac::Pacman_dir> m = get_move(pill_count);
 		if (m.first > -1) {
 			p.set_pacman_direction(m.second);
 			new_pos.x = pill_pos.x;

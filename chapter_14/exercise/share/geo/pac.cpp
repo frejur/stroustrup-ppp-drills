@@ -1,8 +1,8 @@
 #define _USE_MATH_DEFINES
-#include "e10_pac.h"
+#include "pac.h"
 #include <cmath>
 
-void ch14_e10::Pacman::draw_lines() const
+void pac::Pacman::draw_lines() const
 {
 	int rr = radius();
 	float full_a{pacman_open_jaw_angle * jaw};

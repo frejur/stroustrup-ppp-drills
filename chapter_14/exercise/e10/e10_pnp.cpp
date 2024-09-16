@@ -3,7 +3,7 @@
 ch14_e10::Pac_and_pills::Pac_and_pills(Graph_lib::Point start_pos,
                                        int radius,
                                        int jaw_state,
-                                       Pacman_dir direction,
+                                       pac::Pacman_dir direction,
                                        Graph_lib::Color pacman_color,
                                        Graph_lib::Color pill_color)
     : Graph_lib::Shape()
@@ -60,13 +60,13 @@ void ch14_e10::Pac_and_pills::add_pill(Graph_lib::Point pos)
 Graph_lib::Point ch14_e10::Pac_and_pills::direction_vector() const
 {
 	switch (pac.direction()) {
-	case Pacman_dir::Up:
+	case pac::Pacman_dir::Up:
 		return {0, -1};
-	case Pacman_dir::Right:
+	case pac::Pacman_dir::Right:
 		return {1, 0};
-	case Pacman_dir::Down:
+	case pac::Pacman_dir::Down:
 		return {0, 1};
-	case Pacman_dir::Left:
+	case pac::Pacman_dir::Left:
 	default:
 		return {-1, 0};
 	}

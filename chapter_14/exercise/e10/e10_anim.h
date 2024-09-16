@@ -1,7 +1,7 @@
 #ifndef E10_ANIM_H
 #define E10_ANIM_H
 #include "../share/anim/anim_shp.h"
-#include "e10_pac.h"
+#include "../share/geo/pac.h"
 
 namespace ch14_e10 {
 
@@ -13,14 +13,14 @@ class Pacman_animator : public anim::Shape_animator
 {
 public:
 	using anim::Shape_animator::Shape_animator;
-	void add_move(int pill_index, Pacman_dir dir);
+	void add_move(int pill_index, pac::Pacman_dir dir);
 	;
 
 private:
-	std::pair<int, Pacman_dir> get_move(int pill_index);
+	std::pair<int, pac::Pacman_dir> get_move(int pill_index);
 	int pill_count;
 	bool jaw_open;
-	std::vector<std::pair<int, Pacman_dir>> moves;
+	std::vector<std::pair<int, pac::Pacman_dir>> moves;
 	void animate() override;
 	void finish() override;
 };

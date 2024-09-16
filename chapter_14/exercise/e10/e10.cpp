@@ -43,7 +43,7 @@ void ch14_e10::e10()
 	Pac_and_pills pnp_bg{{c.x - ps_win_w / 6 * 4, c.y - ps_win_w},
 	                     64,
 	                     1,
-	                     Pacman_dir::Down,
+	                     pac::Pacman_dir::Down,
 	                     inactive_color(),
 	                     inactive_color()};
 	for (int i = 0; i < 4; ++i) {
@@ -57,14 +57,14 @@ void ch14_e10::e10()
 	win.attach(pnp_bg);
 
 	Pacman_animator anim_pac{win, pnp_bg};
-	anim_pac.add_move(3, Pacman_dir::Right);
-	anim_pac.add_move(4, Pacman_dir::Up);
+	anim_pac.add_move(3, pac::Pacman_dir::Right);
+	anim_pac.add_move(4, pac::Pacman_dir::Up);
 
 	// Content visible in the Pseudo_window ------------------------------------
 	Pac_and_pills pnp_win{{c.x - ps_win_w / 6 * 4, c.y - ps_win_w},
 	                      64,
 	                      1,
-	                      Pacman_dir::Down,
+	                      pac::Pacman_dir::Down,
 	                      Graph_lib::Color::yellow,
 	                      Graph_lib::Color::white};
 	pnp_win.add_pill(pnp_bg.pill_position(3));
@@ -77,8 +77,8 @@ void ch14_e10::e10()
 	pnp_win.detach_pacman(); // Only move pills when the container moves
 
 	Pacman_animator anim_pills{win, pnp_win};
-	anim_pills.add_move(0, Pacman_dir::Right);
-	anim_pills.add_move(4, Pacman_dir::Up);
+	anim_pills.add_move(0, pac::Pacman_dir::Right);
+	anim_pills.add_move(4, pac::Pacman_dir::Up);
 
 	// Pseudo_window -----------------------------------------------------------
 	Graph_lib::Point ps_o{c.x - ps_win_w / 2, c.y - ps_win_h / 2 + ps_win_w / 3};

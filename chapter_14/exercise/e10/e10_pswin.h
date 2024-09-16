@@ -1,8 +1,8 @@
 #ifndef PSWIN_H
 #define PSWIN_H
 #include "../share/geo/box.h"
+#include "../share/geo/pac.h"
 #include "../share/grp/grp_shp.h"
-#include "e10_pac.h"
 
 namespace ch14_e10 {
 
@@ -146,7 +146,7 @@ public:
 
 private:
 	BOX::Box frame;
-	Pacman icon;
+	pac::Pacman icon;
 	Graph_lib::Text title;
 	Minimize_button btn_min;
 	Maximize_button btn_max;

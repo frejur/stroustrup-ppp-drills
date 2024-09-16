@@ -21,12 +21,12 @@ add_executable(${T_THIS}
     
     ../share/geo/box.cpp ../share/geo/box.h
     ../share/geo/box_helpers.cpp ../share/geo/box_helpers.h
+    ../share/geo/pac.h ../share/geo/pac.cpp
 
     e10.cpp
     e10.h
     e10_anim.cpp e10_anim.h
     e10_pswin.h e10_pswin.cpp
-    e10_pac.h e10_pac.cpp
     e10_pnp.h e10_pnp.cpp
     )
 

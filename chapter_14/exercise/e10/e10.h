@@ -1,8 +1,8 @@
 #ifndef E10_H
 #define E10_H
 #include "../../lib/Graph.h"
+#include "../share/geo/pac.h"
 #include "e10_anim.h"
-#include "e10_pac.h"
 #include "e10_pnp.h"
 #include "e10_pswin.h"
 #include <string>
