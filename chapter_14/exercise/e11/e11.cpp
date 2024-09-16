@@ -21,7 +21,7 @@
 
 const std::string& info_click()
 {
-	static const std::string s{"Click on a node / leaf."};
+	static const std::string s{"Click on a node to display its address."};
 	return s;
 }
 
@@ -33,13 +33,13 @@ void e11_to_14()
 	constexpr bool ENABLE_DEBUG{false};
 	constexpr bool ENABLE_CLICK{true};
 
-	constexpr int win_w{ 640 };
-	constexpr int win_h{ 480 };
+	constexpr int win_w{864};
+	constexpr int win_h{480};
 	GL::Point c{ static_cast<int>(win_w*0.5), static_cast<int>(win_h*0.5) };
 	Debug_window win{{10, 10},
 	                 win_w,
 	                 win_h,
-	                 "Baby's got mono",
+	                 "Noodling around",
 	                 ENABLE_DEBUG,
 	                 ENABLE_CLICK};
 
@@ -48,13 +48,29 @@ void e11_to_14()
 	Graph_lib::Text info{{64, 32}, info_click()};
 	win.attach(info);
 
-	Binary_tree bt{{c.x, 50}, 5};
-	win.attach(bt);
+	Circle_binary_tree cbt{{c.x, 50}, 5, 15};
+	cbt.set_line_type(Line_type::Down_arrow);
+	win.attach(cbt);
+
+	Box_binary_tree bbt{{c.x, 290}, 3, 20};
+	bbt.set_line_type(Line_type::Up_arrow);
+	win.attach(bbt);
 
 	while (win.shown()) {
 		if (win.click_has_been_registered()) {
-			// TODO: Highlight path of leaf, display address.
-			bt.move_sub_tree(1, -10, 10);
+			int pt = cbt.find_node_at_point(win.click_position());
+			if (pt > -1) {
+				std::string a = cbt.index_to_address(pt);
+				std::string lab = (pt == 0) ? "root" : a;
+				cbt.set_label(cbt.index_to_address(pt), lab);
+			}
+
+			pt = bbt.find_node_at_point(win.click_position());
+			if (pt > -1) {
+				std::string a = bbt.index_to_address(pt);
+				std::string lab = (pt == 0) ? "root" : a;
+				bbt.set_label(bbt.index_to_address(pt), lab);
+			}
 		}
 		win.wait_for_click();
 	}

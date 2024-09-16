@@ -14,6 +14,8 @@ add_executable(${T_THIS}
     ../../lib/Window.h
     ../../lib/Window.cpp
     ../../lib/Debug_window.h
+    ../share/geo/box.h ../share/geo/box.cpp
+    ../share/help/helpers.h ../share/help/helpers.cpp
     e11.cpp
     binary_tree.h binary_tree.cpp
 )
