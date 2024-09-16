@@ -51,6 +51,8 @@ public:
 	int height() const { return h; };
 	int corner_radius() const { return crv_radius; };
 	Graph_lib::Point bbox_origin() const;
+	void updateSize(int hh, int ww);
+	void updateSize(const Graph_lib::Point& o, const Graph_lib::Point& e);
 
 	int dir_idx(const Graph_lib::Point& o, const Graph_lib::Point& e) const;
 
@@ -71,8 +73,8 @@ private:
 
 	void initRadius(CrvMethod m, double ratio_or_radius, double radius_max);
 
-	void setSize(const Graph_lib::Point& o, const Graph_lib::Point& e);
 	void setSize(int hh, int ww);
+	void setSize(const Graph_lib::Point& o, const Graph_lib::Point& e);
 
 	void updateCornerPoints(const Graph_lib::Point& o,
 	                        const Graph_lib::Point& e);

@@ -19,10 +19,10 @@ Box::Box(Graph_lib::Point o,
     errorIfZeroArea(o, e);
 
     setSize(o, e);
-    updateCornerPoints(o, e);
+	updateCornerPoints(o, e);
 
-    int radius_max{ getMaxRadius() };
-    initRadius(m, crv_ratio, radius_max);
+	int radius_max{getMaxRadius()};
+	initRadius(m, crv_ratio, radius_max);
 }
 
 Box::Box(
@@ -37,11 +37,10 @@ Box::Box(
     errorIfZeroArea(w, h);
 
     setSize(w, h);
+	updateCornerPoints(o, {o.x + w, o.y + h});
 
-    updateCornerPoints(o, { o.x + w, o.y + h });
-
-    int radius_max{ getMaxRadius() };
-    initRadius(m, crv_ratio, radius_max);
+	int radius_max{getMaxRadius()};
+	initRadius(m, crv_ratio, radius_max);
 }
 
 void Box::initRadius(CrvMethod m, double ratio_or_radius, double radius_max)
@@ -59,8 +58,7 @@ void Box::initRadius(CrvMethod m, double ratio_or_radius, double radius_max)
     }
 }
 
-void Box::setSize(
-    const Graph_lib::Point& o, const Graph_lib::Point& e)
+void Box::setSize(const Graph_lib::Point& o, const Graph_lib::Point& e)
 {
     w = std::abs(o.x - e.x);
     h = std::abs(o.y - e.y);
@@ -68,6 +66,12 @@ void Box::setSize(
         throw std::logic_error(
             "After setting the size of Box, area is zero");
     }
+}
+
+void Box::updateSize(const Graph_lib::Point& o, const Graph_lib::Point& e)
+{
+	setSize(o, e);
+	updateCornerPoints(o, e);
 }
 
 void Box::setSize(int ww, int hh)
@@ -78,6 +82,13 @@ void Box::setSize(int ww, int hh)
         throw std::logic_error(
             "After setting the size of Box, area is zero");
     }
+}
+
+void Box::updateSize(int ww, int hh)
+{
+	setSize(ww, hh);
+	updateCornerPoints(bbox_origin(),
+	                   {bbox_origin().x + w, bbox_origin().y + h});
 }
 
 int Box::getMaxRadius() const {
