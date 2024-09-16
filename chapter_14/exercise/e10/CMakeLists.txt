@@ -28,7 +28,7 @@ add_executable(${T_THIS}
     e10_anim.cpp e10_anim.h
     e10_pswin.h e10_pswin.cpp
     e10_pnp.h e10_pnp.cpp
-    )
+)
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
 target_include_directories(${T_THIS} PUBLIC ${FLTK_INCLUDE_DIRS})
