@@ -24,6 +24,8 @@ private:
 	const static std::map<PtID, std::pair<float, float>> dir_XY;
 };
 
+enum class ConnectionPointHelper::PtID { NW, N, NE, W, C, E, SW, S, SE };
+
 GL::Point nw(const Box& r);
 GL::Point n(const Box& r);
 GL::Point ne(const Box& r);

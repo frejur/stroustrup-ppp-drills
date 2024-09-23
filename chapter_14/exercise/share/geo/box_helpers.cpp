@@ -6,12 +6,6 @@
 
 using HLP = BOX::ConnectionPointHelper;
 
-enum class HLP::PtID {
-	NW, N, NE,
-	W, C, E,
-	SW, S, SE
-};
-
 const std::map<HLP::PtID, std::pair<float, float>> HLP::dir_XY {
 	{HLP::PtID::NW, {0.0, 0.0}},
 	{HLP::PtID::N,  {0.5, 0.0}},
