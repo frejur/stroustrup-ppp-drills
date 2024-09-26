@@ -20,11 +20,11 @@ fct::Fct::Fct(Fn f,
 fct::Fct::Fct(double (*f)(double),
               double r1,
               double r2,
-              Graph_lib::Point xy,
+              Graph_lib::Point orig,
               int count,
               double xscale,
               double yscale)
-    : Fct{static_cast<Fn>(f), r1, r2, xy, count, xscale, yscale}
+    : Fct(static_cast<Fn>(f), r1, r2, orig, count, xscale, yscale)
 {}
 
 //------------------------------------------------------------------------------
@@ -73,9 +73,9 @@ void fct::Fct::set_y_scale(double yscale)
 
 //------------------------------------------------------------------------------
 
-fct::Range fct::Fct::valid_range(int start, int end)
+fct::Range fct::Fct::valid_range(double start, double end)
 {
-	if (start - end <= 0) {
+	if (end - start <= 0) {
 		throw std::runtime_error("bad graphing range");
 	}
 	return {start, end};

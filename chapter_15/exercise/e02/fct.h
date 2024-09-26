@@ -8,11 +8,11 @@ using Fn = std::function<double(double)>;
 
 struct Range
 {
-	int r1;
-	int r2;
+	double r1;
+	double r2;
 };
 
-class Fct : Graph_lib::Shape
+class Fct : public Graph_lib::Shape
 {
 public:
 	Fct(Fn f,
@@ -22,14 +22,14 @@ public:
 	    int count = 100,
 	    double xscale = 25,
 	    double yscale = 25);
+	explicit Fct(double (*f)(double),
+	             double r1,
+	             double r2,
+	             Graph_lib::Point orig,
+	             int count = 100,
+	             double xscale = 25,
+	             double yscale = 25);
 
-	Fct(double (*f)(double),
-	    double r1,
-	    double r2,
-	    Graph_lib::Point orig,
-	    int count = 100,
-	    double xscale = 25,
-	    double yscale = 25);
 	void set_function(Fn f);
 	;
 	void set_function(double (*f)(double));
@@ -58,7 +58,7 @@ private:
 	void upd();
 
 	// Invalid throws exception
-	Range valid_range(int start, int end);
+	Range valid_range(double start, double end);
 	int valid_count(int c);
 };
 
