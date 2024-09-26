@@ -3,19 +3,23 @@
 #include "../../lib/Window.h"
 #include "../../lib/Graph.h"
 
+// Chapter 15, exercise 2: Define a new Graph_lib::Function
+// - Copy & paste the code for Graph_lib::Function, call it 'Fct;.
+// - Have this version store the parameters passed to its constructor(s)
+// - Add setter functions.
+
 void e02()
 {
 	constexpr int win_w{ 640 };
 	constexpr int win_h{ 480 };
 	Graph_lib::Point c{static_cast<int>(win_w * 0.5),
 	                   static_cast<int>(win_h * 0.5)};
-	Graph_lib::Window win{{10, 10}, win_w, win_h, "Reset?"};
+	Graph_lib::Window win{{10, 10}, win_w, win_h, "We're fct!"};
 
 	fl_color(0);
 
-	Graph_lib::gui_main();	
+	Graph_lib::gui_main();
 }
-
 
 int main() {
 	try {

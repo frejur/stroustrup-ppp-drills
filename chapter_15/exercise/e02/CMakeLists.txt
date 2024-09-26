@@ -13,6 +13,7 @@ add_executable(${T_THIS}
     ../../lib/Window.cpp
 
     e02.cpp
+    fct.h fct.cpp
 )
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
