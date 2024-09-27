@@ -482,10 +482,14 @@ Function::Function(Fct f, double r1, double r2, Point xy,
     if (count <=0) error("non-positive graphing count");
     double dist = (r2-r1)/count;
     double r = r1;
-    for (int i = 0; i<count; ++i) {
-        add(Point{xy.x+int(r*xscale),xy.y-int(f(r)*yscale)});
-        r += dist;
-    }
+	double x{};
+	double y{};
+	for (int i = 0; i < count; ++i) {
+		x = xy.x + r * xscale;
+		y = xy.y - f(r) * yscale;
+		add({static_cast<int>(std::round(x)), static_cast<int>(std::round(y))});
+		r += dist;
+	}
 }
 
 Function::Function(double (*f)(double), double r1, double r2, Point xy,
