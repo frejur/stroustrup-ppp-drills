@@ -99,7 +99,7 @@ void e04()
 	constexpr int scale_y{notch_sz * 2};
 
 	Graph_lib::Color fn_sin_col{Graph_lib::Color::dark_green};
-	Graph_lib::Function fn_sin{std::sin,
+	Graph_lib::Function fn_sin{[](double x) { return std::sin(x); },
 	                           range_start,
 	                           range_end,
 	                           {origin_x, origin_y},
@@ -121,7 +121,7 @@ void e04()
 	win.attach(lb_sin);
 
 	Graph_lib::Color fn_cos_col{Graph_lib::Color::dark_red};
-	Graph_lib::Function fn_cos{std::cos,
+	Graph_lib::Function fn_cos{[](double x) { return std::cos(x); },
 	                           range_start,
 	                           range_end,
 	                           {origin_x, origin_y},
