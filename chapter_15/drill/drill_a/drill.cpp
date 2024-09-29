@@ -136,7 +136,7 @@ void drill()
 	win.attach(fn_square);
 
 	const Graph_lib::Color fn_cos_col{Graph_lib::Color::blue};
-	Graph_lib::Function fn_cos{std::cos,
+	Graph_lib::Function fn_cos{[](double x) { return std::cos(x); },
 	                           range_start,
 	                           range_end,
 	                           {origin_x, origin_y},
