@@ -492,11 +492,11 @@ Function::Function(Fct f, double r1, double r2, Point xy,
 	}
 }
 
-Function::Function(double (*f)(double), double r1, double r2, Point xy,
-		int count, double xscale, double yscale): 
-			Function{static_cast<Fct>(f),r1,r2,xy,count,xscale,yscale}
-{
-}
+// Function::Function(double (*f)(double), double r1, double r2, Point xy,
+// 		int count, double xscale, double yscale):
+// 			Function{static_cast<Fct>(f),r1,r2,xy,count,xscale,yscale}
+// {
+// }
 
 //------------------------------------------------------------------------------
 
