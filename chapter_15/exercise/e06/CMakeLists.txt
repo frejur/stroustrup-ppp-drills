@@ -14,10 +14,10 @@ add_executable(${T_THIS}
 
     e06.cpp
     
-    ../share/bar_chart.h ../share/bar_chart.cpp
-    ../share/bar.cpp
+    ../share/chart/bar_chart.h ../share/chart/bar_chart.cpp
+    ../share/chart/bar.cpp
     ../share/ch15_helpers.h ../share/ch15_helpers.cpp
-    ../share/nval_pair.h ../share/nval_pair.cpp
+    ../share/parse/nval_pair.h ../share/parse/nval_pair.cpp
 )
 
 configure_file(txt/heights.txt heights.txt COPYONLY)

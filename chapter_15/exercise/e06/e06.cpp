@@ -1,7 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "../../lib/Window.h"
-#include "../share/bar_chart.h"
 #include "../share/ch15_helpers.h"
+#include "../share/chart/bar_chart.h"
 
 // Chapter 15, exercise 6 to 8: Bar charts
 
