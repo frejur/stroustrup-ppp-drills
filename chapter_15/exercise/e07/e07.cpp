@@ -1,4 +1,5 @@
 #define _USE_MATH_DEFINES
+#include "e07.h"
 #include "../../lib/Window.h"
 #include "../share/bar_chart.h"
 #include "../share/ch15_helpers.h"
@@ -7,6 +8,7 @@
 // Chapter 15, exercise 7: Bar chart from an external dataset.
 //                         Like the prev. exercise, only using another set
 //                         of values.
+//------------------------------------------------------------------------------
 
 inline const Graph_lib::Color& default_color()
 {
@@ -28,61 +30,7 @@ inline const std::string& name_value_pairs_filename()
 
 //------------------------------------------------------------------------------
 
-struct Distr_height
-{
-	int height;
-	int count;
-};
-
-std::ostream& operator<<(std::ostream& os, const Distr_height h)
-{
-	os << "(\"" << h.height << "\", " << h.count << ')' << '\n';
-	return os;
-}
-
-std::vector<Distr_height> get_distr_heights(CSV_parser& p,
-                                            const std::string& column_name)
-{
-	std::vector<Distr_height> distr_h;
-	p.perform_action_on({column_name},
-	                    [&distr_h, &column_name](CSV_value_vector a) {
-		                    double h{a.as_double(column_name)};
-		                    if (h > 0) {
-			                    int rounded_h{static_cast<int>(
-			                        std::round(h * 2 / 10) * 10 / 2)};
-			                    int match = -1;
-			                    for (int i = 0; i < distr_h.size(); ++i) {
-				                    if (rounded_h == distr_h[i].height) {
-					                    match = i;
-					                    break;
-				                    }
-			                    }
-			                    if (match > -1) {
-				                    ++distr_h[match].count;
-			                    } else {
-				                    distr_h.push_back({rounded_h, 1});
-			                    }
-		                    }
-	                    });
-	return distr_h;
-}
-
-void save_distr_heights_to_file(const std::vector<Distr_height>& heights,
-                                const std::string& filename)
-{
-	std::ofstream ofs{filename};
-	if (!ofs) {
-		throw std::runtime_error("Could not open file " + filename
-		                         + " for writing");
-	}
-	for (const Distr_height& h : heights) {
-		ofs << h;
-	}
-}
-
-//------------------------------------------------------------------------------
-
-void e07()
+void ch15_e07::e07()
 {
 	fl_color(default_color().as_int());
 
@@ -116,7 +64,7 @@ void e07()
 
 int main()
 try {
-	e07();
+	ch15_e07::e07();
 	return 0;
 } catch (const std::exception& e) {
 	std::cerr << "Error: " << e.what() << '\n';

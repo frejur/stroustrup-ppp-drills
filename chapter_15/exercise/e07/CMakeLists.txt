@@ -12,7 +12,8 @@ add_executable(${T_THIS}
     ../../lib/Window.h
     ../../lib/Window.cpp
 
-    e07.cpp
+    e07.h e07.cpp
+    e07_helpers.cpp
     
     ../share/bar_chart.h ../share/bar_chart.cpp
     ../share/bar.cpp
