@@ -1,6 +1,6 @@
 #include "ch15_helpers.h"
-#include "bar_chart.h"
-#include "nval_pair.h"
+#include "chart/bar_chart.h"
+#include "parse/nval_pair.h"
 
 int ch15_hlp::calc_lb_w(const std::string& txt, Graph_lib::Font f, int f_sz)
 {

@@ -1,9 +1,9 @@
 #define _USE_MATH_DEFINES
 #include "e07.h"
 #include "../../lib/Window.h"
-#include "../share/bar_chart.h"
 #include "../share/ch15_helpers.h"
-#include "../share/csv_parser.h"
+#include "../share/chart/bar_chart.h"
+#include "../share/parse/csv_parser.h"
 
 // Chapter 15, exercise 7: Bar chart from an external dataset.
 //                         Like the prev. exercise, only using another set

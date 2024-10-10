@@ -1,5 +1,5 @@
+#include "../ch15_helpers.h"
 #include "bar_chart.h"
-#include "ch15_helpers.h"
 
 barch::Bar::Bar(const Bar_chart& parent_chart, const string& label, double value)
     : par(parent_chart)

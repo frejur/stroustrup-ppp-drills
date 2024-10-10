@@ -1,5 +1,5 @@
 #include "bar_chart.h"
-#include "ch15_helpers.h"
+#include "../ch15_helpers.h"
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>

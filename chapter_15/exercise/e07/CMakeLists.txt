@@ -15,11 +15,11 @@ add_executable(${T_THIS}
     e07.h e07.cpp
     e07_helpers.cpp
     
-    ../share/bar_chart.h ../share/bar_chart.cpp
-    ../share/bar.cpp
+    ../share/chart/bar_chart.h ../share/chart/bar_chart.cpp
+    ../share/chart/bar.cpp
     ../share/ch15_helpers.h ../share/ch15_helpers.cpp
-    ../share/nval_pair.h ../share/nval_pair.cpp
-    ../share/csv_parser.h ../share/csv_parser.cpp
+    ../share/parse/nval_pair.h ../share/parse/nval_pair.cpp
+    ../share/parse/csv_parser.h ../share/parse/csv_parser.cpp
 )
 
 configure_file(csv/nba_player_stats_2014_2015.csv nba_player_stats_2014_2015.csv COPYONLY)

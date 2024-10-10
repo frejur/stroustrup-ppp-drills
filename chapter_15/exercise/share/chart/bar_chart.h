@@ -1,6 +1,6 @@
 #ifndef BAR_CHART_H
 #define BAR_CHART_H
-#include "../../lib/Graph.h"
+#include "../../../lib/Graph.h"
 #include <string>
 
 namespace barch {
