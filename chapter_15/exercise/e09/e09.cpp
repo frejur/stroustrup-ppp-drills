@@ -1,11 +1,11 @@
 #define _USE_MATH_DEFINES
-#include "e07.h"
+#include "e09.h"
 #include "../../lib/Window.h"
 #include "../share/ch15_helpers.h"
 #include "../share/chart/bar_chart.h"
 #include "../share/parse/csv_parser.h"
 
-// Chapter 15, exercise 7: Bar chart from an external dataset.
+// Chapter 15, exercise 9: Bar chart from an external dataset.
 //                         Like the prev. exercise, only using another set
 //                         of values.
 //------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ inline const std::string& name_value_pairs_filename()
 
 //------------------------------------------------------------------------------
 
-void ch15_e07::e07()
+void ch15_e09::e09()
 {
 	fl_color(default_color().as_int());
 
@@ -63,7 +63,7 @@ void ch15_e07::e07()
 
 int main()
 try {
-	ch15_e07::e07();
+	ch15_e09::e09();
 	return 0;
 } catch (const std::exception& e) {
 	std::cerr << "Error: " << e.what() << '\n';

@@ -1,14 +1,14 @@
 #include "../share/parse/csv_parser.h"
-#include "e07.h"
+#include "e09.h"
 #include <fstream>
 
-std::ostream& operator<<(std::ostream& os, const ch15_e07::Distr_height h)
+std::ostream& operator<<(std::ostream& os, const ch15_e09::Distr_height h)
 {
 	os << "(\"" << h.height << "\", " << h.count << ')' << '\n';
 	return os;
 }
 
-void ch15_e07::distr_height(CSV_value_vector values,
+void ch15_e09::distr_height(CSV_value_vector values,
                             std::vector<Distr_height>& heights,
                             const std::string& height_column_name)
 {
@@ -30,7 +30,7 @@ void ch15_e07::distr_height(CSV_value_vector values,
 	}
 }
 
-std::vector<ch15_e07::Distr_height> ch15_e07::get_distr_heights(
+std::vector<ch15_e09::Distr_height> ch15_e09::get_distr_heights(
     CSV_parser& p, const std::string& column_name)
 {
 	std::vector<Distr_height> distr_h;
@@ -41,7 +41,7 @@ std::vector<ch15_e07::Distr_height> ch15_e07::get_distr_heights(
 	return distr_h;
 }
 
-void ch15_e07::save_distr_heights_to_file(
+void ch15_e09::save_distr_heights_to_file(
     const std::vector<Distr_height>& heights, const std::string& filename)
 {
 	std::ofstream ofs{filename};

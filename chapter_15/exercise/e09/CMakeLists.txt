@@ -1,6 +1,6 @@
-message("Processing /exercise/e07...")
+message("Processing /exercise/e09...")
 
-set(T_THIS "Chapter_15_exercise_07")
+set(T_THIS "Chapter_15_exercise_09")
 
 add_executable(${T_THIS}
     ../../lib/Graph.h
@@ -12,8 +12,8 @@ add_executable(${T_THIS}
     ../../lib/Window.h
     ../../lib/Window.cpp
 
-    e07.h e07.cpp
-    e07_helpers.cpp
+    e09.h e09.cpp
+    e09_helpers.cpp
     
     ../share/chart/chart.h ../share/chart/chart.cpp
     ../share/chart/canvas.h ../share/chart/canvas.cpp

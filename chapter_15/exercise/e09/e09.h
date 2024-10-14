@@ -1,5 +1,5 @@
-#ifndef E07_H
-#define E07_H
+#ifndef E09_H
+#define E09_H
 #include <iostream>
 #include <vector>
 
@@ -8,9 +8,9 @@ class CSV_value_vector;
 class CSV_parser;
 //------------------------------------------------------------------------------
 
-namespace ch15_e07 {
+namespace ch15_e09 {
 
-void e07();
+void e09();
 
 struct Distr_height
 {
@@ -28,8 +28,8 @@ std::vector<Distr_height> get_distr_heights(CSV_parser& p,
 void save_distr_heights_to_file(const std::vector<Distr_height>& heights,
                                 const std::string& filename);
 
-} // namespace ch15_e07
+} // namespace ch15_e09
 
-std::ostream& operator<<(std::ostream& os, const ch15_e07::Distr_height h);
+std::ostream& operator<<(std::ostream& os, const ch15_e09::Distr_height h);
 
-#endif // E07_H
+#endif // E09_H
