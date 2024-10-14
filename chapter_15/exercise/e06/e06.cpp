@@ -22,9 +22,8 @@ void e06()
 	const std::string win_lb{"Wuthering"};
 	Graph_lib::Window win{{0, 0}, win_w, win_h, win_lb};
 
-	barch::Bar_chart bc{{16, 16}, win_w - 32, win_h - 32};
+	chart::Bar_chart bc{{16, 16}, win_w - 32, win_h - 32};
 	bc.set_title("People grouped by their height");
-	bc.set_y_title("Count");
 	bc.set_x_title("Height (cm)");
 	bc.show_grid_lines();
 	ch15_hlp::add_name_value_pairs_from_file(bc, "heights.txt");
@@ -32,7 +31,6 @@ void e06()
 	bc.set_fill_colors({Graph_lib::Color::blue,
 	                    Graph_lib::Color::dark_blue,
 	                    Graph_lib::Color::yellow});
-	// bc.sort_by_label(barch::Order::Asc);
 	bc.set_max_value(25);
 	win.attach(bc);
 
