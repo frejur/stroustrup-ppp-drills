@@ -107,17 +107,17 @@ void chart::Bar_chart::sort_by_label(Order o)
 
 	if (o == Order::Asc) {
 		std::sort(oid_v.begin(), oid_v.end(), [this](int oid_a, int oid_b) {
-			return elem[oid_a].label() < elem[oid_b].label();
+			return elem[oid_a - 1].label() < elem[oid_b - 1].label();
 		});
 	} else {
 		std::sort(oid_v.begin(), oid_v.end(), [this](int oid_a, int oid_b) {
-			return elem[oid_a].label() > elem[oid_b].label();
+			return elem[oid_a - 1].label() > elem[oid_b - 1].label();
 		});
 	}
 
 	for (int j = 0; j < elem.size(); ++j) {
-		Bar& b{static_cast<Bar&>(elem[j])};
-		b.set_x_value(j);
+		Bar& b{static_cast<Bar&>(elem[oid_v[j] - 1])};
+		b.set_x_value(j + 1);
 	}
 	upd_colors();
 }

@@ -44,9 +44,8 @@ void ch15_e07::e07()
 	std::vector<Distr_height> distr_h{get_distr_heights(csv_p, height_col_name)};
 	save_distr_heights_to_file(distr_h, name_value_pairs_filename());
 
-	barch::Bar_chart bc{{16, 16}, win_w - 32, win_h - 32};
+	chart::Bar_chart bc{{16, 16}, win_w - 32, win_h - 32};
 	bc.set_title("Distributed height of NBA Players (2014-2015)");
-	bc.set_y_title("Count");
 	bc.set_x_title("Height (cm)");
 	bc.show_grid_lines();
 	ch15_hlp::add_name_value_pairs_from_file(bc, name_value_pairs_filename());
@@ -54,7 +53,7 @@ void ch15_e07::e07()
 	bc.set_fill_colors({Graph_lib::Color::dark_blue,
 	                    Graph_lib::Color::dark_red,
 	                    Graph_lib::Color::dark_green});
-	bc.sort_by_label(barch::Order::Asc);
+	bc.sort_by_label(chart::Order::Asc);
 	win.attach(bc);
 
 	Graph_lib::gui_main();
