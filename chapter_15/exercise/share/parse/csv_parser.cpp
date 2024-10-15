@@ -25,7 +25,7 @@ std::istream& operator>>(std::istream& is, CSV_value& val)
 		}
 		if (c == '"') {
 			if (open_quote) {
-				if ((is >> c) && ((c != ',') || !is.eof())) {
+				if ((is >> c) && ((c != ',') && !is.eof())) {
 					is.clear(std::ios_base::badbit);
 				} else {
 					val.value = name;
@@ -66,14 +66,7 @@ CSV_parser::CSV_parser(const std::string& filename)
 	std::getline(ifs, ln);
 	iss.str(ln);
 	CSV_value hdr;
-	while (true) {
-		iss >> hdr;
-		bool is_eof = iss.eof();
-		bool is_fail = iss.fail();
-		bool is_bad = iss.bad();
-		if (!iss) {
-			break;
-		}
+	while (iss >> hdr) {
 		cols.push_back(hdr.value);
 	}
 	if (cols.size() == 0) {
@@ -113,13 +106,13 @@ void CSV_parser::perform_action_on(
 		std::string ln;
 		std::getline(ifs, ln);
 		iss.str(ln);
-		CSV_value hdr;
+		CSV_value val;
 		int hdr_count = 0;
 		int hdr_idx = hdr_idx_v[hdr_count];
 		int val_idx = 0;
-		while (val_idx <= hdr_idx_v.back() && iss >> hdr) {
+		while (val_idx <= hdr_idx_v.back() && iss >> val) {
 			if (val_idx == hdr_idx) {
-				values.push_back(cols[hdr_idx], hdr.value);
+				values.push_back(cols[hdr_idx], val.value);
 				++hdr_count;
 				if (hdr_count < hdr_idx_v.size()) {
 					hdr_idx = hdr_idx_v[hdr_count];

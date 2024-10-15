@@ -56,13 +56,6 @@ public:
 	void sort_by_label(Order o = Order::Asc);
 	void sort_by_value(Order o = Order::Asc);
 
-	void refresh()
-	{
-		upd_min_max_val();
-		upd_layout();
-		cv.refresh();
-	};
-
 	virtual int label_padding() const override { return pad_v; };
 	virtual ch15_hlp::Text_alignment label_alignment() const override;
 

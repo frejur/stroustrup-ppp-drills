@@ -91,6 +91,13 @@ public:
 
 	void draw_lines() const override;
 
+	void refresh()
+	{
+		upd_min_max_val();
+		upd_layout();
+		cv.refresh();
+	};
+
 private:
 	struct Min_max_vals
 	{
