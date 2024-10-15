@@ -7,6 +7,10 @@ std::istream& operator>>(std::istream& is, CSV_value& val)
 {
 	char c;
 	is >> c;
+	if (!is) {
+		return is; // Note: Also catches manually cleared eofbit
+	}
+
 	if (c == ',') {
 		val.value = "";
 		return is;
@@ -16,9 +20,12 @@ std::istream& operator>>(std::istream& is, CSV_value& val)
 	std::string name = (open_quote) ? "" : std::string{c};
 	while (is) {
 		is.get(c);
+		if (is.eof()) {
+			break;
+		}
 		if (c == '"') {
 			if (open_quote) {
-				if ((is >> c) && c != ',') {
+				if ((is >> c) && ((c != ',') || !is.eof())) {
 					is.clear(std::ios_base::badbit);
 				} else {
 					val.value = name;
@@ -38,6 +45,9 @@ std::istream& operator>>(std::istream& is, CSV_value& val)
 	if (open_quote) {
 		is.clear(std::ios_base::badbit);
 	} else {
+		if (is.eof()) {
+			is.clear(); // Manually clears eofbit to signal success
+		}
 		val.value = name;
 	}
 
@@ -56,7 +66,14 @@ CSV_parser::CSV_parser(const std::string& filename)
 	std::getline(ifs, ln);
 	iss.str(ln);
 	CSV_value hdr;
-	while (iss >> hdr) {
+	while (true) {
+		iss >> hdr;
+		bool is_eof = iss.eof();
+		bool is_fail = iss.fail();
+		bool is_bad = iss.bad();
+		if (!iss) {
+			break;
+		}
 		cols.push_back(hdr.value);
 	}
 	if (cols.size() == 0) {
