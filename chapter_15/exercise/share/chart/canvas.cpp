@@ -345,7 +345,17 @@ void chart::Canvas::draw_grid_line(int px_val, Axis a) const
 	long double max = (a == Axis::X) ? x_max_val : y_max_val;
 	int limit = (a == Axis::X) ? top_left_corner().x + w
 	                           : top_left_corner().y + h;
-	Graph_lib::Point tl = (min == 0 || max == 0) ? origin() : top_left_corner();
+	Graph_lib::Point tl;
+	if (min == 0 || max == 0) {
+		if (a == Axis::X) {
+			tl = origin();
+		} else {
+			tl = top_left_corner();
+			limit -= (h - (origin().y - tl.y));
+		}
+	} else {
+		tl = top_left_corner();
+	}
 	if (a == Axis::Y) {
 		fl_line(px_val, tl.y, px_val, tl.y + (limit - tl.y));
 	} else {

@@ -156,6 +156,9 @@ chart::Chart::Chart(Graph_lib::Point top_left, int width, int height)
     , show_fr(false)
     , show_lb(false)
 
+    // Toggle refresh
+    , enable_refr(true)
+
     // Appearance
     , ls(default_line_style())
     , title_fnt(default_font())

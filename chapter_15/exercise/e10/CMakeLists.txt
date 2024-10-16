@@ -15,9 +15,12 @@ add_executable(${T_THIS}
     e10.h e10.cpp
     e10_helpers.cpp
     
+    ../share/chart/bar.cpp
+    ../share/chart/bar_chart.cpp ../share/chart/bar_chart.h
     ../share/chart/chart.h ../share/chart/chart.cpp
     ../share/chart/canvas.h ../share/chart/canvas.cpp
     ../share/chart/scatter_plot.h ../share/chart/scatter_plot.cpp
+    ../share/chart/plot_pt.cpp
     ../share/chart/elem.h ../share/chart/elem.cpp
     ../share/ch15_helpers.h ../share/ch15_helpers.cpp
     ../share/parse/nval_pair.h ../share/parse/nval_pair.cpp

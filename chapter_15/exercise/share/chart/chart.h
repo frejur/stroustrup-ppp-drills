@@ -91,11 +91,16 @@ public:
 
 	void draw_lines() const override;
 
+	// Refresh
+	void enable_automatic_refresh() { enable_refr = true; };
+	void disable_automatic_refresh() { enable_refr = false; };
 	void refresh()
 	{
-		upd_min_max_val();
-		upd_layout();
-		cv.refresh();
+		if (enable_refr) {
+			upd_min_max_val();
+			upd_layout();
+			cv.refresh();
+		}
 	};
 
 private:
@@ -139,6 +144,9 @@ protected:
 	// Visibility toggles
 	bool show_fr;
 	bool show_lb;
+
+	// Toggle refresh
+	bool enable_refr;
 
 	// Appearance
 	Graph_lib::Line_style ls; // hides base class Line_style

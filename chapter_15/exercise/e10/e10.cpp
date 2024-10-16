@@ -2,6 +2,7 @@
 #include "e10.h"
 #include "../../lib/Window.h"
 #include "../share/ch15_helpers.h"
+#include "../share/chart/scatter_plot.h"
 #include "../share/parse/csv_parser.h"
 
 // Chapter 15, exercise 10: Collect data unsuitable for a Line or Bar Graph and
@@ -32,8 +33,8 @@ void ch15_e10::e10()
 {
 	fl_color(default_color().as_int());
 
-	constexpr int win_w{640};
-	constexpr int win_h{320};
+	constexpr int win_w{1024};
+	constexpr int win_h{780};
 	const std::string win_lb{"Scatter plot, I choose you!"};
 	Graph_lib::Window win{{0, 0}, win_w, win_h, win_lb};
 
@@ -47,20 +48,20 @@ void ch15_e10::e10()
 	                               "Legendary"};
 	std::vector<Pokemon_stats> stats{get_pokemon_stats(csv_p, col_names)};
 	save_pokemon_stats_to_file(stats, plot_points_filename());
-	/*
 
-	chart::Bar_chart bc{{16, 16}, win_w - 32, win_h - 32};
-	bc.set_title("Distributed height of NBA Players (2014-2015)");
-	bc.set_x_title("Height (cm)");
-	bc.show_grid_lines();
-	ch15_hlp::add_name_value_pairs_from_file(bc, name_value_pairs_filename());
-	bc.set_unit(5);
-	bc.set_fill_colors({Graph_lib::Color::dark_blue,
-	                    Graph_lib::Color::dark_red,
-	                    Graph_lib::Color::dark_green});
-	bc.sort_by_label(chart::Order::Asc);
-	win.attach(bc);
-*/
+	chart::Scatter_plot sp{{16, 16}, win_w - 32, win_h - 32};
+	sp.set_title("Pokemon stats");
+	sp.set_x_title("Attack + Sp. Attack");
+	sp.set_y_title("Defence + Sp. Defence");
+	sp.show_horizontal_grid_lines();
+	sp.show_vertical_grid_lines();
+	add_pokemon_plot_points_from_file(sp, plot_points_filename());
+	sp.set_x_unit(100);
+	sp.set_y_unit(100);
+	sp.set_x_max_value(425);
+	sp.set_y_max_value(475);
+	sp.refresh();
+	win.attach(sp);
 
 	Graph_lib::gui_main();
 }
