@@ -1,6 +1,6 @@
 #define _USE_MATH_DEFINES
 #include "../../lib/Window.h"
-#include "../share/ch15_helpers.h"
+#include "../share/barch_helpers.h"
 #include "../share/chart/bar_chart.h"
 
 // Chapter 15, exercise 6 to 8: Bar charts
@@ -26,7 +26,7 @@ void e06()
 	bc.set_title("People grouped by their height");
 	bc.set_x_title("Height (cm)");
 	bc.show_grid_lines();
-	ch15_hlp::add_name_value_pairs_from_file(bc, "heights.txt");
+	barch_hlp::add_name_value_pairs_from_file(bc, "heights.txt");
 	bc.set_unit(5);
 	bc.set_fill_colors({Graph_lib::Color::blue,
 	                    Graph_lib::Color::dark_blue,

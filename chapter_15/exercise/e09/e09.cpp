@@ -1,7 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "e09.h"
 #include "../../lib/Window.h"
-#include "../share/ch15_helpers.h"
+#include "../share/barch_helpers.h"
 #include "../share/chart/bar_chart.h"
 #include "../share/parse/csv_parser.h"
 
@@ -48,7 +48,7 @@ void ch15_e09::e09()
 	bc.set_title("Distributed height of NBA Players (2014-2015)");
 	bc.set_x_title("Height (cm)");
 	bc.show_grid_lines();
-	ch15_hlp::add_name_value_pairs_from_file(bc, name_value_pairs_filename());
+	barch_hlp::add_name_value_pairs_from_file(bc, name_value_pairs_filename());
 	bc.set_unit(5);
 	bc.set_fill_colors({Graph_lib::Color::dark_blue,
 	                    Graph_lib::Color::dark_red,
