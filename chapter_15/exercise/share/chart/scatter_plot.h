@@ -19,7 +19,6 @@ public:
 	virtual void draw_lines() const override;
 
 private:
-	void draw_point(Graph_lib::Point xy, Point_shape_type t, int pt_sz) const;
 };
 
 class Scatter_plot : public Chart
@@ -56,6 +55,10 @@ private:
 		return Point_shape_type::Point;
 	};
 };
+
+//------------------------------------------------------------------------------
+
+void draw_plot_point(Graph_lib::Point xy, Point_shape_type t, int pt_sz);
 
 } // namespace chart
 

@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "e10.h"
 #include "../../lib/Window.h"
+#include "../share/chart/legend.h"
 #include "../share/chart/scatter_plot.h"
 #include "../share/parse/csv_parser.h"
 
@@ -106,6 +107,27 @@ void ch15_e10::e10()
 	sp.set_shape_type_callback(shape_type_by_legendary);
 	add_pokemon_plot_points_from_file(sp, plot_points_filename());
 	win.attach(sp);
+
+	//	Add legend
+	constexpr int lbox_y{96};
+	constexpr int lbox_r_pad{64};
+	chart::Legend_box lbox_col{{0, lbox_y}, 18, chart::Legend_flow::Vertical};
+	for (int i = 0; i < pokemon_regions().size(); ++i) {
+		lbox_col.add_color_legend(pokemon_regions().at(i),
+		                          pokemon_region_colors().at(i));
+	}
+	int lbox_col_w{lbox_col.width()};
+	int lbox_col_target_x{win_w - lbox_col_w - lbox_r_pad};
+	lbox_col.move(lbox_col_target_x, 0);
+	win.attach(lbox_col);
+
+	chart::Legend_box lbox_shp{{0, lbox_y}, 18, chart::Legend_flow::Horizontal};
+	lbox_shp.add_shape_legend("Regular", chart::Point_shape_type::Circle);
+	lbox_shp.add_shape_legend("Legendary", chart::Point_shape_type::Diamond);
+	int lbox_shp_w{lbox_shp.width()};
+	int lbox_shp_target_x{win_w - lbox_col_w - lbox_r_pad - lbox_shp_w - 16};
+	lbox_shp.move(lbox_shp_target_x, 0);
+	win.attach(lbox_shp);
 
 	Graph_lib::gui_main();
 }

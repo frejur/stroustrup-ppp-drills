@@ -16,13 +16,11 @@ void chart::Plot_point::draw_lines() const
 	fl_color(col.as_int());
 	Graph_lib::Point xy{par.position_from_value(x_value(), y_value())};
 	Point_shape_type t{plot.plot_point_shape_type(*this)};
-	draw_point(xy, t, plot.plot_point_size());
+	draw_plot_point(xy, t, plot.plot_point_size());
 	fl_color(ocol.as_int());
 }
 
-void chart::Plot_point::draw_point(Graph_lib::Point xy,
-                                   Point_shape_type t,
-                                   int size) const
+void chart::draw_plot_point(Graph_lib::Point xy, Point_shape_type t, int size)
 {
 	int rad{static_cast<int>(std::round(size * 0.5))};
 	switch (t) {
