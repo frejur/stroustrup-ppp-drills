@@ -22,6 +22,7 @@ add_executable(${T_THIS}
     ../share/chart/scatter_plot.h ../share/chart/scatter_plot.cpp
     ../share/chart/plot_pt.cpp
     ../share/chart/elem.h ../share/chart/elem.cpp
+    ../share/chart/legend.cpp ../share/chart/legend.h
     ../share/ch15_helpers.h ../share/ch15_helpers.cpp
     ../share/parse/nval_pair.h ../share/parse/nval_pair.cpp
     ../share/parse/csv_parser.h ../share/parse/csv_parser.cpp

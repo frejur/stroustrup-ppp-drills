@@ -299,6 +299,9 @@ void chart::Chart::upd_graph()
 
 void chart::Chart::upd_min_max_val()
 {
+	if (elem.size() == 0) {
+		return;
+	}
 	Min_max_vals elem_min_max{min_max_vals_from_elements()};
 	Min_max_vals new_min_max = elem_min_max;
 	if (use_usr_x_min_val) {
@@ -314,9 +317,13 @@ void chart::Chart::upd_min_max_val()
 		new_min_max.y_max = (std::max)(elem_min_max.y_max, usr_min_max.y_max);
 	}
 	cv.set_x_min_value(new_min_max.x_min);
-	cv.set_x_max_value(new_min_max.x_max);
+	if (!(new_min_max.x_min == 0 && new_min_max.x_max == 0)) {
+		cv.set_x_max_value(new_min_max.x_max);
+	}
 	cv.set_y_min_value(new_min_max.y_min);
-	cv.set_y_max_value(new_min_max.y_max);
+	if (!(new_min_max.y_min == 0 && new_min_max.y_max == 0)) {
+		cv.set_y_max_value(new_min_max.y_max);
+	}
 }
 
 //------------------------------------------------------------------------------

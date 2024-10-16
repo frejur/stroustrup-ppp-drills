@@ -32,33 +32,10 @@ inline bool ch15_e10::str_to_bool(const std::string& s)
 
 std::string ch15_e10::region_from_generation(int gen)
 {
-	std::string r;
-	switch (gen) {
-	case 1:
-		r = "Kanto";
-		break;
-	case 2:
-		r = "Johto";
-		break;
-	case 3:
-		r = "Hoenn";
-		break;
-	case 4:
-		r = "Sinnoh";
-		break;
-	case 5:
-		r = "Unova";
-		break;
-	case 6:
-		r = "Kalos";
-		break;
-	default:
-		break;
-	}
-	if (r.empty()) {
+	if (gen < 1 || gen > pokemon_regions().size()) {
 		throw std::runtime_error("Invalid generation value");
 	}
-	return r;
+	return pokemon_regions()[gen - 1];
 }
 
 //------------------------------------------------------------------------------
@@ -259,4 +236,5 @@ void ch15_e10::add_pokemon_plot_points_from_file(chart::Scatter_plot& plot,
 	}
 
 	plot.enable_automatic_refresh();
+	plot.refresh();
 }

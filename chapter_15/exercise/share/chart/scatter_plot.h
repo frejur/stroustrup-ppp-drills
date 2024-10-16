@@ -5,7 +5,7 @@
 
 namespace chart {
 
-enum class Point_shape { Point, Circle, Triangle, Square };
+enum class Point_shape_type { Point, Circle, Diamond };
 
 class Scatter_plot; // Forward declare
 
@@ -19,11 +19,7 @@ public:
 	virtual void draw_lines() const override;
 
 private:
-	std::function<Graph_lib::Color()> cb_color;
-	std::function<Point_shape()> cb_shape;
-
-	Graph_lib::Color default_cb_color() { return color(); };
-	static Point_shape default_cb_shape() { return Point_shape::Point; };
+	void draw_point(Graph_lib::Point xy, Point_shape_type t, int pt_sz) const;
 };
 
 class Scatter_plot : public Chart
@@ -34,11 +30,31 @@ public:
 	             int height,
 	             int point_size = default_pt_sz);
 	void add(std::function<Chart_element*(const Scatter_plot&)> element_callback);
+	Graph_lib::Color plot_point_color(const Plot_point& pt) const;
+	void set_color_callback(
+	    std::function<Graph_lib::Color(const Plot_point&)> cb);
+	Point_shape_type plot_point_shape_type(const Plot_point& pt) const;
+	void set_shape_type_callback(
+	    std::function<Point_shape_type(const Plot_point&)> cb);
+	int plot_point_size() const { return pt_sz; };
+	void set_plot_point_size(int sz) { pt_sz = valid_pt_sz(sz); };
 
 private:
 	int pt_sz;
 	int valid_pt_sz(const int sz);
-	static constexpr int default_pt_sz{4};
+	static constexpr int default_pt_sz{16};
+
+	std::function<Graph_lib::Color(const Plot_point&)> cb_color;
+	std::function<Point_shape_type(const Plot_point&)> cb_shape_tp;
+
+	static Graph_lib::Color default_cb_color(const Plot_point& pt)
+	{
+		return pt.color();
+	};
+	static Point_shape_type default_cb_shape_tp(const Plot_point& pt)
+	{
+		return Point_shape_type::Point;
+	};
 };
 
 } // namespace chart

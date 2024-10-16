@@ -9,6 +9,17 @@ class CSV_value_vector;
 class CSV_parser;
 //------------------------------------------------------------------------------
 
+static const std::vector<std::string>& pokemon_regions()
+{
+	static const std::vector<std::string> r{"Kanto",
+	                                        "Johto",
+	                                        "Hoenn",
+	                                        "Sinnoh",
+	                                        "Unova",
+	                                        "Kalos"};
+	return r;
+}
+
 namespace ch15_e10 {
 
 void e10();
@@ -66,6 +77,7 @@ public:
 	    , is_leg(is_legendary)
 	    , reg(region){};
 	bool is_legendary() const { return is_leg; };
+	std::string region() const { return reg; };
 
 private:
 	bool is_leg;
@@ -76,6 +88,7 @@ void add_pokemon_plot_points_from_file(chart::Scatter_plot& plot,
                                        const std::string& filename);
 
 } // namespace ch15_e10
+//------------------------------------------------------------------------------
 
 std::ostream& operator<<(std::ostream& os, const ch15_e10::Pokemon_stats& stats);
 std::istream& operator>>(std::istream& is, ch15_e10::Pokemon_stats& stats);
