@@ -16,6 +16,10 @@ public:
 	void set_x_value(double x) { x_val = x; };
 	void set_y_value(double y) { y_val = y; };
 	void set_label(const std::string& l) { lb = l; };
+	virtual long double min_x_value() const { return x_value(); };
+	virtual long double max_x_value() const { return x_value(); };
+	virtual long double min_y_value() const { return y_value(); };
+	virtual long double max_y_value() const { return y_value(); };
 
 protected:
 	Chart_element(const Chart& parent_chart,

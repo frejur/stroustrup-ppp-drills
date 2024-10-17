@@ -15,7 +15,7 @@ add_executable(${T_THIS}
     e10.h e10.cpp
     e10_helpers.cpp
     
-    ../share/chart/bar.cpp
+    ../share/chart/bar.cpp ../share/chart/bar_pair.cpp
     ../share/chart/bar_chart.cpp ../share/chart/bar_chart.h
     ../share/chart/chart.h ../share/chart/chart.cpp
     ../share/chart/canvas.h ../share/chart/canvas.cpp

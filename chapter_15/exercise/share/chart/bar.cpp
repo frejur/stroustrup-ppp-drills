@@ -1,5 +1,18 @@
-#include "../ch15_helpers.h"
 #include "bar_chart.h"
+namespace {
+const Graph_lib::Color& default_color()
+{
+	static const Graph_lib::Color c{Graph_lib::Color::black,
+	                                Graph_lib::Color::Transparency::invisible};
+	return c;
+}
+
+const Graph_lib::Color& default_fill_color()
+{
+	static const Graph_lib::Color c{Graph_lib::Color::dark_blue};
+	return c;
+}
+} // namespace
 
 chart::Bar::Bar(const Bar_chart& parent_chart,
                 const string& label,
@@ -8,8 +21,67 @@ chart::Bar::Bar(const Bar_chart& parent_chart,
     : Chart_element::Chart_element(parent_chart, label, x_value, y_value)
 {}
 
-void chart::Bar::draw_lines() const
+Graph_lib::Color chart::Bar::bar_color(int bar_idx) const
 {
+	if (bar_idx < number_of_bars()) {
+		return col_v.at(bar_idx);
+	}
+	return default_color();
+}
+
+Graph_lib::Color chart::Bar::bar_fill_color(int bar_idx) const
+{
+	if (bar_idx < number_of_bars()) {
+		return fill_v.at(bar_idx);
+	}
+	return default_fill_color();
+}
+
+void chart::Bar::set_bar_color(Graph_lib::Color col, int bar_idx)
+{
+	init_colors();
+	col_v.at(bar_idx) = col;
+}
+
+void chart::Bar::set_bar_fill_color(Graph_lib::Color col, int bar_idx)
+{
+	init_colors();
+	fill_v.at(bar_idx) = col;
+}
+void chart::Bar::init_colors()
+{
+	if (col_v.empty()) {
+		col_v = std::vector<Graph_lib::Color>(number_of_bars(), default_color());
+	}
+	if (fill_v.empty()) {
+		fill_v = std::vector<Graph_lib::Color>(number_of_bars(),
+		                                       default_fill_color());
+	}
+};
+
+Graph_lib::Point chart::Bar::label_offset() const
+{
+	int offs_x = -1
+	             * static_cast<int>(std::round(
+	                 static_cast<const Bar_chart&>(par).bar_width() * 0.5));
+	int offs_y = par.origin().y - par.position_from_value(0, y_value()).y;
+	return {offs_x, offs_y};
+}
+
+//------------------------------------------------------------------------------
+
+chart::Bar_single::Bar_single(const Bar_chart& parent_chart,
+                              const string& label,
+                              long double x_value,
+                              long double y_value)
+    : Bar::Bar(parent_chart, label, x_value, y_value)
+{}
+
+void chart::Bar_single::draw_lines() const
+{
+	Graph_lib::Color c = color();
+	Graph_lib::Color cf = fill_color();
+
 	if (y_value() == 0
 	    || (!fill_color().visibility() && !color().visibility())) {
 		return;
@@ -32,13 +104,4 @@ void chart::Bar::draw_lines() const
 	}
 
 	draw_label();
-}
-
-Graph_lib::Point chart::Bar::label_offset() const
-{
-	int offs_x = -1
-	             * static_cast<int>(std::round(
-	                 static_cast<const Bar_chart&>(par).bar_width() * 0.5));
-	int offs_y = par.origin().y - par.position_from_value(0, y_value()).y;
-	return {offs_x, offs_y};
 }

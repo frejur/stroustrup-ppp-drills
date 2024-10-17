@@ -38,7 +38,17 @@ chart::Bar_chart::Bar_chart(Graph_lib::Point top_left,
 void chart::Bar_chart::add(const string& label, long double value)
 {
 	long double x = elem.size() + 1;
-	elem.push_back(new Bar(*this, label, x, value));
+	elem.push_back(new Bar_single(*this, label, x, value));
+
+	refresh();
+}
+
+void chart::Bar_chart::add(const string& label,
+                           long double value_a,
+                           long double value_b)
+{
+	long double x = elem.size() + 1;
+	elem.push_back(new Bar_pair(*this, label, x, value_a, value_b));
 
 	refresh();
 }
@@ -154,9 +164,13 @@ void chart::Bar_chart::upd_post_layout()
 
 void chart::Bar_chart::upd_colors()
 {
+	int col_idx = 0;
 	for (int i = 0; i < elem.size(); ++i) {
 		Bar& b{static_cast<Bar&>(elem[i])};
-		b.set_color(color_by_index(b.x_value() - 1));
-		b.set_fill_color(fill_color_by_index(b.x_value() - 1));
+		for (int j = 0; j < b.number_of_bars(); ++j) {
+			b.set_bar_color(color_by_index(col_idx), j);
+			b.set_bar_fill_color(fill_color_by_index(col_idx), j);
+			++col_idx;
+		}
 	}
 }

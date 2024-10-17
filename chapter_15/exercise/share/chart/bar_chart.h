@@ -6,7 +6,7 @@
 
 namespace chart {
 
-enum class Order { Asc, Desc };
+//------------------------------------------------------------------------------
 
 class Bar_chart; // Forward declare
 
@@ -17,11 +17,62 @@ public:
 	    const std::string& label,
 	    long double x_value,
 	    long double y_value);
-	void draw_lines() const override;
+	virtual int number_of_bars() const = 0;
+
+	// Hide base class color methods
+	Graph_lib::Color color() const { return bar_color(0); };
+	Graph_lib::Color fill_color() const { return bar_fill_color(0); };
+	void set_color(Graph_lib::Color col) { set_bar_color(col, 0); };
+	void set_fill_color(Graph_lib::Color col) { set_bar_fill_color(col, 0); };
+
+	Graph_lib::Color bar_color(int bar_idx) const;
+	Graph_lib::Color bar_fill_color(int bar_idx) const;
+	void set_bar_color(Graph_lib::Color col, int bar_idx);
+	void set_bar_fill_color(Graph_lib::Color col, int bar_index);
+
+protected:
+	std::vector<Graph_lib::Color> col_v;
+	std::vector<Graph_lib::Color> fill_v;
+
+	Graph_lib::Point label_offset() const;
+	void init_colors();
+};
+
+class Bar_single : public Bar
+{
+public:
+	Bar_single(const Bar_chart& parent_chart,
+	           const std::string& label,
+	           long double x_value,
+	           long double y_value);
+	virtual void draw_lines() const override;
+	virtual int number_of_bars() const override { return 1; };
 
 private:
-	virtual Graph_lib::Point label_offset() const override;
 };
+
+class Bar_pair : public Bar
+{
+public:
+	Bar_pair(const Bar_chart& parent_chart,
+	         const std::string& label,
+	         long double x_value,
+	         long double y_value_a,
+	         long double y_value_b);
+	long double y_value_a() const { return y_value(); };
+	long double y_value_b() const { return y_val_b; };
+	void set_y_value_a(double y) { set_y_value(y); };
+	void set_y_value_b(double y) { y_val_b = y; };
+	virtual void draw_lines() const override;
+	virtual int number_of_bars() const override { return 2; };
+
+private:
+	long double y_val_b;
+};
+
+//------------------------------------------------------------------------------
+
+enum class Order { Asc, Desc };
 
 class Bar_chart : public Chart
 {
@@ -31,8 +82,7 @@ public:
 	          int height,
 	          int bars_padding = 0);
 	void add(const std::string& label, long double value);
-
-	// void draw_lines() const override;
+	void add(const std::string& label, long double value_a, long double value_b);
 
 	void set_colors(std::initializer_list<Graph_lib::Color> cv);
 	void set_fill_colors(std::initializer_list<Graph_lib::Color> cv);

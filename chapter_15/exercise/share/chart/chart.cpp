@@ -332,12 +332,19 @@ chart::Chart::Min_max_vals chart::Chart::min_max_vals_from_elements() const
 {
 	Min_max_vals min_max;
 	for (int i = 0; i < elem.size(); ++i) {
-		long double x_val = elem[i].x_value();
-		long double y_val = elem[i].y_value();
-		min_max.x_min = (i == 0) ? x_val : (std::min)(x_val, min_max.x_min);
-		min_max.x_max = (i == 0) ? x_val : (std::max)(x_val, min_max.x_max);
-		min_max.y_min = (i == 0) ? y_val : (std::min)(y_val, min_max.y_min);
-		min_max.y_max = (i == 0) ? y_val : (std::max)(y_val, min_max.y_max);
+		long double x_min_val = elem[i].min_x_value();
+		long double y_min_val = elem[i].min_y_value();
+		min_max.x_min = (i == 0) ? x_min_val
+		                         : (std::min)(x_min_val, min_max.x_min);
+		min_max.y_min = (i == 0) ? y_min_val
+		                         : (std::min)(y_min_val, min_max.y_min);
+
+		long double x_max_val = elem[i].max_x_value();
+		long double y_max_val = elem[i].max_y_value();
+		min_max.y_max = (i == 0) ? y_max_val
+		                         : (std::max)(y_max_val, min_max.y_max);
+		min_max.x_max = (i == 0) ? x_max_val
+		                         : (std::max)(x_max_val, min_max.x_max);
 	}
 	min_max.x_min = (std::min)(min_max.x_min, 0.0L);
 	min_max.x_max = (std::max)(min_max.x_max, 0.0L);
