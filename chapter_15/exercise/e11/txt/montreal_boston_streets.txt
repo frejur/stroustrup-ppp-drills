@@ -1,0 +1,6 @@
+Street_name,		Montreal,	Boston
+"King Street",		350,		880
+"Queen Street",		400,		180
+"Bishop Street",	580,		100
+"Acorn Street",		70,		420
+"Oxford Street",	330,		130
