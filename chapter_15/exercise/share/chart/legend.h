@@ -1,6 +1,6 @@
 #ifndef LEGEND_H
 #define LEGEND_H
-#include "scatter_plot.h"
+#include "chart.h"
 
 namespace chart {
 

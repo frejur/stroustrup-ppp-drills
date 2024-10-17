@@ -206,6 +206,13 @@ enum class Chart::Upd_state {
 	All_done
 };
 
+//------------------------------------------------------------------------------
+
+enum class Point_shape_type { Point, Circle, Diamond };
+void draw_plot_point(Graph_lib::Point xy, Point_shape_type t, int pt_sz);
+
+//------------------------------------------------------------------------------
+
 } // namespace chart
 
 #endif // CHART_H

@@ -5,7 +5,6 @@
 
 namespace chart {
 
-enum class Point_shape_type { Point, Circle, Diamond };
 
 class Scatter_plot; // Forward declare
 
@@ -58,7 +57,6 @@ private:
 
 //------------------------------------------------------------------------------
 
-void draw_plot_point(Graph_lib::Point xy, Point_shape_type t, int pt_sz);
 
 } // namespace chart
 
