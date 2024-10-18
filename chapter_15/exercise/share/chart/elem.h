@@ -30,9 +30,11 @@ protected:
 	virtual void draw_label() const;
 	virtual Graph_lib::Point label_offset() const { return {0, 0}; };
 
-private:
+protected:
 	long double x_val;
 	long double y_val;
+
+private:
 	std::string lb;
 };
 } // namespace chart

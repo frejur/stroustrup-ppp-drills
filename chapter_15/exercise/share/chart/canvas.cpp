@@ -313,11 +313,14 @@ void chart::Canvas::draw_axis(Axis a) const
 	// line
 	int ocol = fl_color();
 	fl_color(color().as_int());
-	int limit = (a == Axis::X) ? top_left_corner().x + w : top_left_corner().y;
-	Graph_lib::Point tl = (min == 0 || max == 0) ? origin() : top_left_corner();
+	int limit = (a == Axis::X) ? top_left_corner().x + w
+	                           : top_left_corner().y + h;
+	Graph_lib::Point tl{top_left_corner()};
 	if (a == Axis::X) {
+		tl.x = (min < 0) ? tl.x : origin().x;
 		fl_line(tl.x, origin_.y, tl.x + (limit - tl.x), origin_.y);
 	} else {
+		tl.y = (max > 0) ? tl.y : origin().y;
 		fl_line(origin_.x, tl.y, origin_.x, tl.y + (limit - tl.y));
 	}
 	fl_color(ocol);

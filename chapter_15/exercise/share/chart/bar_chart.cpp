@@ -144,7 +144,6 @@ ch15_hlp::Text_alignment chart::Bar_chart::label_alignment() const
 void chart::Bar_chart::upd_post_layout()
 {
 	if (elem.size() == 0) {
-		pad_bars = 0;
 		return;
 	}
 	int pad = 0;

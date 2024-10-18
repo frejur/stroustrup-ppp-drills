@@ -61,10 +61,13 @@ public:
 	         long double y_value_b);
 	long double y_value_a() const { return y_value(); };
 	long double y_value_b() const { return y_val_b; };
+	virtual long double y_value_by_index(int bar_index) const;
 	void set_y_value_a(double y) { set_y_value(y); };
 	void set_y_value_b(double y) { y_val_b = y; };
 	virtual void draw_lines() const override;
 	virtual int number_of_bars() const override { return 2; };
+	virtual long double min_y_value() const override;
+	virtual long double max_y_value() const override;
 
 private:
 	long double y_val_b;
@@ -131,6 +134,7 @@ private:
 	void unset_y_min_value();            /*                         */
 	void unset_y_max_value();            /*                         */
 };
+
 } // namespace chart
 
 #endif // BAR_CHART_NEW_H
