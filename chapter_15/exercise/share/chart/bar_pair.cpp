@@ -34,9 +34,10 @@ void chart::Bar_pair::draw_lines() const
 	for (int i = 0; i < number_of_bars(); ++i) {
 		Graph_lib::Point tr{
 		    par.position_from_value(x_value(), y_value_by_index(i))};
+		tr.x -= bc.bar_width();
 		int tl_x = (i == number_of_bars() - 1)
-		               ? tr.x - bc.bar_width()
-		               : tr.x - (i * pad_sub_bar + (i + 1) * sub_bar_w);
+		               ? tr.x + bc.bar_width() - sub_bar_w
+		               : tr.x + (i * pad_sub_bar + i * sub_bar_w);
 		int h{std::abs(par.origin().y - tr.y)};
 		int tl_y{tr.y};
 
