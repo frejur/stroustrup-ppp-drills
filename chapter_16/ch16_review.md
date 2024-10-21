@@ -51,12 +51,12 @@ The book considers **control** to be "more descriptive, but less evocative".
 However, it does not name any particular systems that prefer this term over **widget**.
 
 ### Some examples of widgets?
-Window, Button, Menu, Inbox, Outbox
+Window, Button, Menu, In_box, Out_box
 
-### Situations where you would want to use an Inbox Widget
+### Situations where you would want to use an In_box Widget
 When you want to capture text input.
 
-### The type of the value stored in an Inbox Widget
+### The type of the value stored in an In_box Widget
 A string (Which can be interpreted as numerical input if needed).
 
 ### Situations where would you use a button
