@@ -1,7 +1,7 @@
 #include "ln_win.h"
 #include <iostream>
 
-// Drill A: Get the line-drawing program from 16.7 and get it to run (Add menu)
+// Drill B: Get the line-drawing program from 16.7 and get it to run (Add menu)
 
 int drill()
 {
