@@ -13,11 +13,13 @@ find_package(FLTK REQUIRED NO_MODULE)
 # Targets
 set(T_DRILL_A "Drill A")
 set(T_DRILL_B "Drill B")
+set(T_DRILL_C "Drill C")
 
 SET(SELECTED_TARGET ${T_DRILL_A} CACHE STRING "Selected target")
 set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
     ${T_DRILL_A}
     ${T_DRILL_B}
+    ${T_DRILL_C}
 )
 message("Building target: ${SELECTED_TARGET}")
 
@@ -27,4 +29,7 @@ if (
 elseif (
     ${SELECTED_TARGET} STREQUAL ${T_DRILL_B})
         add_subdirectory(${CMAKE_SOURCE_DIR}/drill/drill_b)
+elseif (
+    ${SELECTED_TARGET} STREQUAL ${T_DRILL_C})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/drill/drill_c)
 endif()
