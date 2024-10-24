@@ -40,19 +40,22 @@ private:
 class Shape_button : public Graph_lib::Button
 {
 public:
-	Shape_button(Graph_lib::Point top_left,
-	             int width,
-	             int height,
-	             const string& label,
-	             Graph_lib::Callback callback_fn);
+	explicit Shape_button(Graph_lib::Point top_left,
+	                      int width,
+	                      int height,
+	                      const string& label,
+	                      Graph_lib::Callback callback_fn,
+	                      Graph_lib::Color bg_color = default_fill_color());
 
-	Shape_button(Graph_lib::Point top_left,
-	             int normal_width,
-	             int normal_height,
-	             int active_width,
-	             int active_height,
-	             const string& label,
-	             Graph_lib::Callback callback_fn);
+	explicit Shape_button(Graph_lib::Point top_left,
+	                      int normal_width,
+	                      int normal_height,
+	                      int active_width,
+	                      int active_height,
+	                      const string& label,
+	                      Graph_lib::Callback callback_fn,
+	                      Graph_lib::Color bg_color = default_fill_color());
+	;
 
 	Graph_lib::Point position() const
 	{
@@ -119,6 +122,8 @@ private:
 	const int active_h;
 
 	Shape_button_state state() const { return st; };
+
+	static const Graph_lib::Color& default_fill_color();
 
 	Text_box box;              // Covers buttons, dictates appearance
 	Graph_lib::Button btn_act; // Active

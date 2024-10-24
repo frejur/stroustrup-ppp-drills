@@ -15,12 +15,6 @@ const Graph_lib::Line_style& default_style()
 	return s;
 };
 
-const Graph_lib::Color& default_fill_color()
-{
-	static Graph_lib::Color c{Graph_lib::Color(fl_rgb_color(120, 180, 180))};
-	return c;
-}
-
 const Graph_lib::Color& default_color()
 {
 	static Graph_lib::Color c{Graph_lib::Color::white};
@@ -28,20 +22,28 @@ const Graph_lib::Color& default_color()
 }
 } // namespace
 
+const Graph_lib::Color& shp_btn::Shape_button::default_fill_color()
+{
+	static Graph_lib::Color c{Graph_lib::Color(fl_rgb_color(120, 180, 180))};
+	return c;
+}
+
 //------------------------------------------------------------------------------
 
 shp_btn::Shape_button::Shape_button(Graph_lib::Point top_left,
                                     int width,
                                     int height,
                                     const string& label,
-                                    Graph_lib::Callback callback_fn)
+                                    Graph_lib::Callback callback_fn,
+                                    Graph_lib::Color bg_color)
     : Shape_button::Shape_button(top_left,
                                  width,
                                  height,
                                  width,
                                  height,
                                  label,
-                                 callback_fn)
+                                 callback_fn,
+                                 bg_color)
 {}
 
 shp_btn::Shape_button::Shape_button(Graph_lib::Point top_left,
@@ -50,7 +52,8 @@ shp_btn::Shape_button::Shape_button(Graph_lib::Point top_left,
                                     int active_width,
                                     int active_height,
                                     const string& label,
-                                    Graph_lib::Callback callback_fn)
+                                    Graph_lib::Callback callback_fn,
+                                    Graph_lib::Color bg_color)
     : Graph_lib::Button(top_left, normal_width, normal_height, label, callback_fn)
 
     // Initial state / position
@@ -61,7 +64,7 @@ shp_btn::Shape_button::Shape_button(Graph_lib::Point top_left,
 
     // Reset style
     , reset_col(default_color())
-    , reset_fill(default_fill_color())
+    , reset_fill(bg_color)
     , reset_sty(default_style())
 
     // Reset label
@@ -80,7 +83,7 @@ shp_btn::Shape_button::Shape_button(Graph_lib::Point top_left,
     , btn_act(top_left, active_width, active_height, label, callback_fn)
 {
 	set_color(default_color());
-	set_fill_color(default_fill_color());
+	set_fill_color(bg_color);
 	set_style(default_style());
 	set_font(default_font());
 	set_font_size(default_font_size);
