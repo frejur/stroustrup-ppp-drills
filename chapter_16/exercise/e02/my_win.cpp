@@ -141,6 +141,12 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 				btn_grid[btn_grid.size() - 1].offset_active_position(offs_x,
 				                                                     offs_y);
 			}
+			if ((count + r) % 2 != 0) {
+				Graph_lib::Color odd_fill{
+				    Graph_lib::Color(fl_rgb_color(85, 139, 130))};
+				btn_grid[btn_grid.size() - 1].set_fill_color(odd_fill);
+				btn_grid[btn_grid.size() - 1].set_current_fill_color_as_default();
+			}
 			++count;
 		}
 	}
