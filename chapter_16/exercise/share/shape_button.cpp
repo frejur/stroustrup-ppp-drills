@@ -54,9 +54,10 @@ shp_btn::Shape_button::Shape_button(Graph_lib::Point top_left,
                                     const string& label,
                                     Graph_lib::Callback callback_fn,
                                     Graph_lib::Color bg_color)
-    : Graph_lib::Button(top_left, normal_width, normal_height, label, callback_fn)
+    : Control(top_left, normal_width, normal_height, label, callback_fn)
 
     // Initial state / position
+    , is_attached(false)
     , box(top_left, normal_width, normal_height, label)
     , btn_act(top_left, active_width, active_height, label, callback_fn)
     , is_hidden(false)
@@ -93,7 +94,10 @@ shp_btn::Shape_button::Shape_button(Graph_lib::Point top_left,
 
 void shp_btn::Shape_button::move(int offs_x, int offs_y)
 {
-	Graph_lib::Button::show();
+	require_attached();
+	bool nrm_visible = Control::is_visible();
+	bool act_visible = btn_act.is_visible();
+	Control::show();
 	btn_act.show();
 	normal_xy.x += offs_x;
 	normal_xy.y += offs_y;
@@ -101,15 +105,18 @@ void shp_btn::Shape_button::move(int offs_x, int offs_y)
 	active_xy.y += offs_y;
 	Graph_lib::Button::move(offs_x, offs_y);
 	btn_act.move(offs_x, offs_y);
-	if (!is_active()) {
+	box.move(offs_x, offs_y);
+	if (!nrm_visible) {
+		Control::hide();
+	}
+	if (!act_visible) {
 		btn_act.hide();
-	} else {
-		Graph_lib::Button::hide();
 	}
 }
 
 void shp_btn::Shape_button::hide()
 {
+	require_attached();
 	is_hidden = true;
 	btn_act.hide();
 	Graph_lib::Button::hide();
@@ -118,8 +125,9 @@ void shp_btn::Shape_button::hide()
 
 void shp_btn::Shape_button::show()
 {
+	require_attached();
 	is_hidden = false;
-	if (is_active()) {
+	if (!is_active()) {
 		Graph_lib::Button::show();
 	} else {
 		btn_act.hide();
@@ -135,31 +143,36 @@ void shp_btn::Shape_button::attach(Graph_lib::Window& win)
 	// Hiding / showing buttons only works after attaching, check state, and
 	// adjust initial visibility
 	if (is_active()) {
-		hide();
+		Graph_lib::Button::hide();
 	} else {
 		btn_act.hide();
 	}
 	win.attach(box);
+	is_attached = true;
 }
 
 void shp_btn::Shape_button::offset_active_position(int offs_x, int offs_y)
 {
+	require_attached();
+	bool act_visible = btn_act.is_visible();
 	btn_act.show();
 	btn_act.move(offs_x, offs_y);
 	active_xy.x += offs_x;
 	active_xy.y += offs_y;
-	if (!is_active() || !is_visible()) {
+	if (!act_visible) {
 		btn_act.hide();
 	}
 }
 
 void shp_btn::Shape_button::offset_normal_position(int offs_x, int offs_y)
 {
+	require_attached();
+	bool nrm_visible = Control::is_visible();
 	Graph_lib::Button::show();
 	move(offs_x, offs_y);
 	normal_xy.x += offs_x;
 	normal_xy.y += offs_x;
-	if (is_active() || !is_visible()) {
+	if (!nrm_visible) {
 		Graph_lib::Button::hide();
 	}
 }

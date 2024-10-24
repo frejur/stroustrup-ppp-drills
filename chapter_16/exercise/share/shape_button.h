@@ -9,6 +9,13 @@ namespace shp_btn {
 
 enum class Shape_button_state { Normal, Active, Disabled };
 
+class Control : public Graph_lib::Button
+{
+public:
+	using Graph_lib::Button::Button;
+	virtual bool is_visible() const { return pw->visible(); };
+};
+
 class Text_box : public Graph_lib::Shape
 {
 public:
@@ -37,7 +44,7 @@ private:
 	std::string lb;
 };
 
-class Shape_button : public Graph_lib::Button
+class Shape_button : public Control
 {
 public:
 	Shape_button(Graph_lib::Point top_left,
@@ -114,16 +121,17 @@ public:
 	bool is_normal() const;
 	bool is_active() const;
 	bool is_disabled() const;
-	bool is_visible() const;
+	virtual bool is_visible() const override;
 	virtual void normalize();
 	virtual void activate();
 	virtual void disable();
 
 protected:
-	Text_box box;              // Covers buttons, dictates appearance
-	Graph_lib::Button btn_act; // Active
+	Text_box box;    // Covers buttons, dictates appearance
+	Control btn_act; // Active
 
 private:
+	bool is_attached;
 	bool is_hidden;
 	Shape_button_state st;
 	Graph_lib::Point normal_xy;
@@ -144,6 +152,14 @@ private:
 	Shape_button_state state() const { return st; };
 
 	static const Graph_lib::Color& default_fill_color();
+
+	void require_attached() const
+	{
+		if (!is_attached) {
+			throw std::runtime_error(
+			    "This operation may not be carried out in an unattached state");
+		}
+	}
 };
 
 } // namespace shp_btn
