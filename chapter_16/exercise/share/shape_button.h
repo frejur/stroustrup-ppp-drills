@@ -94,6 +94,23 @@ public:
 	void reset_font() { box.set_font(reset_fnt); };
 	void reset_font_size() { box.set_font_size(reset_fnt_sz); };
 
+	// Update defaults
+	void set_current_color_as_default() { reset_col = box.color(); };
+	void set_current_fill_color_as_default() { reset_col = box.fill_color(); };
+	void set_current_style_as_default() { reset_sty = style(); }
+	void set_current_font_as_default() { reset_fnt = font(); }
+	void set_current_font_size_as_default() { reset_fnt_sz = font_size(); }
+	void set_current_label_as_default() { reset_lb = label(); }
+	void set_current_as_default()
+	{
+		set_current_color_as_default();
+		set_current_fill_color_as_default();
+		set_current_style_as_default();
+		set_current_font_as_default();
+		set_current_font_size_as_default();
+		set_current_label_as_default();
+	};
+
 	// State
 	bool is_normal() const;
 	bool is_active() const;
@@ -108,13 +125,13 @@ private:
 	Shape_button_state st;
 	Graph_lib::Point normal_xy;
 	Graph_lib::Point active_xy;
-	const Graph_lib::Color reset_col;
-	const Graph_lib::Color reset_fill;
-	const Graph_lib::Line_style reset_sty;
+	Graph_lib::Color reset_col;
+	Graph_lib::Color reset_fill;
+	Graph_lib::Line_style reset_sty;
 
-	const int reset_fnt_sz;
-	const std::string reset_lb;
-	const Graph_lib::Font reset_fnt;
+	int reset_fnt_sz;
+	std::string reset_lb;
+	Graph_lib::Font reset_fnt;
 
 	const int normal_w;
 	const int normal_h;
