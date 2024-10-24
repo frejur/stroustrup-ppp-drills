@@ -57,30 +57,30 @@ shp_btn::Shape_button::Shape_button(Graph_lib::Point top_left,
     : Graph_lib::Button(top_left, normal_width, normal_height, label, callback_fn)
 
     // Initial state / position
-    , is_hidden(false)
-    , st(Shape_button_state::Normal)
-    , normal_xy(top_left)
-    , active_xy(top_left)
-
-    // Reset style
-    , reset_col(default_color())
-    , reset_fill(bg_color)
-    , reset_sty(default_style())
-
-    // Reset label
-    , reset_fnt_sz(default_font_size)
-    , reset_lb(label)
-    , reset_fnt(default_font())
-
-    // Dimensions
-    , normal_w(normal_width)
-    , normal_h(normal_height)
-    , active_w(active_width)
-    , active_h(active_height)
-
-    // Shape / Active button
     , box(top_left, normal_width, normal_height, label)
     , btn_act(top_left, active_width, active_height, label, callback_fn)
+    , is_hidden(false)
+    , st(Shape_button_state::Normal)
+
+    // Reset style
+    , normal_xy(top_left)
+    , active_xy(top_left)
+    , reset_col(default_color())
+
+    // Reset label
+    , reset_fill(bg_color)
+    , reset_sty(default_style())
+    , reset_fnt_sz(default_font_size)
+
+    // Dimensions
+    , reset_lb(label)
+    , reset_fnt(default_font())
+    , normal_w(normal_width)
+    , normal_h(normal_height)
+
+    // Shape / Active button
+    , active_w(active_width)
+    , active_h(active_height)
 {
 	set_color(default_color());
 	set_fill_color(bg_color);
