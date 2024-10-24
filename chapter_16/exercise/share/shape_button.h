@@ -96,7 +96,7 @@ public:
 
 	// Update defaults
 	void set_current_color_as_default() { reset_col = box.color(); };
-	void set_current_fill_color_as_default() { reset_col = box.fill_color(); };
+	void set_current_fill_color_as_default() { reset_fill = box.fill_color(); };
 	void set_current_style_as_default() { reset_sty = style(); }
 	void set_current_font_as_default() { reset_fnt = font(); }
 	void set_current_font_size_as_default() { reset_fnt_sz = font_size(); }
