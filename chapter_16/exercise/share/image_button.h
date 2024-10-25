@@ -24,13 +24,20 @@ public:
 	             const std::string& image_path);
 
 	// Override Widget methods
+	virtual void show() override;
+	virtual void hide() override;
 	virtual void move(int offs_x, int offs_y) override;
 	virtual void attach(Graph_lib::Window&) override;
 
-	// Adjust image position
+	// Adjust image mask
+	void set_mask(int x, int y, int width, int height);
 	void offset_image(int offs_x, int offs_y);
 
 private:
+	int mask_x;
+	int mask_y;
+	int mask_w;
+	int mask_h;
 	Graph_lib::Image img; // Background image
 };
 } // namespace shp_btn

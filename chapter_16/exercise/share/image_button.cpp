@@ -42,12 +42,28 @@ shp_btn::Image_button::Image_button(Graph_lib::Point top_left,
                                  label,
                                  callback_fn,
                                  default_transparent_fill_color())
+    , mask_x(0)
+    , mask_y(0)
+    , mask_w(normal_width)
+    , mask_h(normal_height)
     , img(top_left, image_path)
 {
-	img.set_mask({0, 0}, normal_width, normal_height);
+	img.set_mask({mask_x, mask_y}, mask_w, mask_h);
 }
 
 //------------------------------------------------------------------------------
+
+void shp_btn::Image_button::show()
+{
+	Shape_button::hide();
+	img.set_mask({mask_x, mask_y}, mask_w, mask_h); // TODO: Less Hacky
+}
+
+void shp_btn::Image_button::hide()
+{
+	Shape_button::hide();
+	img.set_mask({-999, -999}, 1, 1); // TODO: Less Hacky
+}
 
 void shp_btn::Image_button::move(int offs_x, int offs_y)
 {
@@ -62,7 +78,20 @@ void shp_btn::Image_button::attach(Graph_lib::Window& win)
 	win.put_on_top(box);
 }
 
+void shp_btn::Image_button::set_mask(int x, int y, int width, int height)
+{
+	mask_x = x;
+	mask_y = y;
+	mask_w = width;
+	mask_h = height;
+	img.set_mask({x, y}, width, height);
+}
+
 void shp_btn::Image_button::offset_image(int offs_x, int offs_y)
 {
+	mask_x = offs_y;
+	mask_y = offs_x;
+	mask_w = width();
+	mask_h = width();
 	img.set_mask({offs_x, offs_y}, width(), height());
 }
