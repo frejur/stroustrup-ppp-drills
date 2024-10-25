@@ -4,9 +4,10 @@
 // "Programming -- Principles and Practice Using C++" by Bjarne Stroustrup
 //
 
+#include "Graph.h"
 #include <FL/Fl_GIF_Image.H>
 #include <FL/Fl_JPEG_Image.H>
-#include "Graph.h"
+#include <FL/Fl_PNG_Image.H>
 #include <FL/fl_draw.H>
 
 #include <iostream>
@@ -519,13 +520,14 @@ Suffix get_encoding(const string& s)
         Suffix suffix;
     };
 
-    static SuffixMap smap[] = {
-        {".jpg",  Suffix::jpg},
-        {".jpeg", Suffix::jpg},
-        {".gif",  Suffix::gif},
-    };
+	static SuffixMap smap[] = {
+	    {".jpg", Suffix::jpg},
+	    {".jpeg", Suffix::jpg},
+	    {".gif", Suffix::gif},
+	    {".png", Suffix::png},
+	};
 
-    for (int i = 0, n = ARRAY_SIZE(smap); i < n; i++)
+	for (int i = 0, n = ARRAY_SIZE(smap); i < n; i++)
     {
         unsigned len = strlen(smap[i].extension);
 
@@ -560,8 +562,11 @@ Image::Image(Point xy, string s, Suffix e)
     case Suffix::gif:
         p = new Fl_GIF_Image(s.c_str());
         break;
-    default:    // Unsupported image encoding
-        fn.set_label("unsupported file type \""+s+'"');
+	case Suffix::png:
+		p = new Fl_PNG_Image(s.c_str());
+		break;
+	default: // Unsupported image encoding
+		fn.set_label("unsupported file type \""+s+'"');
         p = new Bad_image(30,20);    // the "error image"
     }
 }
