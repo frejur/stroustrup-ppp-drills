@@ -125,14 +125,18 @@ public:
 	virtual void normalize();
 	virtual void activate();
 	virtual void disable();
+	bool is_not_attached() const { return !is_attached; }
+
+	virtual void put_on_top();
 
 protected:
 	Text_box box;    // Covers buttons, dictates appearance
 	Control btn_act; // Active
 
 private:
-	bool is_attached;
 	bool is_hidden;
+	bool is_attached;
+
 	Shape_button_state st;
 	Graph_lib::Point normal_xy;
 	Graph_lib::Point active_xy;

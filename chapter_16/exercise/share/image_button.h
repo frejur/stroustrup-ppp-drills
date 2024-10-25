@@ -29,6 +29,8 @@ public:
 	virtual void move(int offs_x, int offs_y) override;
 	virtual void attach(Graph_lib::Window&) override;
 
+	virtual void put_on_top() override;
+
 	// Adjust image mask
 	void set_mask(int x, int y, int width, int height);
 	void offset_image(int offs_x, int offs_y);

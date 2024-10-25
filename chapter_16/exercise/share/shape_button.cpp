@@ -176,3 +176,10 @@ void shp_btn::Shape_button::offset_normal_position(int offs_x, int offs_y)
 		Graph_lib::Button::hide();
 	}
 }
+
+void shp_btn::Shape_button::put_on_top()
+{
+	if (!is_not_attached()) {
+		own->put_on_top(box);
+	}
+}
