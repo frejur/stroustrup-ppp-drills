@@ -27,6 +27,9 @@ public:
 	virtual void move(int offs_x, int offs_y) override;
 	virtual void attach(Graph_lib::Window&) override;
 
+	// Adjust image position
+	void offset_image(int offs_x, int offs_y);
+
 private:
 	Graph_lib::Image img; // Background image
 };

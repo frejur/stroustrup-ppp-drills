@@ -61,3 +61,8 @@ void shp_btn::Image_button::attach(Graph_lib::Window& win)
 	win.attach(img);
 	win.put_on_top(box);
 }
+
+void shp_btn::Image_button::offset_image(int offs_x, int offs_y)
+{
+	img.set_mask({offs_x, offs_y}, width(), height());
+}
