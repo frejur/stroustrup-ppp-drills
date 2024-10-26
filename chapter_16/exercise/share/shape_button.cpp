@@ -54,7 +54,7 @@ shp_btn::Shape_button::Shape_button(Graph_lib::Point top_left,
                                     const string& label,
                                     Graph_lib::Callback callback_fn,
                                     Graph_lib::Color bg_color)
-    : Control(top_left, normal_width, normal_height, label, callback_fn)
+    : Control(top_left, normal_width, normal_height, "", callback_fn)
 
     // Initial state / position
     , box(top_left, normal_width, normal_height, label)
