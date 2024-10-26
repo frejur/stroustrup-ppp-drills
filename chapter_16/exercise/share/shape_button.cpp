@@ -149,6 +149,13 @@ void shp_btn::Shape_button::attach(Graph_lib::Window& win)
 	}
 	win.attach(box);
 	is_attached = true;
+
+	// Check if the above changed the internal positional attrib. - Update shape
+	if (normal_xy.x != loc.x || normal_xy.y != loc.y) {
+		int offs_x = loc.x - normal_xy.x;
+		int offs_y = loc.y - normal_xy.y;
+		box.move(offs_x, offs_y);
+	}
 }
 
 void shp_btn::Shape_button::offset_active_position(int offs_x, int offs_y)
