@@ -57,10 +57,10 @@ shp_btn::Shape_button::Shape_button(Graph_lib::Point top_left,
     : Control(top_left, normal_width, normal_height, label, callback_fn)
 
     // Initial state / position
-    , is_attached(false)
     , box(top_left, normal_width, normal_height, label)
     , btn_act(top_left, active_width, active_height, label, callback_fn)
     , is_hidden(false)
+    , is_attached(false)
     , st(Shape_button_state::Normal)
 
     // Reset style
