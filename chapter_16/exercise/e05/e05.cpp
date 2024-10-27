@@ -10,7 +10,7 @@ int e05()
 	    {10, 10},
 	    480,
 	    320,
-	    "Good Luck",
+	    "Yes, yes. Good Luck",
 	};
 
 	return Graph_lib::gui_main();
