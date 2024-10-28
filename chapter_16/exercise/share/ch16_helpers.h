@@ -16,6 +16,21 @@ void draw_text(Graph_lib::Point xy,
 
 int calc_lb_w(const std::string& txt, Graph_lib::Font f, int f_sz);
 
+//------------------------------------------------------------------------------
+
+double wrap_angle(double angle);
+
+int val_from_f(int min_val, int max_val, double f);
+
+//------------------------------------------------------------------------------
+
+Graph_lib::Point point_at_angle(Graph_lib::Point center,
+                                double rotation,
+                                double distance);
+
+double distance_between(Graph_lib::Point a, Graph_lib::Point b);
+double angle_between(Graph_lib::Point a, Graph_lib::Point b);
+
 } // namespace ch16_hlp
 
 #endif // CH16_HELPERS_H
