@@ -14,6 +14,7 @@ public:
 	                const std::string& title,
 	                int refresh_rate_ms = default_rate_ms);
 	void start_polling(int duration_sec);
+	void stop_polling();
 
 	bool is_polling() const { return is_poll; };
 	int milliseconds_passed() const { return passed_ms; };
@@ -21,9 +22,11 @@ public:
 
 protected:
 	static const int default_rate_ms;
+
 	virtual void polling_action() = 0;
 
 private:
+	bool trigger_stop;
 	bool is_poll;
 	int rate_ms;
 

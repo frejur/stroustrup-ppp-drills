@@ -16,6 +16,7 @@ anm_win::Animated_window::Animated_window(Graph_lib::Point top_left,
                                           const string& title,
                                           int refresh_rate_ms)
     : Graph_lib::Window(top_left, width, height, title)
+    , trigger_stop(false)
     , is_poll(false)
     , rate_ms(valid_rate(refresh_rate_ms))
     , passed_ms(0)
@@ -58,9 +59,10 @@ void anm_win::Animated_window::start_polling(int duration_sec)
 	// At minimum, perform action once
 	polling_action();
 	++act_count;
+	Fl::redraw();
 
 	// Execute polling action for every x number of ms
-	while (shown() && act_count < num_act) {
+	while (shown() && is_polling() && act_count < num_act) {
 		// Wait
 		double t_diff = wait_for_x_sec(rs, wait_sec);
 		passed_ms = (std::min)(dur_ms,
@@ -74,12 +76,22 @@ void anm_win::Animated_window::start_polling(int duration_sec)
 		}
 		act_count += do_act;
 		Fl::redraw();
+
+		if (trigger_stop) {
+			trigger_stop = false;
+			break;
+		}
 	}
 
 	// Reset state
 	is_poll = false;
 	dur_sec = 0;
 	passed_ms = 0;
+}
+
+void anm_win::Animated_window::stop_polling()
+{
+	trigger_stop = true;
 }
 
 //------------------------------------------------------------------------------
