@@ -42,6 +42,7 @@ void anm_win::Animated_window::start_polling(int duration_sec)
 	if (is_poll) {
 		throw std::runtime_error("Polling already active");
 	}
+	is_poll = true;
 	dur_sec = valid_duration(duration_sec, rate_ms);
 	const int dur_ms = dur_sec * 1'000.0;
 	passed_ms = 0;
