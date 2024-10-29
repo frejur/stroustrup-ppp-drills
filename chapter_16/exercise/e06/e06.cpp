@@ -1,13 +1,15 @@
 #include "my_win.h"
 #include <iostream>
 
-// Chapter 16, exercise 5:
+// Chapter 16, exercise 6: Make an animated analog clock, use clock(), sleep().
+//------------------------------------------------------------------------------
+// Since there's animation involved in exercise 7 as well, a more generic
+// Animated_window was implemented.
 
 int e06()
 {
 	fl_color(0);
-	My_window win{{10, 10}, 480, 480, "All things must pass", 500};
-	win.start_polling(15);
+	My_window win{{10, 10}, 400, 400, "All things must pass", 100};
 
 	return Graph_lib::gui_main();
 }
