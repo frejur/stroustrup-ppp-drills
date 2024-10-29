@@ -3,8 +3,14 @@
 
 // Chapter 16, exercise 6: Make an animated analog clock, use clock(), sleep().
 //------------------------------------------------------------------------------
-// Since there's animation involved in exercise 7 as well, a more generic
-// Animated_window was implemented.
+// Design Notes:
+// 1. Created a custom 'Animated_window' class to support future exercises
+//    involving animation.
+// 2. Replaced 'sleep()' with 'Fl::wait(x)' for portability and to avoid screen
+//    lock during waits.
+// 3. Limited animation to 60 seconds initially as to not hog resources. It can
+//    be resumed with the 'Play' button.
+//------------------------------------------------------------------------------
 
 int e06()
 {
