@@ -65,32 +65,35 @@ My_window::My_window(Graph_lib::Point top_left,
 	    (*static_cast<My_window*>(pw)).stop_ticking();
     })
 {
+	// Frame / outer border
 	attach(frame);
 	frame.set_color(transparent_color());
 	frame.set_fill_color(clock_primary_color());
 
+	// Background
 	attach(bg);
 	bg.set_fill_color(clock_secondary_color());
 	bg.set_color(transparent_color());
 	bg.set_style(
 	    Graph_lib::Line_style(Graph_lib::Line_style::solid, clock_frame_thk));
 
+	// Face (Digits, notches)
 	attach(face);
 	face.set_font_size(clock_font_size);
 
+	// Hands
 	attach(hand_min);
 	hand_min.set_style(
 	    Graph_lib::Line_style(Graph_lib::Line_style::solid, hand_min_thk));
-
 	attach(hand_hour);
 	hand_hour.set_style(
 	    Graph_lib::Line_style(Graph_lib::Line_style::solid, hand_hour_thk));
-
 	attach(hand_sec);
 	hand_sec.set_color(clock_primary_color());
 	hand_min.set_style(
 	    Graph_lib::Line_style(Graph_lib::Line_style::solid, hand_sec_thk));
 
+	// Pause text (Shown when paused)
 	attach(txt_pause);
 	txt_pause.set_font_size(pause_text_font_size);
 	txt_pause.set_color(Graph_lib::Color::white);
@@ -99,6 +102,7 @@ My_window::My_window(Graph_lib::Point top_left,
 	                                txt_pause.font_size());
 	txt_pause.move(-txt_w / 2, pause_text_font_size / 2 - fl_descent());
 
+	// Start and pause buttons
 	attach(btn_start);
 	attach(btn_pause);
 	btn_pause.hide();
@@ -129,15 +133,14 @@ void My_window::stop_ticking()
 		return;
 	}
 	stop_polling();
-	txt_pause.set_color(Graph_lib::Color::white);
 }
 
 //------------------------------------------------------------------------------
 
 void My_window::polling_action()
 {
+	// Angles from current time
 	Hms t = current_time_as_hms();
-
 	angle_sec = t.seconds * 6;
 	angle_min = t.minutes * 6;
 	angle_hour = ((t.hours % 12) + t.minutes / 60.0) * 30;
