@@ -7,6 +7,7 @@ add_executable(${T_THIS}
     e07.cpp
     my_win.h my_win.cpp
     prg_bar.h prg_bar.cpp
+    pickup.cpp pickup.h
 
     # Shared
     ../share/win/anim_win.h ../share/win/anim_win.cpp
@@ -18,7 +19,7 @@ add_executable(${T_THIS}
     ../../lib/GUI.h ../../lib/GUI.cpp
     ../../lib/Window.h ../../lib/Window.cpp
     ../../lib/Point.h
-)
+) 
 
 configure_file(img/pkup_sprt.png pkup_sprt.png COPYONLY)
 

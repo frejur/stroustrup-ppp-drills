@@ -10,6 +10,8 @@ const Graph_lib::Color Progress_bar::default_col = Graph_lib::Color::black;
 const Graph_lib::Color Progress_bar::default_fill = Graph_lib::Color::green;
 const Graph_lib::Color Progress_bar::default_bg = Graph_lib::Color::dark_green;
 
+//------------------------------------------------------------------------------
+
 Progress_bar::Progress_bar(Graph_lib::Point top_left,
                            int width,
                            int height,
@@ -26,10 +28,14 @@ Progress_bar::Progress_bar(Graph_lib::Point top_left,
 	set_fill_color(fill_color);
 }
 
+//------------------------------------------------------------------------------
+
 void Progress_bar::set_value(double v)
 {
 	st_val = valid_st_val(v);
 }
+
+//------------------------------------------------------------------------------
 
 void Progress_bar::draw_lines() const
 {
