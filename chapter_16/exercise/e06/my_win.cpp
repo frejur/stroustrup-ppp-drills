@@ -113,12 +113,12 @@ void My_window::start_ticking()
 	}
 
 	txt_pause.set_color(transparent_color());
-
 	btn_start.hide();
 	btn_pause.show();
 
 	start_polling(60);
 
+	txt_pause.set_color(Graph_lib::Color::white);
 	btn_pause.hide();
 	btn_start.show();
 }
