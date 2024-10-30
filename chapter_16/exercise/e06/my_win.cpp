@@ -65,6 +65,8 @@ My_window::My_window(Graph_lib::Point top_left,
 	    (*static_cast<My_window*>(pw)).stop_ticking();
     })
 {
+	size_range(width, height, width, height); // Lock window size
+
 	// Frame / outer border
 	attach(frame);
 	frame.set_color(transparent_color());

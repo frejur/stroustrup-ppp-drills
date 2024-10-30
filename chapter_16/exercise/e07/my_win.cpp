@@ -107,6 +107,8 @@ My_window::My_window(Graph_lib::Point top_left,
 	                (*static_cast<My_window*>(pw)).stop_moving();
                 })
 {
+	size_range(width, height, width, height); // Lock window size
+
 	// Pickup
 	attach(pkup);
 	pkup.set_bounding_box_size(50);

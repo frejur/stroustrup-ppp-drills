@@ -68,6 +68,8 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                "Menu")
     , planch({128, 128}, Mw_const::planchette_radius)
 {
+	size_range(w, h, w, h); // Lock window size
+
 	// BG and text
 	attach(bg);
 	attach(txt_info);
