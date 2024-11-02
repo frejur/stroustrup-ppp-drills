@@ -67,3 +67,7 @@ build*/
 *.autosave
 CMakeLists.txt.user
 *.kdev4
+
+# Testing
+temp_sandbox/
+
