@@ -137,6 +137,9 @@ void shp_btn::Shape_button::show()
 
 void shp_btn::Shape_button::attach(Graph_lib::Window& win)
 {
+	if (is_attached) {
+		return;
+	}
 	Graph_lib::Button::attach(win);
 	btn_act.attach(win);
 
