@@ -12,7 +12,10 @@ public:
 	virtual void draw_lines() const
 	{
 		if (fill_color().visibility()) {
+			Graph_lib::Color ocol = fl_color();
+			fl_color(fill_color().as_int());
 			fl_rectf(point(0).x, point(0).y, w, h);
+			fl_color(ocol.as_int());
 		}
 		Graph_lib::Image::draw_lines();
 	};
