@@ -83,10 +83,13 @@ public:
 
 	// Shape
 	Graph_lib::Color color() const { return box.color(); };
-	Graph_lib::Color fill_color() const { return box.fill_color(); };
+	virtual Graph_lib::Color fill_color() const { return box.fill_color(); };
 	Graph_lib::Line_style style() const { return box.style(); };
 	void set_color(Graph_lib::Color col) { box.set_color(col); };
-	void set_fill_color(Graph_lib::Color col) { box.set_fill_color(col); };
+	virtual void set_fill_color(Graph_lib::Color col)
+	{
+		box.set_fill_color(col);
+	};
 	void set_style(Graph_lib::Line_style sty) { box.set_style(sty); };
 	void reset_color() { box.set_color(reset_col); };
 	void reset_fill_color() { box.set_fill_color(reset_fill); };

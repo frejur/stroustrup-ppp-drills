@@ -76,7 +76,6 @@ void shp_btn::Image_button::attach(Graph_lib::Window& win)
 	Shape_button::attach(win);
 	win.attach(img);
 	win.put_on_top(box);
-	win.put_on_top(img);
 }
 
 void shp_btn::Image_button::set_mask(int x, int y, int width, int height)
