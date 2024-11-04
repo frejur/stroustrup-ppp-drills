@@ -1,12 +1,17 @@
 #include "ch16_helpers.h"
 #include "shape_button.h"
 
+namespace {
+constexpr int horizontal_padding{4};
+}
+
 shp_btn::Text_box::Text_box(Graph_lib::Point top_left,
                             int w,
                             int h,
                             const string& label)
     : is_hidden(false)
     , lb(label)
+    , align(Alignment::Center)
 {
 	if (h <= 0 || w <= 0) {
 		throw std::runtime_error("Bad rectangle: non-positive side");
@@ -54,18 +59,32 @@ void shp_btn::Text_box::draw_lines() const
 		int osz = fl_size();
 		fl_font(fnt.as_int(), fnt_sz);
 
-		Graph_lib::Point c{
-		    point(0).x
-		        + static_cast<int>(std::round((point(1).x - point(0).x) * 0.5)),
-		    point(0).y
-		        + static_cast<int>(std::round((point(1).y - point(0).y) * 0.5)),
-		};
-		ch16_hlp::draw_text(c,
-		                    label(),
-		                    font(),
-		                    font_size(),
-		                    color(),
-		                    ch16_hlp::Text_alignment::Center);
+		if (align == Alignment::Center) {
+			Graph_lib::Point c{
+			    point(0).x
+			        + static_cast<int>(
+			            std::round((point(1).x - point(0).x) * 0.5)),
+			    point(0).y
+			        + static_cast<int>(
+			            std::round((point(1).y - point(0).y) * 0.5)),
+			};
+			ch16_hlp::draw_text(c,
+			                    label(),
+			                    font(),
+			                    font_size(),
+			                    color(),
+			                    ch16_hlp::Text_alignment::Center);
+		} else {
+			Graph_lib::Point pt{point(0)};
+			pt.y += static_cast<int>(
+			    std::round((point(1).y - point(0).y) * 0.5));
+			pt.x += (align == Alignment::Left) ? horizontal_padding
+			                                   : (w - horizontal_padding);
+			ch16_hlp::Text_alignment ta = (align == Alignment::Left)
+			                                  ? ch16_hlp::Text_alignment::Right
+			                                  : ch16_hlp::Text_alignment::Left;
+			ch16_hlp::draw_text(pt, label(), font(), font_size(), color(), ta);
+		}
 		fl_font(ofnt, osz);
 	}
 }

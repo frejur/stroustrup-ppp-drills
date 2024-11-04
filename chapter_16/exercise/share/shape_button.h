@@ -28,12 +28,14 @@ public:
 	void show() { is_hidden = false; };
 
 	// Label
+	enum class Alignment { Left, Center, Right };
 	std::string label() const { return lb; }
 	Graph_lib::Font font() const { return fnt; }
 	int font_size() const { return fnt_sz; }
 	void set_label(const string& s) { lb = s; }
 	void set_font(Graph_lib::Font f) { fnt = f; }
 	void set_font_size(int s) { fnt_sz = s; }
+	void set_alignment(Alignment a) { align = a; };
 
 	virtual void draw_lines() const override;
 
@@ -42,6 +44,7 @@ private:
 	int fnt_sz{fl_size() < 14 ? 14 : fl_size()};
 	Graph_lib::Font fnt{fl_font()};
 	std::string lb;
+	Alignment align;
 };
 
 class Shape_button : public Control
@@ -99,6 +102,7 @@ public:
 	void reset_label() { box.set_label(reset_lb); };
 	void reset_font() { box.set_font(reset_fnt); };
 	void reset_font_size() { box.set_font_size(reset_fnt_sz); };
+	void set_alignment(Text_box::Alignment a) { box.set_alignment(a); };
 
 	// Update defaults
 	void set_current_color_as_default() { reset_col = box.color(); };
