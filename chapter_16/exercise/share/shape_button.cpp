@@ -157,6 +157,7 @@ void shp_btn::Shape_button::attach(Graph_lib::Window& win)
 	if (normal_xy.x != loc.x || normal_xy.y != loc.y) {
 		int offs_x = loc.x - normal_xy.x;
 		int offs_y = loc.y - normal_xy.y;
+		normal_xy = loc;
 		box.move(offs_x, offs_y);
 	}
 }
