@@ -95,6 +95,7 @@ shp_btn::Shape_button::Shape_button(Graph_lib::Point top_left,
 void shp_btn::Shape_button::move(int offs_x, int offs_y)
 {
 	require_attached();
+	bool main_visible = !is_hidden;
 	bool nrm_visible = Control::is_visible();
 	bool act_visible = btn_act.is_visible();
 	Control::show();
@@ -106,11 +107,16 @@ void shp_btn::Shape_button::move(int offs_x, int offs_y)
 	Graph_lib::Button::move(offs_x, offs_y);
 	btn_act.move(offs_x, offs_y);
 	box.move(offs_x, offs_y);
-	if (!nrm_visible) {
-		Control::hide();
-	}
-	if (!act_visible) {
-		btn_act.hide();
+
+	if (main_visible) {
+		if (!nrm_visible) {
+			Control::hide();
+		}
+		if (!act_visible) {
+			btn_act.hide();
+		}
+	} else {
+		hide();
 	}
 }
 
