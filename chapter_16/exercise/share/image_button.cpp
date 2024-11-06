@@ -89,11 +89,7 @@ void shp_btn::Image_button::set_mask(int x, int y, int width, int height)
 
 void shp_btn::Image_button::offset_image(int offs_x, int offs_y)
 {
-	mask_x = offs_x;
-	mask_y = offs_y;
-	mask_w = width();
-	mask_h = height();
-	img.set_mask({offs_x, offs_y}, width(), height());
+	img.move(offs_x, offs_y);
 }
 
 void shp_btn::Image_button::put_on_top()
