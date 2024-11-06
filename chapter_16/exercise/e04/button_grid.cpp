@@ -98,5 +98,6 @@ void btn_grd::Button_grid::offset_image(int offs_x,
                                         int offs_y,
                                         Button_grid_ID id)
 {
-	btn[static_cast<int>(id)].offset_image(offs_x, offs_y);
+	int sz = (std::max)(std::abs(offs_x), std::abs(offs_y));
+	btn[static_cast<int>(id)].set_mask(offs_x, offs_y, sz, sz);
 }
