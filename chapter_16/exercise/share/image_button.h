@@ -57,6 +57,7 @@ public:
 	};
 
 	// Adjust image mask
+	Graph_lib::Point mask_position() const { return {mask_x, mask_y}; }
 	void set_mask(int x, int y, int width, int height);
 	void offset_image(int offs_x, int offs_y);
 
