@@ -8,17 +8,28 @@ namespace shp_btn {
 class Filled_image : public Graph_lib::Image
 {
 public:
-	using Graph_lib::Image::Image;
+	Filled_image(Graph_lib::Point xy,
+	             const Shape_button& parent_button,
+	             std::string file_name,
+	             Graph_lib::Suffix e = Graph_lib::Suffix::none)
+	    : Graph_lib::Image(xy, file_name, e)
+	    , parent_btn(parent_button){};
 	virtual void draw_lines() const
 	{
 		if (fill_color().visibility()) {
 			Graph_lib::Color ocol = fl_color();
 			fl_color(fill_color().as_int());
-			fl_rectf(point(0).x, point(0).y, w, h);
+			fl_rectf(parent_btn.position().x,
+			         parent_btn.position().y,
+			         parent_btn.width(),
+			         parent_btn.height());
 			fl_color(ocol.as_int());
 		}
 		Graph_lib::Image::draw_lines();
 	};
+
+private:
+	const Shape_button& parent_btn;
 };
 
 class Image_button : public Shape_button

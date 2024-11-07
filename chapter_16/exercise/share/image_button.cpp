@@ -46,7 +46,7 @@ shp_btn::Image_button::Image_button(Graph_lib::Point top_left,
     , mask_y(0)
     , mask_w(normal_width)
     , mask_h(normal_height)
-    , img(top_left, image_path)
+    , img(top_left, *this, image_path)
 {
 	img.set_mask({mask_x, mask_y}, mask_w, mask_h);
 }
