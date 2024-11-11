@@ -19,7 +19,7 @@
 // - Allow the user to select which (if any) default callbacks for the
 //   Calculator's various widgets to override upon initialization.
 
-int e08()
+int e09()
 {
 	fl_color(0);
 	My_window win{
@@ -34,7 +34,7 @@ int e08()
 
 int main()
 try {
-	return e08();
+	return e09();
 } catch (const std::exception& e) {
 	std::cerr << "Error: " << e.what() << '\n';
 	return 1;
