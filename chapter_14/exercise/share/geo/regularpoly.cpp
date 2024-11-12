@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "regularpoly.h"
 #include "../help/helpers.h"
+#include <algorithm>
 #include <cmath>
 #include <stdexcept>
 #include <vector>
@@ -80,8 +81,8 @@ void Regular_polygon::scale(double scale_f)
 		throw std::runtime_error(
 		    "Invalid scaling factor, expected a value > 0");
 	}
-	double new_r{scale_f * r};
-	r = min(max_radius, max(min_radius, new_r));
+	int new_r{static_cast<int>(std::round(scale_f * r))};
+	r = (std::min)(max_radius, (std::max)(min_radius, new_r));
 }
 
 } // namespace RPOL
