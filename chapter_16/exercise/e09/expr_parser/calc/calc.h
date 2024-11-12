@@ -170,6 +170,9 @@ constexpr int write_to_file_statement_limit{512};
 
 struct Write_quota
 {
+	Write_quota(int chars, int statmts)
+	    : characters(chars)
+	    , statements(statmts){};
 	int characters = 0;
 	int statements = 0;
 };
