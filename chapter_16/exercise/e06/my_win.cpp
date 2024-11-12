@@ -177,7 +177,7 @@ Hms current_time_as_hms()
 #if defined(_WIN32) || defined(_WIN64)
 	localtime_s(&local_t, &t); // Windows
 #else
-	localtime_r(&local_t, &t); // POSIX
+	localtime_r(&t, &local_t); // POSIX
 #endif
 
 	return {local_t.tm_hour, local_t.tm_min, local_t.tm_sec};
