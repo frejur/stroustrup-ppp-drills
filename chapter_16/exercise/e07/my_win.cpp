@@ -209,7 +209,7 @@ void My_window::polling_action()
 	// Update progress bar
 	double progress_raw = 100
 	                      * (milliseconds_passed()
-	                         / (polling_duration_in_seconds() * 1'000.0));
+	                         / (polling_duration_in_seconds() * 1000.0));
 	bar.set_value((std::max)(0.0, (std::min)(100.0, progress_raw))); // Clamp
 
 	// Move truck
