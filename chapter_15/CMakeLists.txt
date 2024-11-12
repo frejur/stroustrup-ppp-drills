@@ -24,7 +24,7 @@ set(T_E09 "Exercise 9")
 set(T_E10 "Exercise 10")
 set(T_E11 "Exercise 11")
 
-set(SELECTED_TARGET ${T_DRILL} CACHE STRING "Selected target")
+set(SELECTED_TARGET ${T_DRILL_A} CACHE STRING "Selected target")
 set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
    ${T_DRILL_A}
    ${T_DRILL_B}
