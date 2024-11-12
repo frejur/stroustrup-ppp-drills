@@ -39,7 +39,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                button_height,
                button_label_quit(),
                cb_quit)
-    , which_button(Button_pushed::None)
+    , which_button(Button_pushed::No_button)
 {
 	attach(btn_next);
 	attach(btn_quit);
@@ -101,7 +101,7 @@ void My_window::wait_for_button()
 		break;
 	case Button_pushed::Quit:
 		perform_quit();
-	case Button_pushed::None:
+	case Button_pushed::No_button:
 	default:
 		break;
 	}

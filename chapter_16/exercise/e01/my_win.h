@@ -19,13 +19,16 @@ public:
 
 private:
 	bool waiting;
-	enum class Button_pushed { None, Next, Quit };
+	enum class Button_pushed { No_button, Next, Quit };
 	Graph_lib::Button btn_next;
 	Graph_lib::Button btn_quit;
 
 	Button_pushed which_button;
-	void reset_which_button() { which_button = Button_pushed::None; };
-	bool button_is_none() const { return which_button == Button_pushed::None; };
+	void reset_which_button() { which_button = Button_pushed::No_button; };
+	bool button_is_none() const
+	{
+		return which_button == Button_pushed::No_button;
+	};
 
 	// Callbacks
 	static void cb_next(void*, void*);
