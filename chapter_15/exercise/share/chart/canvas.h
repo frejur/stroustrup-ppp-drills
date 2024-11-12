@@ -194,7 +194,7 @@ protected:
 };
 
 enum class Canvas::Upd_state {
-	None,
+	No_state,
 	X_axis_done,
 	Y_axis_done,
 	Origin_done,

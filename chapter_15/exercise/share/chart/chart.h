@@ -197,7 +197,7 @@ protected:
 };
 
 enum class Chart::Upd_state {
-	None,
+	No_state,
 	Left_block_done,
 	Right_block_done,
 	Upper_block_done,

@@ -170,7 +170,7 @@ chart::Chart::Chart(Graph_lib::Point top_left, int width, int height)
     // Canvas
     , cv(top_left, width, height) // Adjust later
 
-    , layout_upd_state(Upd_state::None)
+    , layout_upd_state(Upd_state::No_state)
 {
 	Graph_lib::Shape::add(top_left);
 }
@@ -245,7 +245,7 @@ void chart::Chart::upd_layout()
 
 void chart::Chart::upd_left_block()
 {
-	validate_current_upd_state({Upd_state::None, Upd_state::All_done});
+	validate_current_upd_state({Upd_state::No_state, Upd_state::All_done});
 	int w = pad_h;
 	if (!y_title.empty()) {
 		w += pad_h + y_title_fnt_sz;

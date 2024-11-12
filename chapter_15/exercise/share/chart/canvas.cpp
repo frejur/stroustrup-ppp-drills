@@ -9,8 +9,8 @@ constexpr int min_width{32};
 constexpr int max_width{1920};
 constexpr int min_height{32};
 constexpr int max_height{1920};
-constexpr long double minimum_min_value{-10'000};
-constexpr long double maximum_max_value{10'000};
+constexpr long double minimum_min_value{-10000};
+constexpr long double maximum_max_value{10000};
 constexpr double min_unit{0.001};
 constexpr double max_unit{1000};
 constexpr int default_horizontal_padding{10};
@@ -102,7 +102,7 @@ chart::Canvas::Canvas(Graph_lib::Point top_left, int width, int height)
     , grid_ls(default_grid_line_style())
     , grid_color(default_grid_color())
 
-    , layout_upd_state(Upd_state::None)
+    , layout_upd_state(Upd_state::No_state)
 {
 	Graph_lib::Shape::add(top_left);
 	set_fill_color(default_fill_color());
@@ -410,7 +410,7 @@ void chart::Canvas::draw_value(int val, int px_val, Axis a) const
 
 void chart::Canvas::upd_x_ax_h()
 {
-	validate_current_upd_state({Upd_state::None, Upd_state::All_done});
+	validate_current_upd_state({Upd_state::No_state, Upd_state::All_done});
 	int ax_h = 1;
 	ax_h += (show_x_notches) ? x_notch.len : 0;
 	ax_h += (show_x_vals) ? pad_v + x_val_fnt_sz : 0;
