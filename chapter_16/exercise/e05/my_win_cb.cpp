@@ -50,8 +50,7 @@ void My_window::get_and_remap_char()
 			int y = map_grid_inp[i].loc.y + unit_sz / 2;
 			map_ch(c, {x, y});
 			os << "Mapped '" << c << " to (" << x << ", " << y << "), ";
-			should_reload = true; // Triggers loading remappings when back in
-			                      // Normal state
+			has_remapped_chars = true; // Will set should_relad flag upon save
 		} else {
 			os << "Cannot map that character. ";
 		}
@@ -146,9 +145,8 @@ void My_window::clear_remappings()
 }
 void My_window::save_remappings()
 {
-	if (st != My_window::Window_state::Remapping
-	    || num_unmap() == map_num_chars) {
-		return;
+	if (has_remapped_chars) {
+		should_reload = true; // Will trigger the loading of remappings from file
 	}
 	save_map(Mw_const::mappings_out_path());
 	prep_for_normal();

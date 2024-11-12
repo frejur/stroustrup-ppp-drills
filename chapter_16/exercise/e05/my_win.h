@@ -118,7 +118,7 @@ class My_window : public Graph_lib::Window
 private:
 	enum class Grid_element_action { Hide, Show };
 	enum class Char_action { Hide, Show, Mark_mapped, Mark_unmapped };
-	enum class Window_state { None, Normal, Ouija, Remapping };
+	enum class Window_state { No_state, Normal, Ouija, Remapping };
 
 public:
 	My_window(Graph_lib::Point xy, int w, int h, const string& title);
@@ -156,6 +156,7 @@ private:
 	const static int map_btn_r_pad;
 	const static int map_btn_btm_pad;
 
+	bool has_remapped_chars;
 	bool should_reload;
 	Window_state st;
 	const Graph_lib::Point gdbye_xy;

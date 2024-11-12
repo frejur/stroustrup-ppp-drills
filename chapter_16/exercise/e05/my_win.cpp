@@ -45,8 +45,9 @@ My_button::My_button(Graph_lib::Point top_left,
 
 My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
     : Graph_lib::Window::Window(xy, w, h, title)
+    , has_remapped_chars(false)
     , should_reload(false)
-    , st(Window_state::None)
+    , st(Window_state::No_state)
     , gdbye_xy(Mw_const::goodbye_position())
     , txt_info({0, top_m / 2 + info_fsz / 2}, "")
     , txt_status({status_l_pad, y_max() - btm_m / 2 + status_fsz * 2},
@@ -259,11 +260,11 @@ void My_window::prep_for_normal()
 		return;
 	}
 
-	if (st == My_window::Window_state::None) {
-		load_map(Mw_const::mappings_in_path()); // Load default mappings
-	} else if (should_reload) {
+	if (should_reload) {
 		mod_all_map_chars(Char_action::Mark_unmapped);
 		load_map(Mw_const::mappings_out_path()); // Load remappings
+	} else {
+		load_map(Mw_const::mappings_in_path()); // Load default mappings
 	}
 
 	mod_all_map_grid_elem(Grid_element_action::Hide);
@@ -301,6 +302,7 @@ void My_window::prep_for_remap()
 	if (st != My_window::Window_state::Normal) {
 		return;
 	}
+	has_remapped_chars = false;
 	speak_btn.hide();
 	speak_menu.hide();
 	map_btn.hide();
