@@ -22,7 +22,7 @@ void ch15_e02::repeat_on_click(Btn_win& win,
                                fct::Fct& f)
 {
 	while (win.shown()) {
-		while (!win.btn_has_been_clicked) {
+		while (win.shown() && !win.btn_has_been_clicked) {
 			Fl::wait();
 		}
 		action(f);
