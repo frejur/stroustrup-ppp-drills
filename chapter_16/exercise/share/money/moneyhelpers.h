@@ -89,8 +89,12 @@ inline const long decimal_to_cents(double amt_as_dbl, bool allow_infoloss=false)
 	return amt_as_long;
 }
 
-constexpr int XRATE_SIGNIFICANT_DIGITS() { return 7; };
-constexpr long long XRATE_FACTOR() {
+inline const int XRATE_SIGNIFICANT_DIGITS()
+{
+	return 7;
+};
+inline const long long XRATE_FACTOR()
+{
 	return exp_f(XRATE_SIGNIFICANT_DIGITS());
 }
 
