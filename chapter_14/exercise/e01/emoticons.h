@@ -24,10 +24,18 @@ inline const Graph_lib::Color& smiley_default_bg_color()
 
 struct Eye_attr
 {
-	Graph_lib::Point origin;
+	Eye_attr(Graph_lib::Point p_origin,
+	         int p_width,
+	         int p_height,
+	         int p_offset_x)
+	    : origin(p_origin)
+	    , width(p_width)
+	    , height(p_height)
+	    , offset_x(p_offset_x){};
 	int width{0};
 	int height{0};
 	int offset_x{0};
+	Graph_lib::Point origin;
 };
 
 Eye_attr eye_attributes(Graph_lib::Point pos, int radius);
