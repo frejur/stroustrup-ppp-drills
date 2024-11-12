@@ -13,7 +13,7 @@ namespace BOX { //------------------------------------------
 
 enum class CrvMethod {	Ratio, Radius };
 enum class Corner { NW, NE, SE, SW }; // North West, etc...
-enum class Flatten_side { None, Top, Right, Bottom, Left };
+enum class Flatten_side { No_side, Top, Right, Bottom, Left };
 
 class Box : public Graph_lib::Shape
 {
@@ -23,12 +23,12 @@ public:
 	    Graph_lib::Point e,
 	    double crv_ratio,
 	    CrvMethod m = CrvMethod::Ratio,
-	    Flatten_side fl = Flatten_side::None);
+	    Flatten_side fl = Flatten_side::No_side);
 	Box(Graph_lib::Point o,
 	    Graph_lib::Point e,
 	    int crv_radius,
 	    CrvMethod m,
-	    Flatten_side fl = Flatten_side::None)
+	    Flatten_side fl = Flatten_side::No_side)
 	    : Box(o, e, static_cast<double>(crv_radius), m, fl){};
 
 	// Define by top left corner point and size
@@ -37,13 +37,13 @@ public:
 	    int h,
 	    double crv_ratio,
 	    CrvMethod m = CrvMethod::Ratio,
-	    Flatten_side fl = Flatten_side::None);
+	    Flatten_side fl = Flatten_side::No_side);
 	Box(Graph_lib::Point o,
 	    int w,
 	    int h,
 	    int crv_radius,
 	    CrvMethod m,
-	    Flatten_side fl = Flatten_side::None)
+	    Flatten_side fl = Flatten_side::No_side)
 	    : Box(o, w, h, static_cast<double>(crv_radius), m, fl){};
 	void draw_lines() const; // override Shape::draw_lines()
 	enum Drawing_mode { DRAW_STROKE, DRAW_FILL };

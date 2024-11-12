@@ -265,7 +265,7 @@ bool Box::corner_is_flat(Corner c) const
 		return (c == Corner::SE || c == Corner::SW);
 	case Flatten_side::Left:
 		return (c == Corner::NW || c == Corner::SW);
-	case Flatten_side::None:
+	case Flatten_side::No_side:
 	default:
 		return false;
 	}
