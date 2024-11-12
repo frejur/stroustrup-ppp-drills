@@ -1,5 +1,6 @@
 #include "../share/parse/csv_parser.h"
 #include "e09.h"
+#include <cmath>
 #include <fstream>
 
 std::ostream& operator<<(std::ostream& os, const ch15_e09::Distr_height h)
