@@ -31,6 +31,9 @@ int e04()
 	    "Complacent placement",
 	};
 
+	// Select a random initial position
+	win.random();
+
 	return Graph_lib::gui_main();
 }
 
