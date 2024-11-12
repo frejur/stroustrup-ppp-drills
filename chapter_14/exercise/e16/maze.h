@@ -7,7 +7,7 @@
 
 namespace ch14_e16 {
 
-enum class Pill_dir { None = -1, Up, Right, Down, Left };
+enum class Pill_dir { No_direction = -1, Up, Right, Down, Left };
 
 class Pill : public Graph_lib::Circle
 {

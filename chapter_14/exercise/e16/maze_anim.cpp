@@ -62,7 +62,7 @@ void ch14_e16::Maze_animator::animate()
 
 		if (ontop_of_pill || passes_pill) {
 			Pill_dir pill_d = m.pill_direction(i);
-			if (pill_d != Pill_dir::None) {
+			if (pill_d != Pill_dir::No_direction) {
 				new_pos = pill_pos;
 				pac::Pacman_dir pac_d{};
 				if (pill_d == Pill_dir::Up) {

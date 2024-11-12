@@ -235,7 +235,7 @@ void ch14_e16::Maze::add_pill(const int col, const int row, const char c)
 	Pill_dir d;
 	switch (c) {
 	case '.':
-		d = Pill_dir::None;
+		d = Pill_dir::No_direction;
 		break;
 	case 'u':
 		d = Pill_dir::Up;
