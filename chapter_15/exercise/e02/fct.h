@@ -31,19 +31,12 @@ public:
 	             double yscale = 25);
 
 	void set_function(Fn f);
-	;
 	void set_function(double (*f)(double));
-	;
 	void set_range(int start, int end);
-	;
 	void set_origin(Graph_lib::Point o);
-	;
 	void set_count(int c);
-	;
 	void set_x_scale(double xscale);
-	;
 	void set_y_scale(double yscale);
-	;
 
 	virtual void draw_lines() const override;
 
