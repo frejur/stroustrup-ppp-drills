@@ -41,7 +41,7 @@ inline const int count_d(long long num) {
     return c;
 }
 
-constexpr long double exp_f(int e)
+inline const long double exp_f(int e)
 {
 	if (e == 0) {
 		return 1;
