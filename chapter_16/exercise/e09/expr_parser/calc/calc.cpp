@@ -1,5 +1,6 @@
 #include "calc.h"
 #include "../help/help.h"
+#include <cmath>
 
 namespace {
 using std::string;
