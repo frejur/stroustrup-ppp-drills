@@ -22,7 +22,8 @@ public:
 	Validated_in_box(Graph_lib::Point top_left,
 	                 int width,
 	                 int height,
-	                 const std::string &label,
+	                 const std::string& label,
+	                 const std::string& default_value_as_string,
 	                 Graph_lib::Callback callback_fn);
 
 	// Widget overides
@@ -30,8 +31,8 @@ public:
 	virtual void move(int dx, int dy) override;
 
 	// Enable / disable
-	void enable();
-	void disable();
+	void enable() { enabled = true; };
+	void disable() { enabled = false; };
 	bool is_enabled() const { return enabled; };
 
 	// Validation, state
@@ -58,9 +59,29 @@ private:
 	State state;
 	std::string default_val;
 	std::string latest_val;
+	Graph_lib::Color frame_clr;
+	Graph_lib::Line_style frame_sty;
 	Graph_lib::Rectangle frame;
 
 protected:
+	enum class Value_type { Integer_value, Double_value };
+
+	// String conversion helper
+	class Converted_value
+	{
+	public:
+		Converted_value(Value_type t, const std::string& s);
+		bool has_succeeded() const { return success; }
+		int get_int();
+		double get_double();
+
+	private:
+		bool success;
+		Value_type type;
+		int value_int;
+		double value_double;
+	};
+
 	// Depending on the derived type, one of these getters needs to be made
 	// public
 	virtual std::string get_valid_string();
@@ -69,12 +90,15 @@ protected:
 
 	// Derived types need to implement this to reflect their specific
 	// conditions for what qualifies as a valid value
-	virtual State check_val(const std::string &s) = 0;
+	void check_default_val(); // Only used for initialization, will throw
+	                          // an exception on failure
+	virtual State check_val(const std::string& s) = 0;
 
-	void put(const std::string &s);
+	void put(const std::string& s); // Update input field
 
-	void mark_frame() const;
-	void reset_frame() const;
+	// Frame appearance
+	void mark_frame();
+	void reset_frame();
 };
 
 #endif // VALID_IN_H
