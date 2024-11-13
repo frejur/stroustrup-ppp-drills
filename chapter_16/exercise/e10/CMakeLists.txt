@@ -6,6 +6,8 @@ add_executable(${T_THIS}
     e10.cpp
     my_win.h my_win.cpp
     
+    valid_in.h valid_in.cpp
+    
     ../share/shape_button.h ../share/shape_button.cpp
     ../share/image_button.h ../share/image_button.cpp
     ../share/shape_button_state.cpp
