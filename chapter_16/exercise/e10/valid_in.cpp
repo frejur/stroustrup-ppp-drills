@@ -33,6 +33,13 @@ Converted_value::Converted_value(Value_type t, const string& s)
     , value_int(0)
     , value_double(0)
 {
+	// If the type is 'String', no need to convert anything, use the raw value
+	if (t == Value_type::String_value) {
+		success = true;
+		return;
+	}
+
+	// Convert to int / double
 	std::istringstream istr{s};
 	int new_i;
 	double new_d;
@@ -42,6 +49,7 @@ Converted_value::Converted_value(Value_type t, const string& s)
 		istr >> new_d;
 	}
 
+	// If the initial conversion succeeded
 	if (istr) {
 		char c;
 		success = true; // Assume true, check that only whitespace remains
@@ -221,6 +229,12 @@ void Validated_in_box::check_default_val()
 	State_and_converted_value st_val = conv_and_check_val(default_val);
 	if (!st_val.value.has_succeeded() || st_val.state != State::Valid) {
 		throw std::runtime_error("Invalid default value");
+	}
+	if (st_val.value.type() == Converted_value::Value_type::Integer_value) {
+		default_val_int = st_val.value.get_int();
+	} else if (st_val.value.type()
+	           == Converted_value::Value_type::Double_value) {
+		default_val_double = st_val.value.get_double();
 	}
 	conv_val = st_val.value;
 	state = st_val.state;

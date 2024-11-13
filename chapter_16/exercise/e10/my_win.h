@@ -13,7 +13,7 @@ public:
 
 private:
 	Validated_int_min_max_in_box test;
-	Graph_lib::In_box in;
+	Graph_lib::Out_box out;
 };
 
 #endif // MY_WIN_H

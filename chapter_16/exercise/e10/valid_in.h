@@ -7,7 +7,12 @@
 class Converted_value
 {
 public:
-	enum class Value_type { Not_a_type, Integer_value, Double_value };
+	enum class Value_type {
+		Not_a_type,
+		String_value,
+		Integer_value,
+		Double_value
+	};
 	Converted_value();
 	Converted_value(Value_type t, const std::string& s);
 	Value_type type() const { return type_; }
