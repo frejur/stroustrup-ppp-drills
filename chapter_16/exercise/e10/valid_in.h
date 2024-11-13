@@ -2,6 +2,24 @@
 #define VALID_IN_H
 #include "../../lib/GUI.h"
 #include "../../lib/Graph.h"
+// String conversion helpers
+
+enum class Value_type { Integer_value, Double_value };
+
+class Converted_value
+{
+public:
+	Converted_value(Value_type t, const std::string& s);
+	bool has_succeeded() const { return success; }
+	int get_int();
+	double get_double();
+
+private:
+	bool success;
+	Value_type type;
+	int value_int;
+	double value_double;
+};
 
 //------------------------------------------------------------------------------
 // An In_box that validates its value and triggers its callback function when
@@ -64,26 +82,7 @@ private:
 	Graph_lib::Rectangle frame;
 
 protected:
-	enum class Value_type { Integer_value, Double_value };
-
-	// String conversion helper
-	class Converted_value
-	{
-	public:
-		Converted_value(Value_type t, const std::string& s);
-		bool has_succeeded() const { return success; }
-		int get_int();
-		double get_double();
-
-	private:
-		bool success;
-		Value_type type;
-		int value_int;
-		double value_double;
-	};
-
-	// Depending on the derived type, one of these getters needs to be made
-	// public
+	// Depending on the derived type, one of these getters should be made public
 	virtual std::string get_valid_string();
 	virtual int get_valid_int();
 	virtual double get_valid_double();
@@ -99,6 +98,40 @@ protected:
 	// Frame appearance
 	void mark_frame();
 	void reset_frame();
+};
+//------------------------------------------------------------------------------
+
+class Validated_string_in_box : public Validated_in_box
+{
+public:
+	using Validated_in_box::get_valid_string;
+	using Validated_in_box::Validated_in_box;
+};
+//------------------------------------------------------------------------------
+
+class Validated_int_in_box : public Validated_in_box
+{
+public:
+	Validated_int_in_box(Graph_lib::Point top_left,
+	                     int width,
+	                     int height,
+	                     const std::string& label,
+	                     int default_value_as_int,
+	                     Graph_lib::Callback callback_fn);
+	using Validated_in_box::get_valid_int;
+};
+//------------------------------------------------------------------------------
+
+class Validated_double_in_box : public Validated_in_box
+{
+public:
+	Validated_double_in_box(Graph_lib::Point top_left,
+	                        int width,
+	                        int height,
+	                        const std::string& label,
+	                        int default_value_as_double,
+	                        Graph_lib::Callback callback_fn);
+	using Validated_in_box::get_valid_double;
 };
 
 #endif // VALID_IN_H

@@ -15,7 +15,64 @@ const Graph_lib::Line_style& frame_style()
 	    Graph_lib::Line_style(Graph_lib::Line_style::solid, frame_thickness)};
 	return s;
 }
+
+std::string initial_int_str(int i);
+std::string initial_double_str(double i);
 } // namespace
+//------------------------------------------------------------------------------
+
+Converted_value::Converted_value(Value_type t, const string& s)
+    : success(false)
+    , type(t)
+    , value_int(0)
+    , value_double(0)
+{
+	std::istringstream istr{s};
+	int new_i;
+	double new_d;
+	if (t == Value_type::Integer_value) {
+		istr >> new_i;
+	} else {
+		istr >> new_d;
+	}
+
+	if (istr) {
+		char c;
+		success = true; // Assume true, check that only whitespace remains
+		while (istr.get(c)) {
+			if (!std::isspace(static_cast<unsigned char>(c))) {
+				success = false;
+				break;
+			}
+		}
+	}
+
+	if (success) {
+		if (t == Value_type::Integer_value) {
+			value_int = new_i;
+		} else {
+			value_double = new_d;
+		}
+	}
+}
+
+int Converted_value::get_int()
+{
+	if (type != Value_type::Integer_value) {
+		return value_int;
+	} else {
+		return static_cast<int>(value_double); // Possible, but not recommended
+	}
+}
+
+double Converted_value::get_double()
+{
+	if (type != Value_type::Double_value) {
+		return value_double;
+	} else {
+		return static_cast<double>(value_int); // Possible, but not recommended
+	}
+}
 //------------------------------------------------------------------------------
 
 Validated_in_box::Validated_in_box(Graph_lib::Point top_left,
@@ -113,61 +170,6 @@ int Validated_in_box::label_width() const
 	return ch16_hlp::calc_lb_w(label, p.labelfont(), p.labelsize());
 }
 //------------------------------------------------------------------------------
-
-Validated_in_box::Converted_value::Converted_value(Value_type t, const string& s)
-    : success(false)
-    , type(t)
-    , value_int(0)
-    , value_double(0)
-{
-	std::istringstream istr{s};
-	int new_i;
-	double new_d;
-	if (t == Value_type::Integer_value) {
-		istr >> new_i;
-	} else {
-		istr >> new_d;
-	}
-
-	if (istr) {
-		char c;
-		success = true; // Assume true, check that only whitespace remains
-		while (istr.get(c)) {
-			if (!std::isspace(static_cast<unsigned char>(c))) {
-				success = false;
-				break;
-			}
-		}
-	}
-
-	if (success) {
-		if (t == Value_type::Integer_value) {
-			value_int = new_i;
-		} else {
-			value_double = new_d;
-		}
-	}
-}
-
-int Validated_in_box::Converted_value::get_int()
-{
-	if (type != Value_type::Integer_value) {
-		return value_int;
-	} else {
-		return static_cast<int>(value_double); // Possible, but not recommended
-	}
-}
-
-double Validated_in_box::Converted_value::get_double()
-{
-	if (type != Value_type::Double_value) {
-		return value_double;
-	} else {
-		return static_cast<double>(value_int); // Possible, but not recommended
-	}
-}
-//------------------------------------------------------------------------------
-
 string Validated_in_box::get_valid_string()
 {
 	validate();
@@ -240,3 +242,51 @@ void Validated_in_box::reset_frame()
 	frame.set_color(Graph_lib::Color(Graph_lib::Color::black,
 	                                 Graph_lib::Color::Transparency::invisible));
 }
+
+//------------------------------------------------------------------------------
+namespace {
+std::string initial_int_str(int i)
+{
+	std::ostringstream oss{};
+	oss << i;
+	return oss.str();
+}
+} // namespace
+
+Validated_int_in_box::Validated_int_in_box(Graph_lib::Point top_left,
+                                           int width,
+                                           int height,
+                                           const string& label,
+                                           int default_value_as_int,
+                                           Graph_lib::Callback callback_fn)
+    : Validated_in_box(top_left,
+                       width,
+                       height,
+                       label,
+                       initial_int_str(default_value_as_int),
+                       callback_fn)
+{}
+
+//------------------------------------------------------------------------------
+namespace {
+std::string initial_double_str(double d)
+{
+	std::ostringstream oss{};
+	oss << d;
+	return oss.str();
+}
+} // namespace
+
+Validated_double_in_box::Validated_double_in_box(Graph_lib::Point top_left,
+                                                 int width,
+                                                 int height,
+                                                 const string& label,
+                                                 int default_value_as_double,
+                                                 Graph_lib::Callback callback_fn)
+    : Validated_in_box(top_left,
+                       width,
+                       height,
+                       label,
+                       initial_double_str(default_value_as_double),
+                       callback_fn)
+{}
