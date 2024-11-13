@@ -158,7 +158,7 @@ public:
 	                        int width,
 	                        int height,
 	                        const std::string& label,
-	                        int default_value_as_double,
+	                        double default_value_as_double,
 	                        Graph_lib::Callback callback_fn);
 	using Validated_in_box::get_valid_double;
 };

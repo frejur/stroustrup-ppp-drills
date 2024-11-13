@@ -301,7 +301,7 @@ Validated_double_in_box::Validated_double_in_box(Graph_lib::Point top_left,
                                                  int width,
                                                  int height,
                                                  const string& label,
-                                                 int default_value_as_double,
+                                                 double default_value_as_double,
                                                  Graph_lib::Callback callback_fn)
     : Validated_in_box(top_left,
                        width,
