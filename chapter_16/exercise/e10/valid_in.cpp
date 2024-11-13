@@ -64,7 +64,7 @@ Converted_value::Converted_value(Value_type t, const string& s)
 
 int Converted_value::get_int() const
 {
-	if (type_ != Value_type::Integer_value) {
+	if (type_ == Value_type::Integer_value) {
 		return value_int;
 	} else {
 		return static_cast<int>(value_double); // Possible, but not recommended
@@ -73,7 +73,7 @@ int Converted_value::get_int() const
 
 double Converted_value::get_double() const
 {
-	if (type_ != Value_type::Double_value) {
+	if (type_ == Value_type::Double_value) {
 		return value_double;
 	} else {
 		return static_cast<double>(value_int); // Possible, but not recommended
