@@ -13,8 +13,10 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
            [](void*, void* pw) {
 	           (*static_cast<My_window*>(pw)).validate_test();
            })
+    , in({x_max() / 2, 128}, 64, 32, "")
 {
 	attach(test);
+	attach(in);
 }
 
 void My_window::validate_test()

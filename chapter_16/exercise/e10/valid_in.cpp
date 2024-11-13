@@ -89,15 +89,17 @@ Validated_in_box::Validated_in_box(Graph_lib::Point top_left,
                                    Graph_lib::Callback callback_fn)
     : Graph_lib::Widget(top_left, w, h, label, callback_fn)
     , enabled(true)
+    , is_attached(false)
+    , state(State::Not_validated)
+    , default_val(default_value_as_string)
     , conv_val(Converted_value::Value_type::Integer_value, "0")
     , frame_clr(frame_color())
     , frame_sty(frame_style())
     , frame({top_left.x - frame_thickness, top_left.y - frame_thickness},
-            width + frame_thickness * 2,
-            height + frame_thickness * 2)
-    , state(State::Not_validated)
-    , default_val(default_value_as_string)
+            w + frame_thickness * 2,
+            h + frame_thickness * 2)
 {
+	int t = 0;
 }
 //------------------------------------------------------------------------------
 
@@ -236,12 +238,15 @@ void Validated_in_box::put(const string& s)
 void Validated_in_box::mark_frame()
 {
 	frame.set_color(frame_clr);
+	frame.set_style(frame_sty);
+	redraw_window();
 }
 
 void Validated_in_box::reset_frame()
 {
 	frame.set_color(Graph_lib::Color(Graph_lib::Color::black,
 	                                 Graph_lib::Color::Transparency::invisible));
+	redraw_window();
 }
 
 //------------------------------------------------------------------------------

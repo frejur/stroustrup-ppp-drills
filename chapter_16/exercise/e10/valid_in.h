@@ -116,6 +116,12 @@ protected:
 	// Frame appearance
 	void mark_frame();
 	void reset_frame();
+
+	inline void redraw_window() const
+	{
+		Graph_lib::Window& w{*static_cast<Graph_lib::Window*>(own)};
+		w.redraw();
+	}
 };
 //------------------------------------------------------------------------------
 

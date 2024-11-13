@@ -24,8 +24,8 @@ Validated_int_min_max_in_box::Validated_int_min_max_in_box(
                            label,
                            default_value_as_int,
                            callback_fn)
-    , min(valid_min(min_value))
-    , max(valid_max(min, max_value))
+    , min_val(valid_min(min_value))
+    , max_val(valid_max(min_val, max_value))
 {}
 
 Validated_in_box::State_and_converted_value
