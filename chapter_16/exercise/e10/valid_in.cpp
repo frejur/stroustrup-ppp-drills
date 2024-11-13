@@ -21,9 +21,15 @@ std::string initial_double_str(double i);
 } // namespace
 //------------------------------------------------------------------------------
 
+Converted_value::Converted_value()
+    : success(false)
+    , type_(Value_type::Not_a_type)
+    , value_int(0)
+    , value_double(0) {};
+
 Converted_value::Converted_value(Value_type t, const string& s)
     : success(false)
-    , type(t)
+    , type_(t)
     , value_int(0)
     , value_double(0)
 {
@@ -56,18 +62,18 @@ Converted_value::Converted_value(Value_type t, const string& s)
 	}
 }
 
-int Converted_value::get_int()
+int Converted_value::get_int() const
 {
-	if (type != Value_type::Integer_value) {
+	if (type_ != Value_type::Integer_value) {
 		return value_int;
 	} else {
 		return static_cast<int>(value_double); // Possible, but not recommended
 	}
 }
 
-double Converted_value::get_double()
+double Converted_value::get_double() const
 {
-	if (type != Value_type::Double_value) {
+	if (type_ != Value_type::Double_value) {
 		return value_double;
 	} else {
 		return static_cast<double>(value_int); // Possible, but not recommended
@@ -83,6 +89,7 @@ Validated_in_box::Validated_in_box(Graph_lib::Point top_left,
                                    Graph_lib::Callback callback_fn)
     : Graph_lib::Widget(top_left, w, h, label, callback_fn)
     , enabled(true)
+    , conv_val(Converted_value::Value_type::Integer_value, "0")
     , frame_clr(frame_color())
     , frame_sty(frame_style())
     , frame({top_left.x - frame_thickness, top_left.y - frame_thickness},
@@ -91,9 +98,6 @@ Validated_in_box::Validated_in_box(Graph_lib::Point top_left,
     , state(State::Not_validated)
     , default_val(default_value_as_string)
 {
-	put(default_val);
-	check_default_val();
-	reset_frame();
 }
 //------------------------------------------------------------------------------
 
@@ -122,6 +126,10 @@ void Validated_in_box::attach(Graph_lib::Window& win)
 	}
 
 	is_attached = true;
+
+	put(default_val);
+	check_default_val();
+	reset_frame();
 }
 
 void Validated_in_box::move(int dx, int dy)
@@ -137,8 +145,13 @@ void Validated_in_box::validate()
 		return;
 	}
 
-	state = check_val(raw_value());
-	if (get_state() == State::Valid) {
+	// Convert and validate
+	conv_val = Converted_value();
+	State_and_converted_value st_val = conv_and_check_val(raw_value());
+
+	state = st_val.state;
+	if (state == State::Valid) {
+		conv_val = st_val.value;
 		reset_frame();
 	} else {
 		mark_frame();
@@ -183,16 +196,9 @@ string Validated_in_box::get_valid_string()
 int Validated_in_box::get_valid_int()
 {
 	validate();
-	int val_int = 0;
+	int val_int = default_val_int;
 	if (get_state() == State::Valid) {
-		Converted_value val{Value_type::Integer_value, raw_value()};
-		if (val.has_succeeded()) {
-			val_int = val.get_int();
-		} else {
-			Converted_value default_val_int{Value_type::Integer_value,
-			                                default_value()};
-			val_int = default_val_int.get_int();
-		}
+		val_int = conv_val.get_int();
 	}
 	return val_int;
 }
@@ -200,16 +206,9 @@ int Validated_in_box::get_valid_int()
 double Validated_in_box::get_valid_double()
 {
 	validate();
-	double val_double = 0;
+	double val_double = default_val_double;
 	if (get_state() == State::Valid) {
-		Converted_value val{Value_type::Double_value, raw_value()};
-		if (val.has_succeeded()) {
-			val_double = val.get_double();
-		} else {
-			Converted_value default_val_double{Value_type::Double_value,
-			                                   default_value()};
-			val_double = default_val_double.get_double();
-		}
+		val_double = conv_val.get_double();
 	}
 	return val_double;
 }
@@ -217,10 +216,12 @@ double Validated_in_box::get_valid_double()
 
 void Validated_in_box::check_default_val()
 {
-	state = check_val(default_val);
-	if (state != State::Valid) {
+	State_and_converted_value st_val = conv_and_check_val(default_val);
+	if (!st_val.value.has_succeeded() || st_val.state != State::Valid) {
 		throw std::runtime_error("Invalid default value");
 	}
+	conv_val = st_val.value;
+	state = st_val.state;
 }
 //------------------------------------------------------------------------------
 

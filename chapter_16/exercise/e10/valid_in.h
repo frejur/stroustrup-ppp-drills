@@ -4,19 +4,20 @@
 #include "../../lib/Graph.h"
 // String conversion helpers
 
-enum class Value_type { Integer_value, Double_value };
-
 class Converted_value
 {
 public:
+	enum class Value_type { Not_a_type, Integer_value, Double_value };
+	Converted_value();
 	Converted_value(Value_type t, const std::string& s);
+	Value_type type() const { return type_; }
 	bool has_succeeded() const { return success; }
-	int get_int();
-	double get_double();
+	int get_int() const;
+	double get_double() const;
 
 private:
 	bool success;
-	Value_type type;
+	Value_type type_;
 	int value_int;
 	double value_double;
 };
@@ -75,23 +76,40 @@ private:
 	bool enabled;
 	bool is_attached;
 	State state;
+	int default_val_int;
+	double default_val_double;
 	std::string default_val;
 	std::string latest_val;
+	Converted_value conv_val;
 	Graph_lib::Color frame_clr;
 	Graph_lib::Line_style frame_sty;
 	Graph_lib::Rectangle frame;
 
 protected:
+	// Used to collect the results of `conv_and_check_val()`
+	struct State_and_converted_value
+	{
+		State_and_converted_value(State s, Converted_value v)
+		    : state(s)
+		    , value(v) {};
+		State state;
+		Converted_value value;
+	};
+
 	// Depending on the derived type, one of these getters should be made public
 	virtual std::string get_valid_string();
 	virtual int get_valid_int();
 	virtual double get_valid_double();
 
+	int default_value_int() const { return default_val_int; }
+	double default_value_double() const { return default_val_double; }
+
 	// Derived types need to implement this to reflect their specific
 	// conditions for what qualifies as a valid value
 	void check_default_val(); // Only used for initialization, will throw
 	                          // an exception on failure
-	virtual State check_val(const std::string& s) = 0;
+	virtual State_and_converted_value conv_and_check_val(const std::string& s)
+	    = 0;
 
 	void put(const std::string& s); // Update input field
 
