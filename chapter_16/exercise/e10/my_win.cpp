@@ -9,6 +9,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
            0,
            -10,
            10,
+           1,
            [](void*, void* pw) {
 	           (*static_cast<My_window*>(pw)).validate_test();
            })
@@ -33,7 +34,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 
 void My_window::validate_test()
 {
-	out.put(std::to_string(test.get_valid_int()));
+	out.put(std::to_string(test.value()));
 }
 
 void My_window::validate_test2()
