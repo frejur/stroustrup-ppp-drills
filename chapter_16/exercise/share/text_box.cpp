@@ -60,14 +60,10 @@ void shp_btn::Text_box::draw_lines() const
 		fl_font(fnt.as_int(), fnt_sz);
 
 		if (align == Alignment::Center) {
-			Graph_lib::Point c{
-			    point(0).x
-			        + static_cast<int>(
-			            std::round((point(1).x - point(0).x) * 0.5)),
-			    point(0).y
-			        + static_cast<int>(
-			            std::round((point(1).y - point(0).y) * 0.5)),
-			};
+			Graph_lib::Point c{point(0).x
+			                       + static_cast<int>(std::round(
+			                           (point(1).x - point(0).x) * 0.5)),
+			                   point(1).y - fl_descent()};
 			ch16_hlp::draw_text(c,
 			                    label(),
 			                    font(),
@@ -76,8 +72,7 @@ void shp_btn::Text_box::draw_lines() const
 			                    ch16_hlp::Text_alignment::Center);
 		} else {
 			Graph_lib::Point pt{point(0)};
-			pt.y += static_cast<int>(
-			    std::round((point(1).y - point(0).y) * 0.5));
+			pt.y = point(1).y - fl_descent();
 			pt.x += (align == Alignment::Left) ? horizontal_padding
 			                                   : (w - horizontal_padding);
 			ch16_hlp::Text_alignment ta = (align == Alignment::Left)
