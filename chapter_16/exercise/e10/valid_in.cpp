@@ -138,6 +138,7 @@ void Validated_in_box::attach(Graph_lib::Window& win)
 	is_attached = true;
 
 	put(default_val);
+	latest_val = default_val;
 	check_default_val();
 	reset_frame();
 }
@@ -162,6 +163,7 @@ void Validated_in_box::validate()
 	state = st_val.state;
 	if (state == State::Valid) {
 		conv_val = st_val.value;
+		latest_val = raw_value();
 		reset_frame();
 	} else {
 		mark_frame();
@@ -245,7 +247,6 @@ void Validated_in_box::put(const string& s)
 {
 	Fl_Input& p = *static_cast<Fl_Input*>(pw);
 	p.value(s.c_str());
-	latest_val = s;
 }
 //------------------------------------------------------------------------------
 
