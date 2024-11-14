@@ -3,7 +3,7 @@
 
 #include "../../lib/Graph.h"
 #include "../../lib/Window.h"
-#include "step_in.h"
+#include "step_in_int.h"
 #include "valid_dbl_mm.h"
 
 class My_window : public Graph_lib::Window
