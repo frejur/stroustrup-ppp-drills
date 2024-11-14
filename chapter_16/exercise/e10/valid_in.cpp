@@ -1,6 +1,7 @@
 #include "valid_in.h"
 #include "../share/ch16_helpers.h"
 #include <FL/Fl_Output.H>
+#include <iomanip>
 
 namespace {
 constexpr int frame_thickness = 2;
@@ -262,6 +263,56 @@ void Validated_in_box::reset_frame()
 	frame.set_color(Graph_lib::Color(Graph_lib::Color::black,
 	                                 Graph_lib::Color::Transparency::invisible));
 	redraw_window();
+}
+//------------------------------------------------------------------------------
+
+std::string Validated_double_in_box::format_dbl(double d)
+{
+	// Double to string
+	std::ostringstream ostr;
+	ostr << std::fixed << std::showpoint << d;
+
+	// String to Integer part, decimal point, and Fractional part
+	int int_part = 0;
+	char dot;
+	int fract_part = 0;
+	std::istringstream istr{ostr.str()};
+	istr >> int_part >> dot;
+
+	if (d == int_part) {
+		return std::to_string(int_part) + ".0";
+	}
+
+	// Check for leading zeros
+	int num_leading = 0;
+	char c{};
+	while (istr.get(c)) {
+		if (c == '0') {
+			++num_leading;
+		} else {
+			istr.putback(c);
+			break;
+		}
+	}
+
+	// Extract fractional part as integer, get rid of trailing zeros
+	istr >> fract_part;
+	while (fract_part > 0) {
+		int temp = fract_part / 10;
+		if (temp * 10 != fract_part) {
+			break;
+		}
+		fract_part /= 10;
+	}
+
+	// Rebuild formatted number string
+	ostr.str("");
+	ostr << int_part << '.';
+	for (int i = 0; i < num_leading; ++i) {
+		ostr << '0';
+	}
+	ostr << fract_part;
+	return ostr.str();
 }
 
 //------------------------------------------------------------------------------

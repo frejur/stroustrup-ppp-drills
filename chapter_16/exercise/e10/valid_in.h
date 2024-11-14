@@ -161,6 +161,9 @@ public:
 	                        double default_value_as_double,
 	                        Graph_lib::Callback callback_fn);
 	using Validated_in_box::get_valid_double;
+
+	// Formats double with at least one decimal digit and no trailing zeros
+	static std::string format_dbl(double d);
 };
 
 #endif // VALID_IN_H
