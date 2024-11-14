@@ -9,6 +9,7 @@ add_executable(${T_THIS}
     valid_in.h valid_in.cpp
     valid_int_mm.h valid_int_mm.cpp
     valid_dbl_mm.h valid_dbl_mm.cpp
+    step_in.h step_in.cpp
     
     ../share/shape_button.h ../share/shape_button.cpp
     ../share/image_button.h ../share/image_button.cpp
