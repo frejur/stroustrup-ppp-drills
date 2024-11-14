@@ -148,6 +148,7 @@ public:
 	                     int default_value_as_int,
 	                     Graph_lib::Callback callback_fn);
 	using Validated_in_box::get_valid_int;
+	void set_value(int i);
 };
 //------------------------------------------------------------------------------
 
@@ -161,6 +162,7 @@ public:
 	                        double default_value_as_double,
 	                        Graph_lib::Callback callback_fn);
 	using Validated_in_box::get_valid_double;
+	void set_value(double d);
 
 	// Formats double with at least one decimal digit and no trailing zeros
 	static std::string format_dbl(double d);

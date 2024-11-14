@@ -28,12 +28,6 @@ Validated_double_min_max_in_box::Validated_double_min_max_in_box(
     , max_val(valid_max(min_val, max_value))
 {}
 
-void Validated_double_min_max_in_box::set_value(double d)
-{
-	put(std::to_string(d));
-	validate();
-}
-
 Validated_in_box::State_and_converted_value
 Validated_double_min_max_in_box::conv_and_check_val(const string& s)
 {

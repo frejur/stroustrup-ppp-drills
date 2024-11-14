@@ -15,7 +15,6 @@ public:
 	                                Graph_lib::Callback callback_fn);
 	double min_value() const { return min_val; }
 	double max_value() const { return max_val; }
-	void set_value(double d);
 
 protected:
 	virtual State_and_converted_value conv_and_check_val(

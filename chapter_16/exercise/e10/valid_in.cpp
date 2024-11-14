@@ -338,6 +338,11 @@ Validated_int_in_box::Validated_int_in_box(Graph_lib::Point top_left,
                        initial_int_str(default_value_as_int),
                        callback_fn)
 {}
+void Validated_int_in_box::set_value(int i)
+{
+	put(std::to_string(i));
+	validate();
+}
 
 //------------------------------------------------------------------------------
 namespace {
@@ -362,3 +367,9 @@ Validated_double_in_box::Validated_double_in_box(Graph_lib::Point top_left,
                        initial_double_str(default_value_as_double),
                        callback_fn)
 {}
+
+void Validated_double_in_box::set_value(double d)
+{
+	put(std::to_string(d));
+	validate();
+}
