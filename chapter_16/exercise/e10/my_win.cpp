@@ -20,6 +20,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
             2.33,
             -5.5,
             12.25,
+            0.25,
             [](void*, void* pw) {
 	            (*static_cast<My_window*>(pw)).validate_test2();
             })
@@ -39,5 +40,5 @@ void My_window::validate_test()
 
 void My_window::validate_test2()
 {
-	out2.put(std::to_string(test2.get_valid_double()));
+	out2.put(Validated_double_in_box::format_dbl(test2.value()));
 }

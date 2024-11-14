@@ -3,8 +3,8 @@
 
 #include "../../lib/Graph.h"
 #include "../../lib/Window.h"
+#include "step_in_dbl.h"
 #include "step_in_int.h"
-#include "valid_dbl_mm.h"
 
 class My_window : public Graph_lib::Window
 {
@@ -15,7 +15,7 @@ public:
 
 private:
 	Step_int_in_box test;
-	Validated_double_min_max_in_box test2;
+	Step_double_in_box test2;
 	Graph_lib::Out_box out;
 	Graph_lib::Out_box out2;
 };

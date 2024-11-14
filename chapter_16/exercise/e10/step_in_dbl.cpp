@@ -1,7 +1,7 @@
 #include "step_in_dbl.h"
 
 namespace {
-constexpr double min_increment{1.0};
+constexpr double min_increment{0.01};
 constexpr double max_increment{256.0};
 double valid_incr(double incr, double min, double max);
 } // namespace
