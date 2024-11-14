@@ -13,6 +13,7 @@ public:
 	                             int min_value,
 	                             int max_value,
 	                             Graph_lib::Callback callback_fn);
+	void set_value(int i);
 	int min_value() const { return min_val; }
 	int max_value() const { return max_val; }
 
