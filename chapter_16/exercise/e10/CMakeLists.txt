@@ -11,6 +11,7 @@ add_executable(${T_THIS}
     valid_dbl_mm.h valid_dbl_mm.cpp
     step_in.h step_in.cpp
     step_in_int.h step_in_int.cpp
+    step_in_dbl.h step_in_dbl.cpp
     
     ../share/shape_button.h ../share/shape_button.cpp
     ../share/image_button.h ../share/image_button.cpp
