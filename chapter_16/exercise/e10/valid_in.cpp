@@ -370,6 +370,6 @@ Validated_double_in_box::Validated_double_in_box(Graph_lib::Point top_left,
 
 void Validated_double_in_box::set_value(double d)
 {
-	put(std::to_string(d));
+	put(format_dbl(d));
 	validate();
 }
