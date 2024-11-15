@@ -14,12 +14,19 @@ add_executable(${T_THIS}
     step_in_dbl.h step_in_dbl.cpp
     tgl.h tgl.cpp
     
+    # Canvas
+    ../share/canvas/canvas.cpp ../share/canvas/canvas.h
+    
+    # Shape_button
     ../share/shape_button.h ../share/shape_button.cpp
     ../share/image_button.h ../share/image_button.cpp
     ../share/shape_button_state.cpp
     ../share/text_box.cpp
+    
+    # Helpers
     ../share/ch16_helpers.h ../share/ch16_helpers.cpp
 
+    # Graph_lib
     ../../lib/Graph.h ../../lib/Graph.cpp
     ../../lib/GUI.h ../../lib/GUI.cpp
     ../../lib/Window.h ../../lib/Window.cpp
