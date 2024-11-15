@@ -12,6 +12,7 @@ add_executable(${T_THIS}
     step_in.h step_in.cpp
     step_in_int.h step_in_int.cpp
     step_in_dbl.h step_in_dbl.cpp
+    tgl.h tgl.cpp
     
     ../share/shape_button.h ../share/shape_button.cpp
     ../share/image_button.h ../share/image_button.cpp
