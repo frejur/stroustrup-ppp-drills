@@ -17,6 +17,9 @@ add_executable(${T_THIS}
     # Canvas
     ../share/canvas/canvas.cpp ../share/canvas/canvas.h
     
+    # Fct
+    ../share/fct.h ../share/fct.cpp
+    
     # Shape_button
     ../share/shape_button.h ../share/shape_button.cpp
     ../share/image_button.h ../share/image_button.cpp
