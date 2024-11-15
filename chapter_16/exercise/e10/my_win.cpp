@@ -4,9 +4,10 @@ namespace {
 constexpr float margin_top_factor{0.1};
 constexpr float margin_bottom_factor{0.05};
 constexpr float margin_side_factor{0.1};
-constexpr float function_controls_height_factor{0.05};
+constexpr float function_controls_height_factor{0.04};
 constexpr int number_of_functions{4};
 constexpr int function_controls_inbetween_padding{10};
+constexpr int label_padding{6};
 constexpr int canvas_lower_padding{32};
 const int calculate_canvas_height(int window_h,
                                   int top_margin,
@@ -48,6 +49,13 @@ const Graph_lib::Color& function_perlin_noise_color()
 	static const Graph_lib::Color c{
 	    Graph_lib::Color(fl_rgb_color(120, 235, 120))};
 	return c;
+}
+
+constexpr float label_font_size_factor{0.6};
+const Graph_lib::Font& label_font()
+{
+	static const Graph_lib::Font f{Graph_lib::Font::helvetica};
+	return f;
 }
 
 } // namespace
@@ -98,6 +106,18 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                  [](void*, void* pw) {
 	                 (*static_cast<My_window*>(pw)).toggle_prl();
                  })
+    , txt_fn_log({marg_sde + toggle_w + label_padding,
+                  tgl_fn_log.position().y + fn_ctrl_h / 2},
+                 "log(b, x + 1)")
+    , txt_fn_sin({marg_sde + toggle_w + label_padding,
+                  tgl_fn_sin.position().y + fn_ctrl_h / 2},
+                 "sin(x * f) + 1")
+    , txt_fn_sup({marg_sde + toggle_w + label_padding,
+                  tgl_fn_sup.position().y + fn_ctrl_h / 2},
+                 "0.5 * (1 + superellipse(x, n, m))")
+    , txt_fn_prl({marg_sde + toggle_w + label_padding,
+                  tgl_fn_prl.position().y + fn_ctrl_h / 2},
+                 "perlin_noise(x, o, p)")
     , fn_0_placeholder({marg_sde,
                         marg_top + canvas.height() + canvas_lower_padding},
                        content_w,
@@ -136,6 +156,31 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	tgl_fn_sup.turn_on();
 	attach(tgl_fn_prl);
 	tgl_fn_prl.turn_on();
+
+	// Function labels
+	attach(txt_fn_log);
+	attach(txt_fn_sin);
+	attach(txt_fn_sup);
+	attach(txt_fn_prl);
+	txt_fn_log.set_font(label_font());
+	txt_fn_sin.set_font(label_font());
+	txt_fn_sup.set_font(label_font());
+	txt_fn_prl.set_font(label_font());
+	int new_sz{static_cast<int>(fn_ctrl_h * label_font_size_factor)};
+	txt_fn_log.set_font_size(new_sz);
+	txt_fn_sin.set_font_size(new_sz);
+	txt_fn_sup.set_font_size(new_sz);
+	txt_fn_prl.set_font_size(new_sz);
+
+	// Adjust vertical placement
+	Graph_lib::Font old_f{fl_font()};
+	int old_sz{fl_size()};
+	fl_font(label_font().as_int(), new_sz);
+	txt_fn_log.move(0, new_sz / 2 - fl_descent() / 2);
+	txt_fn_sin.move(0, new_sz / 2 - fl_descent() / 2);
+	txt_fn_sup.move(0, new_sz / 2 - fl_descent() / 2);
+	txt_fn_prl.move(0, new_sz / 2 - fl_descent() / 2);
+	fl_font(old_f.as_int(), old_sz);
 }
 //------------------------------------------------------------------------------
 

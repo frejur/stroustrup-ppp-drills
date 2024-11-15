@@ -29,6 +29,12 @@ private:
 	Toggle tgl_fn_sup;
 	Toggle tgl_fn_prl;
 
+	// Function labels
+	Graph_lib::Text txt_fn_log;
+	Graph_lib::Text txt_fn_sin;
+	Graph_lib::Text txt_fn_sup;
+	Graph_lib::Text txt_fn_prl;
+
 	Graph_lib::Rectangle fn_0_placeholder;
 	Graph_lib::Rectangle fn_1_placeholder;
 	Graph_lib::Rectangle fn_2_placeholder;
