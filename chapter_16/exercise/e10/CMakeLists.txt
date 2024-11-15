@@ -19,6 +19,7 @@ add_executable(${T_THIS}
     
     # Fct
     ../share/fct.h ../share/fct.cpp
+    plot_fn.h plot_fn.cpp
     
     # Shape_button
     ../share/shape_button.h ../share/shape_button.cpp

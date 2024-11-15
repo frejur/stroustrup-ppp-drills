@@ -1,10 +1,18 @@
 #include "my_win.h"
+#include "plot_fn.h"
 
 namespace {
+constexpr float margin_side_factor{0.1}; // Multiplied by window width
+
+// Values multiplied by window height
 constexpr float margin_top_factor{0.1};
 constexpr float margin_bottom_factor{0.05};
-constexpr float margin_side_factor{0.1};
 constexpr float function_controls_height_factor{0.04};
+
+constexpr float parameter_block_width_factor{5.0}; // Multiplied by function
+                                                   // control height
+constexpr float parameter_label_width_factor{0.2}; // Multiplied by parameter
+                                                   // block width
 constexpr int number_of_functions{4};
 constexpr int function_controls_inbetween_padding{10};
 constexpr int label_padding{6};
@@ -27,6 +35,11 @@ const Graph_lib::Line_style& grid_style()
 	return s;
 }
 
+const Graph_lib::Line_style& function_style()
+{
+	static const Graph_lib::Line_style s{Graph_lib::Line_style::solid, 2};
+	return s;
+}
 const Graph_lib::Color& function_log_color()
 {
 	static const Graph_lib::Color c{
@@ -61,17 +74,25 @@ const Graph_lib::Font& label_font()
 } // namespace
 //------------------------------------------------------------------------------
 
+double Plot::fn_log_base = 2;
+
+//------------------------------------------------------------------------------
+
 My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
     : Window(xy, w, h, title)
     , marg_top(y_max() * margin_top_factor)
     , marg_btm(y_max() * margin_bottom_factor)
     , marg_sde(x_max() * margin_side_factor)
     , fn_ctrl_h(y_max() * function_controls_height_factor)
+    , pblock_w(fn_ctrl_h * parameter_block_width_factor)
+    , plabel_w(pblock_w * parameter_label_width_factor)
     , content_w(x_max() - marg_sde * 2)
     , toggle_w(fn_ctrl_h * 1.6)
     , canvas({marg_sde, marg_top},
              content_w,
              calculate_canvas_height(y_max(), marg_top, marg_btm, fn_ctrl_h))
+    , fn_log(Plot::fn_log, 0, 1, {0, 0}, 20, 1, 1)
+
     , tgl_fn_log({marg_sde, marg_top + canvas.height() + canvas_lower_padding},
                  toggle_w,
                  fn_ctrl_h,
@@ -118,6 +139,18 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
     , txt_fn_prl({marg_sde + toggle_w + label_padding,
                   tgl_fn_prl.position().y + fn_ctrl_h / 2},
                  "perlin_noise(x, o, p)")
+    , inb_fn_log_b({x_max() - marg_sde - pblock_w + plabel_w,
+                    tgl_fn_log.position().y},
+                   fn_ctrl_h * 1.6,
+                   fn_ctrl_h,
+                   "b:",
+                   2,
+                   2,
+                   10,
+                   0.5,
+                   [](void*, void* pw) {
+	                   (*static_cast<My_window*>(pw)).update_logarithmic_base();
+                   })
     , fn_0_placeholder({marg_sde,
                         marg_top + canvas.height() + canvas_lower_padding},
                        content_w,
@@ -147,6 +180,14 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	attach(canvas);
 	setup_canvas(canvas);
 
+	// Functions
+	fn_log.set_origin(canvas.position_from_value(0, 0));
+	fn_log.set_x_scale(canvas.x_scale_factor());
+	fn_log.set_y_scale(canvas.y_scale_factor());
+	attach(fn_log);
+	fn_log.set_color(function_log_color());
+	fn_log.set_style(function_style());
+
 	// Toggles
 	attach(tgl_fn_log);
 	tgl_fn_log.turn_on();
@@ -172,7 +213,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	txt_fn_sup.set_font_size(new_sz);
 	txt_fn_prl.set_font_size(new_sz);
 
-	// Adjust vertical placement
+	// Adjust vertical placement of labels
 	Graph_lib::Font old_f{fl_font()};
 	int old_sz{fl_size()};
 	fl_font(label_font().as_int(), new_sz);
@@ -181,12 +222,28 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	txt_fn_sup.move(0, new_sz / 2 - fl_descent() / 2);
 	txt_fn_prl.move(0, new_sz / 2 - fl_descent() / 2);
 	fl_font(old_f.as_int(), old_sz);
+
+	// Parameters
+	attach(inb_fn_log_b);
+}
+//------------------------------------------------------------------------------
+
+void My_window::update_logarithmic_base()
+{
+	double d = inb_fn_log_b.value();
+	Plot::fn_log_base = d;
+	fn_log.refresh();
 }
 //------------------------------------------------------------------------------
 
 void My_window::toggle_log()
 {
 	tgl_fn_log.toggle();
+	if (fn_log.is_visible()) {
+		fn_log.hide();
+	} else {
+		fn_log.show();
+	}
 }
 
 void My_window::toggle_sin()
