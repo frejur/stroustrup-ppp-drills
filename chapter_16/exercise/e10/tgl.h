@@ -18,8 +18,8 @@ public:
 	Toggle(Graph_lib::Point top_left,
 	       int width,
 	       int height,
-	       Graph_lib::Callback callback_fn,
-	       Graph_lib::Color active_bg_color);
+	       Graph_lib::Color active_bg_color,
+	       Graph_lib::Callback callback_fn);
 
 	// Control State
 	void toggle();

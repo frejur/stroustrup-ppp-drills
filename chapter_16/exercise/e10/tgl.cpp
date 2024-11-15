@@ -26,18 +26,18 @@ const Graph_lib::Color& transparent()
 Toggle::Toggle(Graph_lib::Point top_left,
                int width,
                int height,
-               Graph_lib::Callback callback_fn,
-               Graph_lib::Color active_bg_color)
+               Graph_lib::Color active_bg_color,
+               Graph_lib::Callback callback_fn)
     : shp_btn::Shape_button(top_left,
                             width,
                             height,
                             "",
                             callback_fn,
-                            active_bg_color)
+                            default_inactive_color())
     , is_on_(false)
     , on_fill(active_bg_color)
     , off_fill(default_inactive_color())
-    , tgl_square({top_left.x + width / 2, top_left.y + padding},
+    , tgl_square({top_left.x + padding, top_left.y + padding},
                  width / 2 - padding,
                  height - 2 * padding)
 {
@@ -58,13 +58,13 @@ void Toggle::toggle()
 
 void Toggle::turn_on()
 {
-	normalize();
+	activate();
 	is_on_ = true;
 }
 
 void Toggle::turn_off()
 {
-	activate();
+	normalize();
 	is_on_ = false;
 }
 //------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ void Toggle::activate()
 	Shape_button::activate();
 
 	tgl_square.move(tgl_square.width(), 0);
-	tgl_square.set_fill_color(on_fill);
+	Shape_button::set_fill_color(on_fill);
 }
 
 void Toggle::normalize()
@@ -88,7 +88,7 @@ void Toggle::normalize()
 	Shape_button::normalize();
 
 	tgl_square.move(-tgl_square.width(), 0);
-	tgl_square.set_fill_color(off_fill);
+	Shape_button::set_fill_color(off_fill);
 }
 //------------------------------------------------------------------------------
 

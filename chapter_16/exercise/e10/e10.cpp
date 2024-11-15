@@ -46,7 +46,7 @@ int e10()
 	My_window win{
 	    {10, 10},
 	    640,
-	    480,
+	    544,
 	    "Disturbing the peace",
 	};
 
