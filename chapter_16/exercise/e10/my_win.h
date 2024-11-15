@@ -11,17 +11,18 @@ class My_window : public Graph_lib::Window
 {
 public:
 	My_window(Graph_lib::Point xy, int w, int h, const string& title);
-	void validate_test();
-	void validate_test2();
-	void toggle_test();
 
 private:
-	Step_int_in_box test;
-	Step_double_in_box test2;
-	Toggle tgl_test;
-	Graph_lib::Out_box out;
-	Graph_lib::Out_box out2;
-	Graph_lib::Out_box out3;
+	const int marg_top;
+	const int marg_btm;
+	const int marg_sde;
+	const int fn_ctrl_h;
+	const int content_w;
+	Graph_lib::Rectangle canv_placeholder;
+	Graph_lib::Rectangle fn_0_placeholder;
+	Graph_lib::Rectangle fn_1_placeholder;
+	Graph_lib::Rectangle fn_2_placeholder;
+	Graph_lib::Rectangle fn_3_placeholder;
 };
 
 #endif // MY_WIN_H

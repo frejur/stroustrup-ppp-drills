@@ -1,60 +1,65 @@
 #include "my_win.h"
 
+namespace {
+constexpr float margin_top_factor{0.1};
+constexpr float margin_bottom_factor{0.05};
+constexpr float margin_side_factor{0.1};
+constexpr float function_controls_height_factor{0.05};
+constexpr int number_of_functions{4};
+constexpr int function_controls_inbetween_padding{5};
+constexpr int canvas_lower_padding{10};
+const int calculate_canvas_height(int window_h,
+                                  int top_margin,
+                                  int btm_margin,
+                                  int control_h)
+{
+	int pad_count = (number_of_functions > 0)
+	                    ? (function_controls_inbetween_padding - 1)
+	                    : 0;
+	return window_h - top_margin - number_of_functions * control_h
+	       - pad_count * function_controls_inbetween_padding
+	       - canvas_lower_padding - btm_margin;
+}
+} // namespace
+//------------------------------------------------------------------------------
+
 My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
     : Window(xy, w, h, title)
-    , test({x_max() / 2, 64},
-           64,
-           32,
-           "Integer (-10 to 10)",
-           0,
-           -10,
-           10,
-           1,
-           [](void*, void* pw) {
-	           (*static_cast<My_window*>(pw)).validate_test();
-           })
-    , test2({x_max() / 2, 224},
-            64,
-            32,
-            "Double (-5.5 to 12.25)",
-            2.33,
-            -5.5,
-            12.25,
-            0.25,
-            [](void*, void* pw) {
-	            (*static_cast<My_window*>(pw)).validate_test2();
-            })
-    , tgl_test({x_max() / 2, 384},
-               64,
-               32,
-               Graph_lib::Color::dark_green,
-               [](void*, void* pw) {
-	               (*static_cast<My_window*>(pw)).toggle_test();
-               })
-    , out({x_max() / 2, 128}, 64, 32, "Result integer")
-    , out2({x_max() / 2, 288}, 64, 32, "Result double")
-    , out3({x_max() / 2, 448}, 64, 32, "Result toggle")
+    , marg_top(y_max() * margin_top_factor)
+    , marg_btm(y_max() * margin_bottom_factor)
+    , marg_sde(x_max() * margin_side_factor)
+    , fn_ctrl_h(y_max() * function_controls_height_factor)
+    , content_w(x_max() - marg_sde * 2)
+    , canv_placeholder({marg_sde, marg_top},
+                       content_w,
+                       calculate_canvas_height(y_max(),
+                                               marg_top,
+                                               marg_btm,
+                                               fn_ctrl_h))
+    , fn_0_placeholder({marg_sde,
+                        marg_top + canv_placeholder.height()
+                            + canvas_lower_padding},
+                       content_w,
+                       fn_ctrl_h)
+    , fn_1_placeholder({marg_sde,
+                        fn_0_placeholder.point(0).y + fn_ctrl_h
+                            + function_controls_inbetween_padding},
+                       content_w,
+                       fn_ctrl_h)
+    , fn_2_placeholder({marg_sde,
+                        fn_1_placeholder.point(0).y + fn_ctrl_h
+                            + function_controls_inbetween_padding},
+                       content_w,
+                       fn_ctrl_h)
+    , fn_3_placeholder({marg_sde,
+                        fn_2_placeholder.point(0).y + fn_ctrl_h
+                            + function_controls_inbetween_padding},
+                       content_w,
+                       fn_ctrl_h)
 {
-	attach(test);
-	attach(out);
-	attach(test2);
-	attach(out2);
-	attach(tgl_test);
-	attach(out3);
-}
-
-void My_window::validate_test()
-{
-	out.put(std::to_string(test.value()));
-}
-
-void My_window::validate_test2()
-{
-	out2.put(Validated_double_in_box::format_dbl(test2.value()));
-}
-
-void My_window::toggle_test()
-{
-	tgl_test.toggle();
-	out3.put((tgl_test.is_on() ? "ON" : "OFF"));
+	attach(canv_placeholder);
+	attach(fn_0_placeholder);
+	attach(fn_1_placeholder);
+	attach(fn_2_placeholder);
+	attach(fn_3_placeholder);
 }
