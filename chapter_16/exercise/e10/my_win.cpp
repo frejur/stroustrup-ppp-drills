@@ -78,6 +78,8 @@ const Graph_lib::Font& label_font()
 
 double Plot::fn_log_base = 2.0;
 double Plot::fn_sin_freq = 9.5;
+double Plot::fn_sup_exp_n = 2.0;
+double Plot::fn_sup_exp_m = 2.0;
 
 //------------------------------------------------------------------------------
 
@@ -96,6 +98,8 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
              calculate_canvas_height(y_max(), marg_top, marg_btm, fn_ctrl_h))
     , fn_log(Plot::fn_log, 0, 1, {0, 0}, number_of_function_points, 1, 1)
     , fn_sin(Plot::fn_sin, 0, 1, {0, 0}, number_of_function_points, 1, 1)
+    , fn_sup_upr(Plot::fn_sup_upr, 0, 1, {0, 0}, number_of_function_points, 1, 1)
+    , fn_sup_lwr(Plot::fn_sup_lwr, 0, 1, {0, 0}, number_of_function_points, 1, 1)
     , tgl_fn_log({marg_sde, marg_top + canvas.height() + canvas_lower_padding},
                  toggle_w,
                  fn_ctrl_h,
@@ -166,6 +170,32 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                    [](void*, void* pw) {
 	                   (*static_cast<My_window*>(pw)).update_sine_frequency();
                    })
+    , inb_fn_sup_exp_m({x_max() - marg_sde - pblock_w * 2 + plabel_w,
+                        tgl_fn_sup.position().y},
+                       fn_ctrl_h * 1.6,
+                       fn_ctrl_h,
+                       "m:",
+                       Plot::fn_sup_exp_m,
+                       0.25,
+                       5,
+                       1,
+                       [](void*, void* pw) {
+	                       (*static_cast<My_window*>(pw))
+	                           .update_superellipse_exponent_m();
+                       })
+    , inb_fn_sup_exp_n({x_max() - marg_sde - pblock_w + plabel_w,
+                        tgl_fn_sup.position().y},
+                       fn_ctrl_h * 1.6,
+                       fn_ctrl_h,
+                       "n:",
+                       Plot::fn_sup_exp_n,
+                       0.25,
+                       5,
+                       1,
+                       [](void*, void* pw) {
+	                       (*static_cast<My_window*>(pw))
+	                           .update_superellipse_exponent_n();
+                       })
     , fn_0_placeholder({marg_sde,
                         marg_top + canvas.height() + canvas_lower_padding},
                        content_w,
@@ -211,6 +241,20 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	fn_sin.set_color(function_sin_color());
 	fn_sin.set_style(function_style());
 
+	// Superellipse function
+	fn_sup_upr.set_origin(canvas.position_from_value(0, 0));
+	fn_sup_upr.set_x_scale(canvas.x_scale_factor());
+	fn_sup_upr.set_y_scale(canvas.y_scale_factor());
+	attach(fn_sup_upr);
+	fn_sup_upr.set_color(function_superellipse_color());
+	fn_sup_upr.set_style(function_style());
+	fn_sup_lwr.set_origin(canvas.position_from_value(0, 0));
+	fn_sup_lwr.set_x_scale(canvas.x_scale_factor());
+	fn_sup_lwr.set_y_scale(canvas.y_scale_factor());
+	attach(fn_sup_lwr);
+	fn_sup_lwr.set_color(function_superellipse_color());
+	fn_sup_lwr.set_style(function_style());
+
 	// Toggles
 	attach(tgl_fn_log);
 	tgl_fn_log.turn_on();
@@ -249,6 +293,8 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	// Parameters
 	attach(inb_fn_log_b);
 	attach(inb_fn_sin_f);
+	attach(inb_fn_sup_exp_m);
+	attach(inb_fn_sup_exp_n);
 }
 //------------------------------------------------------------------------------
 
@@ -264,6 +310,24 @@ void My_window::update_sine_frequency()
 	double f = inb_fn_sin_f.value();
 	Plot::fn_sin_freq = f;
 	fn_sin.refresh();
+}
+
+void My_window::update_superellipse_exponent_m()
+{
+	double m = inb_fn_sup_exp_m.value();
+	Plot::fn_sup_exp_m = m;
+	fn_sup_lwr.refresh();
+	fn_sup_upr.refresh();
+	redraw();
+}
+
+void My_window::update_superellipse_exponent_n()
+{
+	double n = inb_fn_sup_exp_n.value();
+	Plot::fn_sup_exp_n = n;
+	fn_sup_upr.refresh();
+	fn_sup_lwr.refresh();
+	redraw();
 }
 //------------------------------------------------------------------------------
 
@@ -290,6 +354,13 @@ void My_window::toggle_sin()
 void My_window::toggle_sup()
 {
 	tgl_fn_sup.toggle();
+	if (fn_sup_upr.is_visible()) {
+		fn_sup_upr.hide();
+		fn_sup_lwr.hide();
+	} else {
+		fn_sup_upr.show();
+		fn_sup_lwr.show();
+	}
 }
 
 void My_window::toggle_prl()

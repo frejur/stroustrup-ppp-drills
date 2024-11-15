@@ -15,6 +15,8 @@ public:
 	My_window(Graph_lib::Point xy, int w, int h, const string& title);
 	void update_logarithmic_base();
 	void update_sine_frequency();
+	void update_superellipse_exponent_n();
+	void update_superellipse_exponent_m();
 
 private:
 	const int marg_top;
@@ -31,6 +33,8 @@ private:
 	// Functions
 	fct::Fct fn_log;
 	fct::Fct fn_sin;
+	fct::Fct fn_sup_upr;
+	fct::Fct fn_sup_lwr;
 
 	// Toggles
 	Toggle tgl_fn_log;
@@ -47,6 +51,8 @@ private:
 	// Function parameters
 	Step_double_in_box inb_fn_log_b;
 	Step_double_in_box inb_fn_sin_f;
+	Step_double_in_box inb_fn_sup_exp_n;
+	Step_double_in_box inb_fn_sup_exp_m;
 
 	Graph_lib::Rectangle fn_0_placeholder;
 	Graph_lib::Rectangle fn_1_placeholder;
