@@ -14,6 +14,7 @@ class My_window : public Graph_lib::Window
 public:
 	My_window(Graph_lib::Point xy, int w, int h, const string& title);
 	void update_logarithmic_base();
+	void update_sine_frequency();
 
 private:
 	const int marg_top;
@@ -29,6 +30,7 @@ private:
 
 	// Functions
 	fct::Fct fn_log;
+	fct::Fct fn_sin;
 
 	// Toggles
 	Toggle tgl_fn_log;
@@ -44,6 +46,7 @@ private:
 
 	// Function parameters
 	Step_double_in_box inb_fn_log_b;
+	Step_double_in_box inb_fn_sin_f;
 
 	Graph_lib::Rectangle fn_0_placeholder;
 	Graph_lib::Rectangle fn_1_placeholder;

@@ -23,6 +23,8 @@ const int calculate_canvas_height(int window_h,
                                   int control_h);
 void setup_canvas(chart::Canvas& canvas);
 
+constexpr int number_of_function_points{100};
+
 const Graph_lib::Color& grid_color()
 {
 	static const Graph_lib::Color c{
@@ -74,7 +76,8 @@ const Graph_lib::Font& label_font()
 } // namespace
 //------------------------------------------------------------------------------
 
-double Plot::fn_log_base = 2;
+double Plot::fn_log_base = 2.0;
+double Plot::fn_sin_freq = 9.5;
 
 //------------------------------------------------------------------------------
 
@@ -91,8 +94,8 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
     , canvas({marg_sde, marg_top},
              content_w,
              calculate_canvas_height(y_max(), marg_top, marg_btm, fn_ctrl_h))
-    , fn_log(Plot::fn_log, 0, 1, {0, 0}, 20, 1, 1)
-
+    , fn_log(Plot::fn_log, 0, 1, {0, 0}, number_of_function_points, 1, 1)
+    , fn_sin(Plot::fn_sin, 0, 1, {0, 0}, number_of_function_points, 1, 1)
     , tgl_fn_log({marg_sde, marg_top + canvas.height() + canvas_lower_padding},
                  toggle_w,
                  fn_ctrl_h,
@@ -132,7 +135,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                  "log(b, x + 1)")
     , txt_fn_sin({marg_sde + toggle_w + label_padding,
                   tgl_fn_sin.position().y + fn_ctrl_h / 2},
-                 "sin(x * f) + 1")
+                 "sin(x * f) / 2 + 0.5")
     , txt_fn_sup({marg_sde + toggle_w + label_padding,
                   tgl_fn_sup.position().y + fn_ctrl_h / 2},
                  "0.5 * (1 + superellipse(x, n, m))")
@@ -144,12 +147,24 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                    fn_ctrl_h * 1.6,
                    fn_ctrl_h,
                    "b:",
-                   2,
+                   Plot::fn_log_base,
                    2,
                    10,
                    0.5,
                    [](void*, void* pw) {
 	                   (*static_cast<My_window*>(pw)).update_logarithmic_base();
+                   })
+    , inb_fn_sin_f({x_max() - marg_sde - pblock_w + plabel_w,
+                    tgl_fn_sin.position().y},
+                   fn_ctrl_h * 1.6,
+                   fn_ctrl_h,
+                   "f:",
+                   Plot::fn_sin_freq,
+                   5,
+                   16,
+                   1,
+                   [](void*, void* pw) {
+	                   (*static_cast<My_window*>(pw)).update_sine_frequency();
                    })
     , fn_0_placeholder({marg_sde,
                         marg_top + canvas.height() + canvas_lower_padding},
@@ -180,13 +195,21 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	attach(canvas);
 	setup_canvas(canvas);
 
-	// Functions
+	// Logarithmic function
 	fn_log.set_origin(canvas.position_from_value(0, 0));
 	fn_log.set_x_scale(canvas.x_scale_factor());
 	fn_log.set_y_scale(canvas.y_scale_factor());
 	attach(fn_log);
 	fn_log.set_color(function_log_color());
 	fn_log.set_style(function_style());
+
+	// Sine function
+	fn_sin.set_origin(canvas.position_from_value(0, 0));
+	fn_sin.set_x_scale(canvas.x_scale_factor());
+	fn_sin.set_y_scale(canvas.y_scale_factor());
+	attach(fn_sin);
+	fn_sin.set_color(function_sin_color());
+	fn_sin.set_style(function_style());
 
 	// Toggles
 	attach(tgl_fn_log);
@@ -225,14 +248,22 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 
 	// Parameters
 	attach(inb_fn_log_b);
+	attach(inb_fn_sin_f);
 }
 //------------------------------------------------------------------------------
 
 void My_window::update_logarithmic_base()
 {
-	double d = inb_fn_log_b.value();
-	Plot::fn_log_base = d;
+	double b = inb_fn_log_b.value();
+	Plot::fn_log_base = b;
 	fn_log.refresh();
+}
+
+void My_window::update_sine_frequency()
+{
+	double f = inb_fn_sin_f.value();
+	Plot::fn_sin_freq = f;
+	fn_sin.refresh();
 }
 //------------------------------------------------------------------------------
 
@@ -249,6 +280,11 @@ void My_window::toggle_log()
 void My_window::toggle_sin()
 {
 	tgl_fn_sin.toggle();
+	if (fn_sin.is_visible()) {
+		fn_sin.hide();
+	} else {
+		fn_sin.show();
+	}
 }
 
 void My_window::toggle_sup()
