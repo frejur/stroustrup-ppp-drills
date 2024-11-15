@@ -3,6 +3,7 @@
 
 #include "../../lib/Graph.h"
 #include "../../lib/Window.h"
+#include "../share/canvas/canvas.h"
 #include "step_in_dbl.h"
 #include "step_in_int.h"
 #include "tgl.h"
@@ -18,7 +19,7 @@ private:
 	const int marg_sde;
 	const int fn_ctrl_h;
 	const int content_w;
-	Graph_lib::Rectangle canv_placeholder;
+	chart::Canvas canvas;
 	Graph_lib::Rectangle fn_0_placeholder;
 	Graph_lib::Rectangle fn_1_placeholder;
 	Graph_lib::Rectangle fn_2_placeholder;

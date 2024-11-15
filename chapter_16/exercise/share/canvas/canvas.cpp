@@ -370,7 +370,7 @@ void chart::Canvas::draw_grid_line(int px_val, Axis a) const
 	fl_line_style(default_line_style().style(), default_line_style().width());
 }
 
-void chart::Canvas::draw_value(int val, int px_val, Axis a) const
+void chart::Canvas::draw_value(double val, int px_val, Axis a) const
 {
 	Graph_lib::Point xy;
 	Graph_lib::Font f{0};

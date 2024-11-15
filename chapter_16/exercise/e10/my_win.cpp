@@ -11,14 +11,18 @@ constexpr int canvas_lower_padding{10};
 const int calculate_canvas_height(int window_h,
                                   int top_margin,
                                   int btm_margin,
-                                  int control_h)
+                                  int control_h);
+void setup_canvas(chart::Canvas& canvas);
+const Graph_lib::Color& grid_color()
 {
-	int pad_count = (number_of_functions > 0)
-	                    ? (function_controls_inbetween_padding - 1)
-	                    : 0;
-	return window_h - top_margin - number_of_functions * control_h
-	       - pad_count * function_controls_inbetween_padding
-	       - canvas_lower_padding - btm_margin;
+	static const Graph_lib::Color c{
+	    Graph_lib::Color(fl_rgb_color(155, 155, 155))};
+	return c;
+}
+const Graph_lib::Line_style& grid_style()
+{
+	static const Graph_lib::Line_style s{Graph_lib::Line_style::dot, 1};
+	return s;
 }
 } // namespace
 //------------------------------------------------------------------------------
@@ -30,15 +34,11 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
     , marg_sde(x_max() * margin_side_factor)
     , fn_ctrl_h(y_max() * function_controls_height_factor)
     , content_w(x_max() - marg_sde * 2)
-    , canv_placeholder({marg_sde, marg_top},
-                       content_w,
-                       calculate_canvas_height(y_max(),
-                                               marg_top,
-                                               marg_btm,
-                                               fn_ctrl_h))
+    , canvas({marg_sde, marg_top},
+             content_w,
+             calculate_canvas_height(y_max(), marg_top, marg_btm, fn_ctrl_h))
     , fn_0_placeholder({marg_sde,
-                        marg_top + canv_placeholder.height()
-                            + canvas_lower_padding},
+                        marg_top + canvas.height() + canvas_lower_padding},
                        content_w,
                        fn_ctrl_h)
     , fn_1_placeholder({marg_sde,
@@ -57,9 +57,40 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                        content_w,
                        fn_ctrl_h)
 {
-	attach(canv_placeholder);
 	attach(fn_0_placeholder);
 	attach(fn_1_placeholder);
 	attach(fn_2_placeholder);
 	attach(fn_3_placeholder);
+	attach(canvas);
+	setup_canvas(canvas);
 }
+
+//------------------------------------------------------------------------------
+
+namespace {
+const int calculate_canvas_height(int window_h,
+                                  int top_margin,
+                                  int btm_margin,
+                                  int control_h)
+{
+	int pad_count = (number_of_functions > 0)
+	                    ? (function_controls_inbetween_padding - 1)
+	                    : 0;
+	return window_h - top_margin - number_of_functions * control_h
+	       - pad_count * function_controls_inbetween_padding
+	       - canvas_lower_padding - btm_margin;
+}
+void setup_canvas(chart::Canvas& canvas)
+{
+	canvas.set_x_min_value(0);
+	canvas.set_x_max_value(1);
+	canvas.set_y_min_value(0);
+	canvas.set_y_max_value(1);
+	canvas.set_x_unit(0.5);
+	canvas.set_y_unit(0.5);
+	canvas.set_grid_color(grid_color());
+	canvas.set_grid_style(grid_style());
+	canvas.show_horizontal_grid_lines();
+	canvas.show_vertical_grid_lines();
+}
+} // namespace

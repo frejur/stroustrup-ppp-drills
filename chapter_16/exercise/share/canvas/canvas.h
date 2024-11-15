@@ -8,7 +8,7 @@ namespace chart {
 enum class Axis { X, Y };
 enum class Sign { Neg, Pos };
 
-class Canvas : Graph_lib::Shape
+class Canvas : public Graph_lib::Shape
 {
 public:
 	Canvas(Graph_lib::Point top_left, int width, int height);
@@ -175,7 +175,7 @@ protected:
 	void draw_axis(Axis a) const;
 	void draw_notch(int px_val, Axis a) const;
 	void draw_grid_line(int px_val, Axis a) const;
-	void draw_value(int val, int px_val, Axis a) const;
+	void draw_value(double val, int px_val, Axis a) const;
 
 	// Validates, throws if invalid
 	int valid_w(const int width) const;
