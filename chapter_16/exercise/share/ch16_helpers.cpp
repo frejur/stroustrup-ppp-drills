@@ -2,16 +2,28 @@
 #include "ch16_helpers.h"
 #include <cmath>
 
-int ch16_hlp::calc_lb_w(const std::string& txt, Graph_lib::Font f, int f_sz)
+ch16_hlp::Text_extents ch16_hlp::calc_lb_ext(const std::string& txt,
+                                             Graph_lib::Font f,
+                                             int f_sz)
 {
 	int dummy; // not needed
-	int w;
+	int w, h;
 	int font_backup = fl_font();
 	int size_backup = fl_size();
 	fl_font(f.as_int(), f_sz);
-	fl_text_extents(txt.c_str(), dummy, dummy, w, dummy);
+	fl_text_extents(txt.c_str(), dummy, dummy, w, h);
 	fl_font(font_backup, size_backup);
-	return w;
+	return {w, h};
+};
+
+int ch16_hlp::calc_lb_w(const std::string& txt, Graph_lib::Font f, int f_sz)
+{
+	return calc_lb_ext(txt, f, f_sz).width;
+}
+
+int ch16_hlp::calc_lb_h(const std::string& txt, Graph_lib::Font f, int f_sz)
+{
+	return calc_lb_ext(txt, f, f_sz).height;
 }
 
 void ch16_hlp::draw_text(Graph_lib::Point xy,

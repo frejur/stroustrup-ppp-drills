@@ -14,7 +14,15 @@ void draw_text(Graph_lib::Point xy,
                Text_alignment alignment,
                int px_offset = 0);
 
+struct Text_extents
+{
+	int width;
+	int height;
+};
+
+Text_extents calc_lb_ext(const std::string& txt, Graph_lib::Font f, int f_sz);
 int calc_lb_w(const std::string& txt, Graph_lib::Font f, int f_sz);
+int calc_lb_h(const std::string& txt, Graph_lib::Font f, int f_sz);
 
 //------------------------------------------------------------------------------
 
