@@ -23,7 +23,7 @@ const int calculate_canvas_height(int window_h,
                                   int control_h);
 void setup_canvas(chart::Canvas& canvas);
 
-constexpr int number_of_function_points{100};
+constexpr int number_of_function_points{128}; // Should be a power of 2
 constexpr int function_stroke_thickness{2};
 
 const Graph_lib::Color& grid_color()
