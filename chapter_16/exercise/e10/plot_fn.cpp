@@ -8,7 +8,6 @@ double sgn(double num)
 {
 	return ((num != 0) * (num > 0 ? 1 : -1));
 }
-double superellipse_vertical_offset{0.01};
 } // namespace
 //------------------------------------------------------------------------------
 
@@ -24,14 +23,12 @@ double Plot::fn_sin(double x)
 
 double Plot::fn_sup_upr(double x)
 {
-	const double offs_y = superellipse_vertical_offset;
-	return offs_y + (0.5 - offs_y * 1) * (1 + superellipse(x * 2 - 1.0));
+	return 0.5 * (1 + superellipse(x * 2 - 1.0));
 }
 
 double Plot::fn_sup_lwr(double x)
 {
-	const double offs_y = superellipse_vertical_offset;
-	return offs_y + (0.5 - offs_y * 1) * (1 - superellipse(x * 2 - 1.0));
+	return 0.5 * (1 - superellipse(x * 2 - 1.0));
 }
 
 double Plot::superellipse(double x)

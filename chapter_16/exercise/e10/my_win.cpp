@@ -24,6 +24,7 @@ const int calculate_canvas_height(int window_h,
 void setup_canvas(chart::Canvas& canvas);
 
 constexpr int number_of_function_points{100};
+constexpr int function_stroke_thickness{2};
 
 const Graph_lib::Color& grid_color()
 {
@@ -39,7 +40,8 @@ const Graph_lib::Line_style& grid_style()
 
 const Graph_lib::Line_style& function_style()
 {
-	static const Graph_lib::Line_style s{Graph_lib::Line_style::solid, 2};
+	static const Graph_lib::Line_style s{Graph_lib::Line_style::solid,
+	                                     function_stroke_thickness};
 	return s;
 }
 const Graph_lib::Color& function_log_color()
@@ -170,19 +172,6 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                    [](void*, void* pw) {
 	                   (*static_cast<My_window*>(pw)).update_sine_frequency();
                    })
-    , inb_fn_sup_exp_m({x_max() - marg_sde - pblock_w * 2 + plabel_w,
-                        tgl_fn_sup.position().y},
-                       fn_ctrl_h * 1.6,
-                       fn_ctrl_h,
-                       "m:",
-                       Plot::fn_sup_exp_m,
-                       0.25,
-                       5,
-                       1,
-                       [](void*, void* pw) {
-	                       (*static_cast<My_window*>(pw))
-	                           .update_superellipse_exponent_m();
-                       })
     , inb_fn_sup_exp_n({x_max() - marg_sde - pblock_w + plabel_w,
                         tgl_fn_sup.position().y},
                        fn_ctrl_h * 1.6,
@@ -195,6 +184,19 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                        [](void*, void* pw) {
 	                       (*static_cast<My_window*>(pw))
 	                           .update_superellipse_exponent_n();
+                       })
+    , inb_fn_sup_exp_m({x_max() - marg_sde - pblock_w * 2 + plabel_w,
+                        tgl_fn_sup.position().y},
+                       fn_ctrl_h * 1.6,
+                       fn_ctrl_h,
+                       "m:",
+                       Plot::fn_sup_exp_m,
+                       0.25,
+                       5,
+                       1,
+                       [](void*, void* pw) {
+	                       (*static_cast<My_window*>(pw))
+	                           .update_superellipse_exponent_m();
                        })
     , fn_0_placeholder({marg_sde,
                         marg_top + canvas.height() + canvas_lower_padding},
@@ -242,15 +244,21 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	fn_sin.set_style(function_style());
 
 	// Superellipse function
-	fn_sup_upr.set_origin(canvas.position_from_value(0, 0));
-	fn_sup_upr.set_x_scale(canvas.x_scale_factor());
-	fn_sup_upr.set_y_scale(canvas.y_scale_factor());
+	const int sup_offs = function_stroke_thickness; // Offset and shrink curves
+	                                                // slightly to avoid canvas
+	                                                // axes overlap
+	fn_sup_upr.set_origin(
+	    {canvas.origin().x + sup_offs, canvas.origin().y - sup_offs});
+	fn_sup_upr.set_x_scale(canvas.x_scale_factor() - sup_offs / 2);
+	fn_sup_upr.set_y_scale(canvas.y_scale_factor() - sup_offs);
 	attach(fn_sup_upr);
 	fn_sup_upr.set_color(function_superellipse_color());
 	fn_sup_upr.set_style(function_style());
-	fn_sup_lwr.set_origin(canvas.position_from_value(0, 0));
-	fn_sup_lwr.set_x_scale(canvas.x_scale_factor());
-	fn_sup_lwr.set_y_scale(canvas.y_scale_factor());
+
+	fn_sup_lwr.set_origin(
+	    {canvas.origin().x + sup_offs, canvas.origin().y - sup_offs});
+	fn_sup_lwr.set_x_scale(canvas.x_scale_factor() - sup_offs / 2);
+	fn_sup_lwr.set_y_scale(canvas.y_scale_factor() - sup_offs);
 	attach(fn_sup_lwr);
 	fn_sup_lwr.set_color(function_superellipse_color());
 	fn_sup_lwr.set_style(function_style());

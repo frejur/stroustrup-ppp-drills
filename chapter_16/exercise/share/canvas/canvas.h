@@ -1,6 +1,7 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 #include "../../../lib/Graph.h"
+#include "../../../lib/Window.h"
 #include <initializer_list>
 
 namespace chart {
