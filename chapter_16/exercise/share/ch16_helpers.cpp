@@ -42,25 +42,25 @@ void ch16_hlp::draw_text(Graph_lib::Point xy,
 	int ocol = fl_color();
 	fl_font(font.as_int(), font_size);
 	fl_color(text_color.as_int());
+	Text_extents ext = calc_lb_ext(text, font, font_size);
 	int offs_x = 0;
-	int offs_y = static_cast<int>(std::round(font_size * 0.5));
+	int offs_y = static_cast<int>(std::round(ext.height * 0.5));
 	if (alignment == Text_alignment::Right) {
 		offs_x = px_offset;
 	} else {
-		int w = calc_lb_w(text, font, font_size);
 		if (alignment == Text_alignment::Left) {
-			offs_x = -(w + px_offset);
+			offs_x = -(ext.width + px_offset);
 		} else {
-			offs_x = -(static_cast<int>(std::round(w * 0.5)));
+			offs_x = -(static_cast<int>(std::round(ext.width * 0.5)));
 		}
 
 		if (alignment == Text_alignment::Top) {
-			offs_y -= font_size + px_offset;
+			offs_y -= ext.height + px_offset;
 		} else if (alignment == Text_alignment::Bottom) {
-			offs_y += font_size + px_offset;
+			offs_y += ext.height + px_offset;
 		}
 	}
-	fl_draw(text.c_str(), xy.x + offs_x, xy.y - fl_descent() + offs_y);
+	fl_draw(text.c_str(), xy.x + offs_x, xy.y - fl_descent() * 0.5 + offs_y);
 	fl_font(ofnt, osz);
 	fl_color(ocol);
 }
