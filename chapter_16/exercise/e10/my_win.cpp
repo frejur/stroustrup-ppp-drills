@@ -82,7 +82,10 @@ double Plot::fn_log_base = 2.0;
 double Plot::fn_sin_freq = 9.5;
 double Plot::fn_sup_exp_n = 2.0;
 double Plot::fn_sup_exp_m = 2.0;
-std::vector<int> Plot::rand_ints = Plot::gen_seq(number_of_function_points);
+std::vector<int> Plot::permutation_table = Plot::gen_seq(
+    number_of_function_points);
+std::vector<float> Plot::gradients = Plot::gen_gradients(
+    number_of_function_points);
 
 //------------------------------------------------------------------------------
 
@@ -265,7 +268,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	fn_sup_lwr.set_style(function_style());
 
 	// Perlin noise function
-	Plot::shuffle_rand_ints(3);
+	Plot::shuffle_permutations(Plot::permutation_table, 3);
 
 	// Toggles
 	attach(tgl_fn_log);

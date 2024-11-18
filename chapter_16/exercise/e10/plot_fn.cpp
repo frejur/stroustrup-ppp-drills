@@ -49,7 +49,6 @@ double Plot::superellipse(double x)
 //------------------------------------------------------------------------------
 std::vector<int> Plot::gen_seq(int end_n)
 {
-	// Generate a sequence of integers: 0 to end_n
 	std::vector<int> temp(end_n);
 	for (int i = 0; i < end_n; ++i) {
 		temp[i] = i;
@@ -57,20 +56,29 @@ std::vector<int> Plot::gen_seq(int end_n)
 	return temp;
 }
 
-void Plot::swap_rand_ints(int a_idx, int b_idx)
+void Plot::swap_permutations(std::vector<int>& table, int a_idx, int b_idx)
 {
-	int temp = Plot::rand_ints[a_idx];
-	Plot::rand_ints[a_idx] = Plot::rand_ints[b_idx];
-	Plot::rand_ints[b_idx] = temp;
+	int temp = table[a_idx];
+	table[a_idx] = table[b_idx];
+	table[b_idx] = temp;
 }
 
-void Plot::shuffle_rand_ints(int n_times)
+void Plot::shuffle_permutations(std::vector<int>& table, int n_times)
 {
 	for (int i = 0; i < n_times; ++i) {
-		for (int j = 0; j < Plot::rand_ints.size(); ++j) {
-			int rand_b = (j + Plot::rand_int(0, Plot::rand_ints.size() - 1))
-			             % Plot::rand_ints.size();
-			Plot::swap_rand_ints(j, rand_b);
+		for (int j = 0; j < table.size(); ++j) {
+			int rand_b = (j + Plot::rand_int(0, table.size() - 1))
+			             % table.size();
+			Plot::swap_permutations(table, j, rand_b);
 		}
 	}
+}
+
+std::vector<float> Plot::gen_gradients(int end_n)
+{
+	std::vector<float> temp;
+	for (int i = 0; i < end_n; ++i) {
+		temp.push_back(rand_gradient());
+	}
+	return temp;
 }
