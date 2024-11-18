@@ -29,8 +29,13 @@ struct Plot
 
 	// -------------------------------------------------------------------------
 	// Perlin noise
+	static double fn_prl(double x);
+	static int fn_prl_octaves;        // The number of layers of noise
+	static double fn_prl_persistence; // Controls the amplitutde / effect of
+	                                  // each noise layer that gets added
+
 	static std::vector<int> permutation_table;
-	static std::vector<float> gradients;
+	static std::vector<double> gradients;
 	static std::vector<int> gen_seq(int end_n); // Generates a seq. 0 to end_n
 
 	static inline int rand_int(int min, int max)
@@ -39,7 +44,10 @@ struct Plot
 		    std::chrono::system_clock::now().time_since_epoch().count())};
 		return std::uniform_int_distribution<>{min, max}(ran);
 	}
-	static inline float rand_gradient() { return rand_int(0, 1000) / 1000.0; }
+	static inline double rand_gradient()
+	{
+		return rand_int(-1000, 1000) / 1000.0;
+	}
 
 	// Shuffles the sequence to create a randomly distributed list of integers
 	// This should reduce patterns and biases
@@ -47,7 +55,17 @@ struct Plot
 	static void swap_permutations(std::vector<int>& table, int a_idx, int b_idx);
 
 	// Generates a vector of random values ranging from 0.001 to 1.0
-	static std::vector<float> gen_gradients(int end_n);
+	static std::vector<double> gen_gradients(int end_n);
+
+	// Linear interpolation
+	static inline double lerp(double t, double a, double b)
+	{
+		return a + t * (b - a);
+	}
+
+	static double noise(double x,
+	                    std::vector<int>& table,
+	                    std::vector<double>& grad);
 };
 
 #endif // PLOT_FN_H

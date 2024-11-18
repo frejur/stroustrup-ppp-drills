@@ -84,8 +84,10 @@ double Plot::fn_sup_exp_n = 2.0;
 double Plot::fn_sup_exp_m = 2.0;
 std::vector<int> Plot::permutation_table = Plot::gen_seq(
     number_of_function_points);
-std::vector<float> Plot::gradients = Plot::gen_gradients(
+std::vector<double> Plot::gradients = Plot::gen_gradients(
     number_of_function_points);
+int Plot::fn_prl_octaves = 8;
+double Plot::fn_prl_persistence = .25;
 
 //------------------------------------------------------------------------------
 
@@ -106,6 +108,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
     , fn_sin(Plot::fn_sin, 0, 1, {0, 0}, number_of_function_points, 1, 1)
     , fn_sup_upr(Plot::fn_sup_upr, 0, 1, {0, 0}, number_of_function_points, 1, 1)
     , fn_sup_lwr(Plot::fn_sup_lwr, 0, 1, {0, 0}, number_of_function_points, 1, 1)
+    , fn_prl(Plot::fn_prl, 0, 1, {0, 0}, number_of_function_points, 1, 1)
     , tgl_fn_log({marg_sde, marg_top + canvas.height() + canvas_lower_padding},
                  toggle_w,
                  fn_ctrl_h,
@@ -269,6 +272,13 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 
 	// Perlin noise function
 	Plot::shuffle_permutations(Plot::permutation_table, 3);
+	fn_prl.set_origin(
+	    {canvas.origin().x + sup_offs, canvas.origin().y - sup_offs});
+	fn_prl.set_x_scale(canvas.x_scale_factor() - sup_offs / 2);
+	fn_prl.set_y_scale(canvas.y_scale_factor() - sup_offs);
+	attach(fn_prl);
+	fn_prl.set_color(function_perlin_noise_color());
+	fn_prl.set_style(function_style());
 
 	// Toggles
 	attach(tgl_fn_log);

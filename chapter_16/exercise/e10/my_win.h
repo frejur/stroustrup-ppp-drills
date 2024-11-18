@@ -35,6 +35,7 @@ private:
 	fct::Fct fn_sin;
 	fct::Fct fn_sup_upr;
 	fct::Fct fn_sup_lwr;
+	fct::Fct fn_prl;
 
 	// Toggles
 	Toggle tgl_fn_log;
