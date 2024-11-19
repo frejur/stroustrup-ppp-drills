@@ -231,6 +231,15 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	                   (*static_cast<My_window*>(pw))
 	                       .update_perlin_noise_persistence();
                    })
+    , btn_seed({static_cast<int>(x_max() - marg_sde - pblock_w * 2.5),
+                tgl_fn_prl.position().y},
+               fn_ctrl_h * 1.6,
+               fn_ctrl_h,
+               "Seed",
+               [](void*, void* pw) {
+	               (*static_cast<My_window*>(pw))
+	                   .shuffle_perlin_noise_permutations();
+               })
     , fn_0_placeholder({marg_sde,
                         marg_top + canvas.height() + canvas_lower_padding},
                        content_w,
@@ -341,13 +350,14 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	txt_fn_prl.move(0, new_sz / 2 - fl_descent() / 2);
 	fl_font(old_f.as_int(), old_sz);
 
-	// Parameters
+	// Parameters and buttons
 	attach(inb_fn_log_b);
 	attach(inb_fn_sin_f);
 	attach(inb_fn_sup_exp_m);
 	attach(inb_fn_sup_exp_n);
 	attach(inb_fn_prl_o);
 	attach(inb_fn_prl_p);
+	attach(btn_seed);
 }
 //------------------------------------------------------------------------------
 
@@ -395,6 +405,13 @@ void My_window::update_perlin_noise_persistence()
 {
 	double p = inb_fn_prl_p.value();
 	Plot::fn_prl_persistence = p;
+	fn_prl.refresh();
+	redraw();
+}
+
+void My_window::shuffle_perlin_noise_permutations()
+{
+	Plot::shuffle_permutations(Plot::permutation_table, 3);
 	fn_prl.refresh();
 	redraw();
 }

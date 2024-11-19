@@ -19,6 +19,7 @@ public:
 	void update_superellipse_exponent_m();
 	void update_perlin_noise_number_of_octaves();
 	void update_perlin_noise_persistence();
+	void shuffle_perlin_noise_permutations();
 
 private:
 	const int marg_top;
@@ -58,6 +59,9 @@ private:
 	Step_double_in_box inb_fn_sup_exp_m;
 	Step_int_in_box inb_fn_prl_o;
 	Step_double_in_box inb_fn_prl_p;
+
+	// Seed button
+	shp_btn::Shape_button btn_seed;
 
 	Graph_lib::Rectangle fn_0_placeholder;
 	Graph_lib::Rectangle fn_1_placeholder;
