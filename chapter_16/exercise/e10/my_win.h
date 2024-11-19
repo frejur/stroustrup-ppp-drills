@@ -30,6 +30,7 @@ private:
 	const int plabel_w;
 	const int content_w;
 	const int toggle_w;
+	const int seed_w;
 
 	chart::Canvas canvas;
 

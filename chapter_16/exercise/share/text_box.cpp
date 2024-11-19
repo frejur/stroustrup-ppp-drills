@@ -63,7 +63,7 @@ void shp_btn::Text_box::draw_lines() const
 			Graph_lib::Point c{point(0).x
 			                       + static_cast<int>(std::round(
 			                           (point(1).x - point(0).x) * 0.5)),
-			                   point(1).y - fl_descent()};
+			                   point(1).y - h / 2};
 			ch16_hlp::draw_text(c,
 			                    label(),
 			                    font(),
@@ -72,7 +72,7 @@ void shp_btn::Text_box::draw_lines() const
 			                    ch16_hlp::Text_alignment::Center);
 		} else {
 			Graph_lib::Point pt{point(0)};
-			pt.y = point(1).y - fl_descent();
+			pt.y = point(1).y - h / 2;
 			pt.x += (align == Alignment::Left) ? horizontal_padding
 			                                   : (w - horizontal_padding);
 			ch16_hlp::Text_alignment ta = (align == Alignment::Left)

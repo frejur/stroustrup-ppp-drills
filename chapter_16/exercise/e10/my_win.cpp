@@ -14,7 +14,8 @@ constexpr float parameter_block_width_factor{5.0}; // Multiplied by function
 constexpr float parameter_label_width_factor{0.2}; // Multiplied by parameter
                                                    // block width
 constexpr int number_of_functions{4};
-constexpr int function_controls_inbetween_padding{10};
+constexpr int function_controls_vertical_padding{10};
+constexpr int function_controls_horizontal_padding{10};
 constexpr int label_padding{6};
 constexpr int canvas_lower_padding{32};
 const int calculate_canvas_height(int window_h,
@@ -25,6 +26,10 @@ void setup_canvas(chart::Canvas& canvas);
 
 constexpr int number_of_function_points{100};
 constexpr int function_stroke_thickness{2};
+constexpr float toggle_button_width_factor{1.6}; // Multiplied by function
+                                                 // control height
+constexpr float seed_button_width_factor{2.15};  // Multiplied by function
+                                                 // control height
 
 const Graph_lib::Color& grid_color()
 {
@@ -100,7 +105,8 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
     , pblock_w(fn_ctrl_h * parameter_block_width_factor)
     , plabel_w(pblock_w * parameter_label_width_factor)
     , content_w(x_max() - marg_sde * 2)
-    , toggle_w(fn_ctrl_h * 1.6)
+    , toggle_w(fn_ctrl_h * toggle_button_width_factor)
+    , seed_w(fn_ctrl_h * seed_button_width_factor)
     , canvas({marg_sde, marg_top},
              content_w,
              calculate_canvas_height(y_max(), marg_top, marg_btm, fn_ctrl_h))
@@ -118,7 +124,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                  })
     , tgl_fn_sin({marg_sde,
                   tgl_fn_log.position().y + fn_ctrl_h
-                      + function_controls_inbetween_padding},
+                      + function_controls_vertical_padding},
                  toggle_w,
                  fn_ctrl_h,
                  function_sin_color(),
@@ -127,7 +133,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                  })
     , tgl_fn_sup({marg_sde,
                   tgl_fn_sin.position().y + fn_ctrl_h
-                      + function_controls_inbetween_padding},
+                      + function_controls_vertical_padding},
                  toggle_w,
                  fn_ctrl_h,
                  function_superellipse_color(),
@@ -136,7 +142,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                  })
     , tgl_fn_prl({marg_sde,
                   tgl_fn_sup.position().y + fn_ctrl_h
-                      + function_controls_inbetween_padding},
+                      + function_controls_vertical_padding},
                  toggle_w,
                  fn_ctrl_h,
                  function_perlin_noise_color(),
@@ -231,9 +237,10 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	                   (*static_cast<My_window*>(pw))
 	                       .update_perlin_noise_persistence();
                    })
-    , btn_seed({static_cast<int>(x_max() - marg_sde - pblock_w * 2.5),
+    , btn_seed({static_cast<int>(x_max() - marg_sde - pblock_w * 2 - seed_w
+                                 - function_controls_horizontal_padding),
                 tgl_fn_prl.position().y},
-               fn_ctrl_h * 1.6,
+               seed_w,
                fn_ctrl_h,
                "Seed",
                [](void*, void* pw) {
@@ -246,17 +253,17 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
                        fn_ctrl_h)
     , fn_1_placeholder({marg_sde,
                         fn_0_placeholder.point(0).y + fn_ctrl_h
-                            + function_controls_inbetween_padding},
+                            + function_controls_vertical_padding},
                        content_w,
                        fn_ctrl_h)
     , fn_2_placeholder({marg_sde,
                         fn_1_placeholder.point(0).y + fn_ctrl_h
-                            + function_controls_inbetween_padding},
+                            + function_controls_vertical_padding},
                        content_w,
                        fn_ctrl_h)
     , fn_3_placeholder({marg_sde,
                         fn_2_placeholder.point(0).y + fn_ctrl_h
-                            + function_controls_inbetween_padding},
+                            + function_controls_vertical_padding},
                        content_w,
                        fn_ctrl_h)
 {
@@ -473,7 +480,7 @@ const int calculate_canvas_height(int window_h,
 	int pad_count = (number_of_functions > 0) ? (number_of_functions - 1) : 0;
 	return window_h - top_margin - canvas_lower_padding
 	       - number_of_functions * control_h
-	       - pad_count * function_controls_inbetween_padding - btm_margin;
+	       - pad_count * function_controls_vertical_padding - btm_margin;
 }
 void setup_canvas(chart::Canvas& canvas)
 {

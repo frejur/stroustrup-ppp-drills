@@ -44,7 +44,7 @@ void ch16_hlp::draw_text(Graph_lib::Point xy,
 	fl_color(text_color.as_int());
 	Text_extents ext = calc_lb_ext(text, font, font_size);
 	int offs_x = 0;
-	int offs_y = static_cast<int>(std::round(ext.height * 0.5));
+	int offs_y = static_cast<int>(std::round(font_size * 0.5));
 	if (alignment == Text_alignment::Right) {
 		offs_x = px_offset;
 	} else {
@@ -60,7 +60,7 @@ void ch16_hlp::draw_text(Graph_lib::Point xy,
 			offs_y += ext.height + px_offset;
 		}
 	}
-	fl_draw(text.c_str(), xy.x + offs_x, xy.y - fl_descent() * 0.5 + offs_y);
+	fl_draw(text.c_str(), xy.x + offs_x, xy.y - fl_descent() + offs_y);
 	fl_font(ofnt, osz);
 	fl_color(ocol);
 }
