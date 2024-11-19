@@ -72,6 +72,12 @@ const Graph_lib::Color& function_perlin_noise_color()
 	    Graph_lib::Color(fl_rgb_color(120, 235, 120))};
 	return c;
 }
+const Graph_lib::Color& divider_color()
+{
+	static const Graph_lib::Color c{
+	    Graph_lib::Color(fl_rgb_color(150, 150, 150))};
+	return c;
+}
 
 constexpr float label_font_size_factor{0.6};
 const Graph_lib::Font& label_font()
@@ -247,30 +253,32 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	               (*static_cast<My_window*>(pw))
 	                   .shuffle_perlin_noise_permutations();
                })
-    , fn_0_placeholder({marg_sde,
-                        marg_top + canvas.height() + canvas_lower_padding},
-                       content_w,
-                       fn_ctrl_h)
-    , fn_1_placeholder({marg_sde,
-                        fn_0_placeholder.point(0).y + fn_ctrl_h
-                            + function_controls_vertical_padding},
-                       content_w,
-                       fn_ctrl_h)
-    , fn_2_placeholder({marg_sde,
-                        fn_1_placeholder.point(0).y + fn_ctrl_h
-                            + function_controls_vertical_padding},
-                       content_w,
-                       fn_ctrl_h)
-    , fn_3_placeholder({marg_sde,
-                        fn_2_placeholder.point(0).y + fn_ctrl_h
-                            + function_controls_vertical_padding},
-                       content_w,
-                       fn_ctrl_h)
+    , fn_1_div({marg_sde,
+                marg_top + canvas.height() + canvas_lower_padding + fn_ctrl_h
+                    + function_controls_vertical_padding / 2},
+               {x_max() - marg_sde,
+                marg_top + canvas.height() + canvas_lower_padding + fn_ctrl_h
+                    + function_controls_vertical_padding / 2})
+    , fn_2_div({marg_sde,
+                fn_1_div.point(0).y + fn_ctrl_h
+                    + function_controls_vertical_padding},
+               {x_max() - marg_sde,
+                fn_1_div.point(0).y + fn_ctrl_h
+                    + function_controls_vertical_padding})
+    , fn_3_div({marg_sde,
+                fn_2_div.point(0).y + fn_ctrl_h
+                    + function_controls_vertical_padding},
+               {x_max() - marg_sde,
+                fn_2_div.point(0).y + fn_ctrl_h
+                    + function_controls_vertical_padding})
 {
-	attach(fn_0_placeholder);
-	attach(fn_1_placeholder);
-	attach(fn_2_placeholder);
-	attach(fn_3_placeholder);
+	// Dividers
+	attach(fn_1_div);
+	attach(fn_2_div);
+	attach(fn_3_div);
+	fn_1_div.set_color(divider_color());
+	fn_2_div.set_color(divider_color());
+	fn_3_div.set_color(divider_color());
 
 	// Canvas
 	attach(canvas);

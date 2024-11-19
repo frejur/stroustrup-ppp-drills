@@ -64,10 +64,10 @@ private:
 	// Seed button
 	shp_btn::Shape_button btn_seed;
 
-	Graph_lib::Rectangle fn_0_placeholder;
-	Graph_lib::Rectangle fn_1_placeholder;
-	Graph_lib::Rectangle fn_2_placeholder;
-	Graph_lib::Rectangle fn_3_placeholder;
+	// Dividers
+	Graph_lib::Line fn_1_div;
+	Graph_lib::Line fn_2_div;
+	Graph_lib::Line fn_3_div;
 
 	void toggle_log();
 	void toggle_sin();
