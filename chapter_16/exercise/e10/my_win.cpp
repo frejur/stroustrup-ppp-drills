@@ -87,7 +87,7 @@ std::vector<int> Plot::permutation_table = Plot::gen_seq(
 std::vector<double> Plot::gradients = Plot::gen_gradients(
     number_of_function_points);
 int Plot::fn_prl_octaves = 8;
-double Plot::fn_prl_persistence = .25;
+double Plot::fn_prl_persistence = .5;
 
 //------------------------------------------------------------------------------
 
@@ -205,6 +205,32 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	                       (*static_cast<My_window*>(pw))
 	                           .update_superellipse_exponent_m();
                        })
+    , inb_fn_prl_o({x_max() - marg_sde - pblock_w + plabel_w,
+                    tgl_fn_prl.position().y},
+                   fn_ctrl_h * 1.6,
+                   fn_ctrl_h,
+                   "o:",
+                   Plot::fn_prl_octaves,
+                   1,
+                   16,
+                   1,
+                   [](void*, void* pw) {
+	                   (*static_cast<My_window*>(pw))
+	                       .update_perlin_noise_number_of_octaves();
+                   })
+    , inb_fn_prl_p({x_max() - marg_sde - pblock_w * 2 + plabel_w,
+                    tgl_fn_prl.position().y},
+                   fn_ctrl_h * 1.6,
+                   fn_ctrl_h,
+                   "p:",
+                   Plot::fn_prl_persistence,
+                   0.1,
+                   2,
+                   0.1,
+                   [](void*, void* pw) {
+	                   (*static_cast<My_window*>(pw))
+	                       .update_perlin_noise_persistence();
+                   })
     , fn_0_placeholder({marg_sde,
                         marg_top + canvas.height() + canvas_lower_padding},
                        content_w,
@@ -320,6 +346,8 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	attach(inb_fn_sin_f);
 	attach(inb_fn_sup_exp_m);
 	attach(inb_fn_sup_exp_n);
+	attach(inb_fn_prl_o);
+	attach(inb_fn_prl_p);
 }
 //------------------------------------------------------------------------------
 
@@ -354,6 +382,23 @@ void My_window::update_superellipse_exponent_n()
 	fn_sup_lwr.refresh();
 	redraw();
 }
+
+void My_window::update_perlin_noise_number_of_octaves()
+{
+	int o = inb_fn_prl_o.value();
+	Plot::fn_prl_octaves = o;
+	fn_prl.refresh();
+	redraw();
+}
+
+void My_window::update_perlin_noise_persistence()
+{
+	double p = inb_fn_prl_p.value();
+	Plot::fn_prl_persistence = p;
+	fn_prl.refresh();
+	redraw();
+}
+
 //------------------------------------------------------------------------------
 
 void My_window::toggle_log()
@@ -391,6 +436,13 @@ void My_window::toggle_sup()
 void My_window::toggle_prl()
 {
 	tgl_fn_prl.toggle();
+	if (fn_prl.is_visible()) {
+		fn_prl.hide();
+		fn_prl.hide();
+	} else {
+		fn_prl.show();
+		fn_prl.show();
+	}
 }
 
 //------------------------------------------------------------------------------

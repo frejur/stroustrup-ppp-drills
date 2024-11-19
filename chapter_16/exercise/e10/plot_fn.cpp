@@ -51,7 +51,7 @@ double Plot::superellipse(double x)
 
 double Plot::fn_prl(double x)
 {
-	const double base_freq{8.0}; // Seems to be a good middle ground between
+	const double base_freq{4.0}; // Seems to be a good middle ground between
 	                             // 'detailed' and 'smooth'.
 	double total{0};
 	double max{0};
