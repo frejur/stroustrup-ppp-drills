@@ -300,7 +300,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	fn_sin.set_color(function_sin_color());
 	fn_sin.set_style(function_style());
 
-	// Superellipse function
+	// Superellipse function, upper half
 	const int sup_offs = function_stroke_thickness; // Offset and shrink curves
 	                                                // slightly to avoid canvas
 	                                                // axes overlap
@@ -312,6 +312,7 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 	fn_sup_upr.set_color(function_superellipse_color());
 	fn_sup_upr.set_style(function_style());
 
+	// Superellipse function, lower half
 	fn_sup_lwr.set_origin(
 	    {canvas.origin().x + sup_offs, canvas.origin().y - sup_offs});
 	fn_sup_lwr.set_x_scale(canvas.x_scale_factor() - sup_offs / 2);
@@ -322,10 +323,9 @@ My_window::My_window(Graph_lib::Point xy, int w, int h, const string& title)
 
 	// Perlin noise function
 	Plot::shuffle_permutations(Plot::permutation_table, 3);
-	fn_prl.set_origin(
-	    {canvas.origin().x + sup_offs, canvas.origin().y - sup_offs});
-	fn_prl.set_x_scale(canvas.x_scale_factor() - sup_offs / 2);
-	fn_prl.set_y_scale(canvas.y_scale_factor() - sup_offs);
+	fn_prl.set_origin({canvas.origin().x, canvas.origin().y});
+	fn_prl.set_x_scale(canvas.x_scale_factor());
+	fn_prl.set_y_scale(canvas.y_scale_factor());
 	attach(fn_prl);
 	fn_prl.set_color(function_perlin_noise_color());
 	fn_prl.set_style(function_style());
