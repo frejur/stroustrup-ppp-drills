@@ -3,81 +3,77 @@ project(chapter_03
     VERSION 0.0.0
     LANGUAGES CXX
 )
-set(VERBOSE ON)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Targets
-set(T_TT_P65 "Try this, p. 65")
-set(T_TT_P68 "Try this, p. 68")
-set(T_TT_P75 "Try this, p. 75")
-set(T_TT_P81 "Try this, p. 81")
-set(T_DRILL "Drill")
-set(T_E02 "Exercise 2")
-set(T_E04 "Exercise 4 (and 5)")
-set(T_E06 "Exercise 6")
-set(T_E07 "Exercise 7")
-set(T_E08 "Exercise 8")
-set(T_E09 "Exercise 9")
-set(T_E10 "Exercise 10")
-set(T_E11 "Exercise 11")
+set(ALL "ALL") # When `SELECTED_TARGET` is set to this value, all targets
+               # will be built. Do NOT insert this value into the
+               # `TARGETS` list below
 
-set(SELECTED_TARGET ${T_DRILL} CACHE STRING "Selected target")
-set_property(CACHE SELECTED_TARGET PROPERTY STRINGS
-    ${T_TT_P65}
-    ${T_TT_P68}
-    ${T_TT_P75}
-    ${T_TT_P81}
-    ${T_DRILL}
-    ${T_E02}
-    ${T_E04}
-    ${T_E06}
-    ${T_E07}
-    ${T_E08}
-    ${T_E09}
-    ${T_E10}
-    ${T_E11}
-)
-message("Building target: ${SELECTED_TARGET}")
+# Shorthand for appending to TARGETS and DIRS
+function(apd list_var)
+   foreach(target IN LISTS ARGN)
+        list(APPEND ${list_var} "${target}")
+    endforeach()
+    # Return changes made to local copy to Parent scope
+    set(${list_var} ${${list_var}} PARENT_SCOPE)
+endfunction()
 
-if(
-    ${SELECTED_TARGET} STREQUAL ${T_TT_P65})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/tt/p65)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_TT_P68})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/tt/p68)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_TT_P75})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/tt/p75)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_TT_P81})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/tt/p81)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_DRILL})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/drill)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_E02})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e02)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_E04})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e04)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_E06})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e06)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_E07})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e07)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_E08})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e08)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_E09})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e09)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_E10})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e10)
-elseif(
-    ${SELECTED_TARGET} STREQUAL ${T_E11})
-        add_subdirectory(${CMAKE_SOURCE_DIR}/exercise/e11)
+# Targets and directories
+set(TARGETS "Try this, p. 65" "Try this, p. 68" "Try this, p. 75")
+set(DIRS    "tt/p65"          "tt/p68"          "tt/p75")
+
+apd(TARGETS "Try this, p. 81" "Drill"  "Exercise 2")
+apd(DIRS    "tt/p81"         "drill"   "exercise/e02")
+
+apd(TARGETS "Exercise 4 (and 5)" "Exercise 6"   "Exercise 7")
+apd(DIRS    "exercise/e04"       "exercise/e06" "exercise/e07")
+
+apd(TARGETS "Exercise 8"   "Exercise 9"   "Exercise 10"  "Exercise 11")
+apd(DIRS    "exercise/e08" "exercise/e09" "exercise/e10" "exercise/e11")
+
+# Ensure TARGETS length == DIRS length
+list(LENGTH TARGETS num_targets)
+list(LENGTH DIRS num_dirs)
+if(NOT num_targets EQUAL num_dirs)
+    message(FATAL_ERROR "Number of entries in TARGETS (${num_targets})"
+                        "does not match number of entries in "
+                        "DIRS (${num_dirs})")
+endif()
+
+# Default target
+list(GET TARGETS 0 DEFAULT_TARGET)
+
+# Make targets selectable in `ccmake` and similar
+set(SELECTED_TARGET ${DEFAULT_TARGET} CACHE STRING "Selected target")
+set_property(CACHE SELECTED_TARGET PROPERTY STRINGS ${TARGETS} ${ALL})
+
+# Print targets
+message(STATUS "Available values for SELECTED_TARGET:")
+foreach(target ${TARGETS} ${ALL})
+    message(STATUS " ${target}")
+endforeach()
+message(STATUS "Currently selected target: ${SELECTED_TARGET}")
+
+# Build 'All targets' if selected
+if(${SELECTED_TARGET} STREQUAL ${ALL})
+    message(STATUS "Building all targets...")
+    foreach(target_dir ${DIRS})
+        add_subdirectory(${CMAKE_SOURCE_DIR}/${target_dir})
+    endforeach()
+else()
+
+# Otherwise, build 'Selected target'
+    math(EXPR max_idx "${num_targets} - 1")
+    foreach(i RANGE ${max_idx})
+        list(GET TARGETS ${i} target)
+        list(GET DIRS ${i} target_dir)
+
+        if(${SELECTED_TARGET} STREQUAL ${target})
+            message(STATUS "Building ${target}...")
+            add_subdirectory(${CMAKE_SOURCE_DIR}/${target_dir})
+            break()
+        endif()
+    endforeach()
 endif()
