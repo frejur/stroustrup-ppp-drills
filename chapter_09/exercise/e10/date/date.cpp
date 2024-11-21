@@ -178,7 +178,7 @@ Date::Date(int yy, Month mm, int dd)
 	if (!is_date(yy, mm, dd)) throw std::runtime_error("Invalid date");
 }
 
-std::ostream& operator<<(std::ostream& os, const DDATE::Date& month)
+std::ostream& operator<<(std::ostream& os, const Month month)
 {
 	os << static_cast<int>(month);
 	return os;
