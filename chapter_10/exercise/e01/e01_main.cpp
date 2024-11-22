@@ -30,7 +30,7 @@ try {
 
 	std::cout << '\n';
 	print_goodbye(std::cout);
-	help::wait_for_enter;
+	help::wait_for_enter();
 
 	return 0;
 } catch (const std::exception& e) {
