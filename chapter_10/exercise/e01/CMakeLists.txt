@@ -6,6 +6,7 @@ add_executable(${T_THIS}
     e01_main.cpp
 	e01.h
 	e01.cpp
+	../../lib/help.h ../../lib/help.cpp
 )
 
 # Dynamically copy the data folder into the same
