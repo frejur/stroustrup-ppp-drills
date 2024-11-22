@@ -9,6 +9,8 @@
 #include "test/test_patron.h"
 #include "test/test_library.h"
 
+#include "../../lib/help.h"
+
 int main()
 try {
 	std::cout
@@ -19,7 +21,7 @@ try {
 
 	std::cout << "Enter any character to proceed" << '\n';
 
-	std::cin.get();
+	help::wait_for_enter();
 
 	test_book_class();
 	test_patron_class();
@@ -30,18 +32,18 @@ try {
 		<< '\n';
 
 	std::cout << "Enter any character to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 0;
 }
 catch (std::exception& e) {
 	std::cerr << "Unexpected error: " << e.what();
 	std::cout << "Enter any character to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 1;
 }
 catch (...) {
 	std::cerr << "Unexpected unknown error";
 	std::cout << "Enter any character to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 2;
 }

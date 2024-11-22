@@ -1,4 +1,5 @@
 #include "test.h"
+#include "../../../lib/help.h"
 
 void test_all()
 {
@@ -31,5 +32,5 @@ void test_all()
 		<< '\n' << '\n';
 
 	std::cout << "Enter any key to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 }

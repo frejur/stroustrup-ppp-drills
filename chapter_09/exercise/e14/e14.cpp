@@ -1,8 +1,9 @@
-#include <exception>
-#include <iostream>
+#include "../../lib/help.h"
 #include "money/money.h"
 #include "test/test.h"
 #include "test/test_interactive.h"
+#include <exception>
+#include <iostream>
 
 /* Chapter 9, Exercise 14 - 16. Money class.
  *
@@ -83,12 +84,12 @@ try {
 catch (std::exception& e) {
 	std::cerr << "Error: " << e.what() << '\n';
 	std::cout << "Enter any key to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 1;
 }
 catch (...) {
 	std::cerr << "Error: Unknown error" << '\n';
 	std::cout << "Enter any key to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 2;
 }

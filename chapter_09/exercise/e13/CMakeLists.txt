@@ -6,4 +6,5 @@ add_executable(${T_THIS}
 	e13.cpp
 	rational.h rational.cpp
 	test/test.h test/test.cpp
+	../../lib/help.h ../../lib/help.cpp
 )

@@ -1,6 +1,7 @@
+#include "../../lib/help.h"
+#include "test/test.h"
 #include <exception>
 #include <iostream>
-#include "test/test.h"
 
 /* Chapter 9, Exercise 13. Rational number.
  *
@@ -44,18 +45,18 @@ try {
 		<< '\n' << '\n';
 
 	std::cout << "Enter any key to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 0;
 }
 catch (std::exception& e) {
 	std::cerr << "Error: " << e.what();
 	std::cout << "Enter any key to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 1;
 }
 catch (...) {
 	std::cerr << "Error: Unknown error";
 	std::cout << "Enter any key to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 2;
 }

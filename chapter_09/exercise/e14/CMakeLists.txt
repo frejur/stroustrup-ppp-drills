@@ -26,4 +26,6 @@ add_executable(${T_THIS}
 		test/test_helpers.cpp
 	test/test_interactive.h
 		test/test_interactive.cpp
+	
+	../../lib/help.h ../../lib/help.cpp
 )

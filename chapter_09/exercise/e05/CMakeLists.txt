@@ -18,5 +18,5 @@ add_executable(${T_THIS}
 	test/print_helpers.h test/print_helpers.cpp
 	sample/sample_books.h
 	sample/sample_patrons.h
-
+	../../lib/help.h ../../lib/help.cpp
 )

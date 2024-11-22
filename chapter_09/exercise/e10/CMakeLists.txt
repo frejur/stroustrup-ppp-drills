@@ -16,4 +16,5 @@ add_executable(${T_THIS}
 	test/test_duration.cpp
 	test/test_day_of_the_week_next_workday.cpp
 	test/test_date.cpp
+	../../lib/help.h ../../lib/help.cpp
 )

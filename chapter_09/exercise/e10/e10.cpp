@@ -3,9 +3,10 @@
 // These exercises describe a set of classes and operators used to manage a
 // virtual library.
 
+#include "../../lib/help.h"
+#include "test/test_date.h"
 #include <exception>
 #include <iostream>
-#include "test/test_date.h"
 
 int main()
 try {
@@ -16,8 +17,7 @@ try {
 	    << '\n';
 
 	std::cout << "Enter any character to proceed" << '\n';
-
-	std::cin.get();
+	help::wait_for_enter();
 
 	test_date();
 
@@ -26,18 +26,18 @@ try {
 	          << '\n';
 
 	std::cout << "Enter any character to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 0;
 }
 catch (std::exception& e) {
 	std::cerr << "Unexpected error: " << e.what() << '\n';
 	std::cout << "Enter any character to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 1;
 }
 catch (...) {
 	std::cerr << "Unexpected unknown error" << '\n';
 	std::cout << "Enter any character to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 2;
 }

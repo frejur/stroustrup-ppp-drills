@@ -12,12 +12,13 @@
  * The "old" one uses namespace CHRONO.
  */
 
+#include "../../lib/help.h"
+#include "date/date.h"
+#include "ddate/ddate.h"
+#include "lib/istr.h"
+#include "lib/pad.h"
 #include <exception>
 #include <iostream>
-#include "ddate/ddate.h"
-#include "date/date.h"
-#include "lib/pad.h"
-#include "lib/istr.h"
 
 namespace CONST {
 	const std::string PROMPT{ "> " };
@@ -281,18 +282,18 @@ try {
 
 
 	std::cout << "Enter any character to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 0;
 }
 catch (std::exception& e) {
 	std::cerr << "Unexpected error: " << e.what() << '\n';
 	std::cout << "Enter any character to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 1;
 }
 catch (...) {
 	std::cerr << "Unexpected unknown error" << '\n';
 	std::cout << "Enter any character to exit" << '\n';
-	std::cin.get();
+	help::wait_for_enter();
 	return 2;
 }

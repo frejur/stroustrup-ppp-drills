@@ -18,4 +18,5 @@ add_executable(${T_THIS}
 		ddate/ddate_iostr.cpp
 		ddate/ddate_op.cpp
 	date/date.h date/date.cpp
+	../../lib/help.h ../../lib/help.cpp
 )
