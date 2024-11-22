@@ -1,7 +1,7 @@
 #include "e01.h"
 #include <exception>
 #include <iostream>
-#include "../../lib/help/help.h"
+#include "../../lib/help.h"
 
 /* Chapter 10, Exercise 1: Write a program that reads in numbers from a
  * whitespace-separated text file and calculates the sum of said values
