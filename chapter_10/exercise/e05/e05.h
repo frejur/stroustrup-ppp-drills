@@ -6,12 +6,12 @@
 
 inline const std::string& file_path()
 {
-	static std::string p{"data/readings.txt"};
+	static std::string p{"data_e05/readings.txt"};
 	return p;
 }
 inline const std::string& file_path_formatted()
 {
-	static std::string p{"data/readings_formatted.txt"};
+	static std::string p{"data_e05/readings_formatted.txt"};
 	return p;
 }
 

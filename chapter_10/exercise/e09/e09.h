@@ -10,19 +10,19 @@ namespace e09 {
 
 inline const std::string& file_path_words_01()
 {
-	static std::string s{"data/words_01.txt"};
+	static std::string s{"data_e09/words_01.txt"};
 	return s;
 }
 
 inline const std::string& file_path_words_02()
 {
-	static std::string s{"data/words_02.txt"};
+	static std::string s{"data_e09/words_02.txt"};
 	return s;
 }
 
 inline const std::string& file_path_final()
 {
-	static std::string s{"data/final.txt"};
+	static std::string s{"data_e09/final.txt"};
 	return s;
 }
 

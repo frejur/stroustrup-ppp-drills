@@ -3,7 +3,7 @@
 
 const std::string& input_file_path()
 {
-	static std::string p{ "data/values.txt" };
+	static std::string p{ "data_e01/values.txt" };
 	return p;
 }
 

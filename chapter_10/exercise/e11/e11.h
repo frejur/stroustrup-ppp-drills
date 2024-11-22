@@ -10,7 +10,7 @@ namespace e11 {
 
 inline const std::string& file_path_numbers()
 {
-	static std::string s{"data/numbers.txt"};
+	static std::string s{"data_e11/numbers.txt"};
 	return s;
 }
 

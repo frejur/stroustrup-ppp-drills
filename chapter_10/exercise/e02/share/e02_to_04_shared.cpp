@@ -419,13 +419,13 @@ const std::string& share::file_extension()
 
 const std::string& share::file_path_readings()
 {
-	static std::string p{ "data/raw_temps" };
+	static std::string p{ "data_e02/raw_temps" };
 	return p;
 }
 
 const std::string& share::file_path_readings_with_units()
 {
-	static std::string p{ "data/raw_temps_w_units" };
+	static std::string p{ "data_e02/raw_temps_w_units" };
 	return p;
 }
 

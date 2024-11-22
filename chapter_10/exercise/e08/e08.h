@@ -9,19 +9,19 @@ namespace e08 {
 
 inline const std::string& file_path_start()
 {
-	static std::string s{"data/start.txt"};
+	static std::string s{"data_e08/start.txt"};
 	return s;
 }
 
 inline const std::string& file_path_end()
 {
-	static std::string s{"data/end.txt"};
+	static std::string s{"data_e08/end.txt"};
 	return s;
 }
 
 inline const std::string& file_path_final()
 {
-	static std::string s{"data/final.txt"};
+	static std::string s{"data_e08/final.txt"};
 	return s;
 }
 
