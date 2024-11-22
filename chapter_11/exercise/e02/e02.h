@@ -22,7 +22,7 @@ inline const std::string& quit_symbol()
 
 inline const std::string& file_path_source()
 {
-	static std::string p{"data/words.txt"};
+	static std::string p{"data_e02/words.txt"};
 	return p;
 }
 

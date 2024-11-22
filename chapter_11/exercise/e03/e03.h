@@ -20,7 +20,7 @@ inline const std::string& vowels()
 
 inline const std::string& file_path_source()
 {
-	static std::string p{"data/original.txt"};
+	static std::string p{"data_e03/original.txt"};
 	return p;
 }
 

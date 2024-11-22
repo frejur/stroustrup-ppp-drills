@@ -22,18 +22,18 @@
 
 const std::string& file_original()
 {
-	static const std::string f{"data/abc.txt"};
+	static const std::string f{"data_e09/abc.txt"};
 	return f;
 }
 const std::string& file_to_bin()
 {
-	static const std::string f{"data/abc_bin.txt"};
+	static const std::string f{"data_e09/abc_bin.txt"};
 	return f;
 }
 
 const std::string& file_to_txt()
 {
-	static const std::string f{"data/abc_txt.txt"};
+	static const std::string f{"data_e09/abc_txt.txt"};
 	return f;
 }
 

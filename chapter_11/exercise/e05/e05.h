@@ -14,7 +14,7 @@ namespace e05 {
 
 inline const std::string& file_path_text()
 {
-	static std::string p{"data/otwist.txt"};
+	static std::string p{"data_e05/otwist.txt"};
 	return p;
 }
 

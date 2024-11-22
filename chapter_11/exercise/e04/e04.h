@@ -14,7 +14,7 @@ namespace e04 {
 
 inline const std::string& file_path_input()
 {
-	static std::string p{"data/input.txt"};
+	static std::string p{"data_e04/input.txt"};
 	return p;
 }
 

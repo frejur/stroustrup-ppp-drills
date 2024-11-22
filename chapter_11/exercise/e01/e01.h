@@ -11,12 +11,12 @@ namespace e01 {
 
 inline const std::string& file_path_source()
 {
-	static std::string p{"data/mixed.txt"};
+	static std::string p{"data_e01/mixed.txt"};
 	return p;
 }
 inline const std::string& file_path_output()
 {
-	static std::string p{"data/lowercase.txt"};
+	static std::string p{"data_e01/lowercase.txt"};
 	return p;
 }
 

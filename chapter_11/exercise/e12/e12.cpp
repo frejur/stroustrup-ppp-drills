@@ -31,37 +31,37 @@ const std::string& quit_word()
 
 const std::string& file_chars_original()
 {
-	const static std::string f{"data/abc.txt"};
+	const static std::string f{"data_e12/abc.txt"};
 	return f;
 }
 
 const std::string& file_words_original()
 {
-	const static std::string f{"data/count.txt"};
+	const static std::string f{"data_e12/count.txt"};
 	return f;
 }
 
 const std::string& file_chars_reversed()
 {
-	const static std::string f{"data/abc_rev.txt"};
+	const static std::string f{"data_e12/abc_rev.txt"};
 	return f;
 }
 
 const std::string& file_words_reversed()
 {
-	const static std::string f{"data/count_rev.txt"};
+	const static std::string f{"data_e12/count_rev.txt"};
 	return f;
 }
 
 const std::string& file_chars_reversed_copy()
 {
-	const static std::string f{"data/abc_rev_copy.txt"};
+	const static std::string f{"data_e12/abc_rev_copy.txt"};
 	return f;
 }
 
 const std::string& file_words_reversed_copy()
 {
-	const static std::string f{"data/count_rev_copy.txt"};
+	const static std::string f{"data_e12/count_rev_copy.txt"};
 	return f;
 }
 

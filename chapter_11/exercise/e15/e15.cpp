@@ -47,25 +47,25 @@ const std::string& quit_word()
 
 const std::string& file_floating_point()
 {
-	const static std::string f{"data/random_numbers.txt"};
+	const static std::string f{"data_e15/random_numbers.txt"};
 	return f;
 }
 
 const std::string& file_formatted_copy()
 {
-	const static std::string f{"data/format_numbers.txt"};
+	const static std::string f{"data_e15/format_numbers.txt"};
 	return f;
 }
 
 const std::string& file_integers()
 {
-	const static std::string f{"data/random_ints.txt"};
+	const static std::string f{"data_e15/random_ints.txt"};
 	return f;
 }
 
 const std::string& file_count_unique()
 {
-	const static std::string f{"data/count_unique.txt"};
+	const static std::string f{"data_e15/count_unique.txt"};
 	return f;
 }
 

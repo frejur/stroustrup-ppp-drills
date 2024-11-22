@@ -17,20 +17,20 @@ inline const std::string& quit_word()
 // -----------------------------------------------------------------------------
 
 inline const std::string& file_path_test_punct() {
-    static const std::string f{"data/test_punct.txt"};
+    static const std::string f{"data_e06/test_punct.txt"};
     return f;
 };
 inline const std::string& file_path_contractions() {
-    static const std::string f{"data/contractions.txt"};
+    static const std::string f{"data_e06/contractions.txt"};
     return f;
 };
 inline const std::string& file_path_test_contr() {
-    static const std::string f{"data/test_contr.txt"};
+    static const std::string f{"data_e06/test_contr.txt"};
     return f;
 };
 inline const std::string& file_path_multi_page()
 {
-	static const std::string f{"data/multi_page.txt"};
+	static const std::string f{"data_e06/multi_page.txt"};
     return f;
 };
 
