@@ -17,8 +17,13 @@ add_executable(${T_THIS}
     drill.cpp
 )
 
-configure_file(img/pelikan.jpg img/pelikan.jpg COPYONLY)
-configure_file(img/pigeon.jpg img/pigeon.jpg COPYONLY)
+# Dynamically copy the img folder into the same
+# directory as the executable
+add_custom_command(TARGET ${T_THIS} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/img
+        $<TARGET_FILE_DIR:${T_THIS}>/img_drill
+)
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
 target_include_directories(${T_THIS} PUBLIC ${FLTK_INCLUDE_DIRS})
