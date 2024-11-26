@@ -35,7 +35,7 @@ int main()
     const int wh { 360 };
     win.resize(ww, wh);
 
-    Image img { { 120, 10 }, "img/longcat.jpg"};
+    Image img { { 120, 10 }, "img_e06/longcat.jpg"};
 
     win.label("A shape that stretches beyond the window borders");
 

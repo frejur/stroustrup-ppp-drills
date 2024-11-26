@@ -107,7 +107,7 @@ int main()
         win.wait_for_button();
 
         // Image
-        Graph_lib::Image img{ Graph_lib::Point{ 100, 50 }, "img/pelikan.jpg"};
+        Graph_lib::Image img{ Graph_lib::Point{ 100, 50 }, "img_drill/pelikan.jpg"};
         win.attach(img);
 
         win.set_label("Image");
@@ -139,7 +139,7 @@ int main()
                 << win.x_max() << 'x' << win.y_max();
         Graph_lib::Text sizes{ Point{ 100, 20 }, oss.str() };
 
-        Graph_lib::Image pigeon{ Point{ 225, 225 }, "img/pigeon.jpg" };
+        Graph_lib::Image pigeon{ Point{ 225, 225 }, "img_drill/pigeon.jpg" };
         pigeon.set_mask(Point{ 40, 40 }, 200, 250);
 
         win.attach(c);

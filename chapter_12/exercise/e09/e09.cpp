@@ -12,7 +12,7 @@ int main()
         Simple_window win{ tl, 600, 400, txt };
 
         // Image
-        Image img{ Point{ 100, 50 }, "img/a_friend.gif"};
+        Image img{ Point{ 100, 50 }, "img_e09/a_friend.gif"};
         win.attach(img);
 
         // Label

@@ -23,7 +23,7 @@ int main()
     // Top row --------------------------------------------
     GraphBox box_pt_h {
         4, 4, 10, 3, grd, margin,
-        "html/point_h.html", "Point.h:" };
+        "html_e10/point_h.html", "Point.h:" };
     win.attach(box_pt_h);
 
     Point pt_pt_h_btm_c {
@@ -34,7 +34,7 @@ int main()
 
     GraphBox box_hdr {
         20, 1, 7, 3, grd, margin,
-        "html/fltk_headers.html", "", true };
+        "html_e10/fltk_headers.html", "", true };
     win.attach(box_hdr);
 
     Point pt_hdr_btm_l { box_hdr.getBoundsPosition(2.9) };
@@ -44,7 +44,7 @@ int main()
 
     GraphBox box_code {
         31, 4, 6, 3, grd, margin,
-        "html/fltk_code.html", "", true };
+        "html_e10/fltk_code.html", "", true };
     win.attach(box_code);
 
     Arrow arr_code_to_hdr {
@@ -55,7 +55,7 @@ int main()
     // 2nd row --------------------------------------------
     GraphBox box_graph_h {
         4, 12, 11, 4, grd, margin,
-        "html/graph_h.html", "Graph.h:" };
+        "html_e10/graph_h.html", "Graph.h:" };
     win.attach(box_graph_h);
 
     Point pt_graph_h_top_c {
@@ -77,7 +77,7 @@ int main()
 
     GraphBox box_win_h {
         18, 9, 10, 4, grd, margin,
-        "html/window_h.html", "Window.h:" };
+        "html_e10/window_h.html", "Window.h:" };
     win.attach(box_win_h);
 
     Arrow arr_win_h_to_pt_h {
@@ -102,7 +102,7 @@ int main()
     // 3rd row --------------------------------------------
     GraphBox box_win_cpp {
         12, 19, 8, 3, grd, margin,
-        "html/window_cpp.html", "Window.cpp:" };
+        "html_e10/window_cpp.html", "Window.cpp:" };
     win.attach(box_win_cpp);
 
     Arrow arr_win_cpp_to_win_h {
@@ -112,7 +112,7 @@ int main()
 
     GraphBox box_gui_h {
         27, 16, 10, 4, grd, margin,
-        "html/gui_h.html", "GUI.h:" };
+        "html_e10/gui_h.html", "GUI.h:" };
     win.attach(box_gui_h);
 
     Point pt_gui_h_top_c {
@@ -133,7 +133,7 @@ int main()
     // 4th row --------------------------------------------
     GraphBox box_graph_cpp {
         1, 23, 7, 3, grd, margin,
-        "html/graph_cpp.html", "Graph.cpp:" };
+        "html_e10/graph_cpp.html", "Graph.cpp:" };
     win.attach(box_graph_cpp);
 
     Arrow arr_graph_cpp_to_graph_h {
@@ -145,7 +145,7 @@ int main()
 
     GraphBox box_s_win_h {
         14, 24, 13, 4, grd, margin,
-        "html/simple_window_h.html", "Simple_window.h" };
+        "html_e10/simple_window_h.html", "Simple_window.h" };
     win.attach(box_s_win_h);
 
     Point pt_s_win_h_top_r {
@@ -167,7 +167,7 @@ int main()
 
     GraphBox box_gui_cpp {
         29, 23, 6, 3, grd, margin,
-        "html/gui_cpp.html", "GUI.cpp" };
+        "html_e10/gui_cpp.html", "GUI.cpp" };
     win.attach(box_gui_cpp);
 
     Arrow arr_gui_cpp_to_gui_h {
@@ -179,7 +179,7 @@ int main()
 
     GraphBox box_ch12_cpp {
         9, 31, 12, 4, grd, margin,
-        "html/chapter12_cpp.html", "chapter12.cpp" };
+        "html_e10/chapter12_cpp.html", "chapter12.cpp" };
     win.attach(box_ch12_cpp);
 
     Point pt_ch12_cpp_top_c {
