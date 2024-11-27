@@ -18,8 +18,8 @@ int main()
         const int GRID_NUM_COLS{ 8 };
         constexpr int GRID_NUM_ROWS{ GRID_NUM_COLS };
         constexpr int GRID_SZ { CELL_SZ * GRID_NUM_COLS };
-        const string IMG_PELIKAN = "img/pelikan.jpg";
-        const string IMG_PIGEON = "img/pigeon.jpg";
+        const string IMG_PELIKAN = "img_drill/pelikan.jpg";
+        const string IMG_PIGEON = "img_drill/pigeon.jpg";
 
         Graph_lib::Point tl{ 100, 100 };
 
