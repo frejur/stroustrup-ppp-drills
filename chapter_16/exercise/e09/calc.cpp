@@ -6,7 +6,7 @@ namespace {
 
 const std::string& icons_file_path()
 {
-	static const std::string s{"calc_icons.png"};
+	static const std::string s{"img_e09/calc_icons.png"};
 	return s;
 }
 

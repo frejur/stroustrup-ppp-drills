@@ -25,12 +25,12 @@ My_window& Win_ref(void* pw)
 
 const std::string& dropdown_bg_file_path()
 {
-	static const std::string p{"dropd_bg.png"};
+	static const std::string p{"img_e08/dropd_bg.png"};
 	return p;
 }
 const std::string& switch_bg_file_path()
 {
-	static const std::string p{"switch_bg.png"};
+	static const std::string p{"img_e08/switch_bg.png"};
 	return p;
 }
 

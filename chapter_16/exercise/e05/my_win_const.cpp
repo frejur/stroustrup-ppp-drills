@@ -3,38 +3,38 @@
 
 const Ghost_writer& Mw_const::poe()
 {
-	static const Ghost_writer gw{"Poe", "Edgar", "poe.txt"};
+	static const Ghost_writer gw{"Poe", "Edgar", "txt_e05/poe.txt"};
 	return gw;
 }
 
 const Ghost_writer& Mw_const::frank()
 {
-	static const Ghost_writer gw{"Frank", "Ol' Blue Eyes", "frank.txt"};
+	static const Ghost_writer gw{"Frank", "Ol' Blue Eyes", "txt_e05/frank.txt"};
 	return gw;
 }
 
 const Ghost_writer& Mw_const::doc()
 {
-	static const Ghost_writer gw{"Doc", "Emmett", "doc.txt"};
+	static const Ghost_writer gw{"Doc", "Emmett", "txt_e05/doc.txt"};
 	return gw;
 }
 //------------------------------------------------------------------------------
 
 const std::string& Mw_const::image_path()
 {
-	static const std::string s{"ouija.png"};
+	static const std::string s{"img_e05/ouija.png"};
 	return s;
 }
 
 const std::string& Mw_const::mappings_out_path()
 {
-	static const std::string s{"remappings.txt"};
+	static const std::string s{"txt_e05/remappings.txt"};
 	return s;
 }
 
 const std::string& Mw_const::mappings_in_path()
 {
-	static const std::string s{"mappings_backup.txt"};
+	static const std::string s{"txt_e05/mappings_backup.txt"};
 	return s;
 }
 //------------------------------------------------------------------------------

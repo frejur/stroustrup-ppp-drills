@@ -13,7 +13,7 @@ constexpr int shape_radius{64};
 
 const std::string& icons_file_path()
 {
-	static const std::string p{"icons.png"};
+	static const std::string p{"img_e04/icons.png"};
 	return p;
 }
 

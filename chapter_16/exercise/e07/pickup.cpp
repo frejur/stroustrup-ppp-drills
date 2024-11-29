@@ -6,7 +6,7 @@ constexpr int maximum_size{256};
 const Pickup::Direction default_direction{Pickup::Direction::N};
 const std::string& image_file_path()
 {
-	static const std::string p{"pkup_sprt.png"};
+	static const std::string p{"img_e07/pkup_sprt.png"};
 	return p;
 }
 } // namespace

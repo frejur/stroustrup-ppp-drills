@@ -8,7 +8,7 @@ constexpr int button_font_size{22};
 
 const std::string& image_file_path()
 {
-	static const std::string p{"honeycomb_80_32.jpg"};
+	static const std::string p{"img_e03/honeycomb_80_32.jpg"};
 	return p;
 }
 const std::vector<std::string>& labels()
