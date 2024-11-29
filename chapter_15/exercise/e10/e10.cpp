@@ -17,13 +17,13 @@ inline const Graph_lib::Color& default_color()
 
 inline const std::string& csv_filename()
 {
-	static const std::string s{"pokemon.csv"};
+	static const std::string s{"csv_e10/pokemon.csv"};
 	return s;
 };
 
 inline const std::string& plot_points_filename()
 {
-	static const std::string s{"pokemon_stats.txt"};
+	static const std::string s{"csv_e10/pokemon_stats.txt"};
 	return s;
 };
 

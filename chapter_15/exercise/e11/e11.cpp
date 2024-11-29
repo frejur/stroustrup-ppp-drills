@@ -57,19 +57,19 @@ inline const Graph_lib::Color& boston_color()
 
 inline const std::string& montreal_temperatures_filename()
 {
-	static const std::string s{"montreal_avg_temp.txt"};
+	static const std::string s{"txt_e11/montreal_avg_temp.txt"};
 	return s;
 };
 
 inline const std::string& boston_temperatures_filename()
 {
-	static const std::string s{"boston_avg_temp.txt"};
+	static const std::string s{"txt_e11/boston_avg_temp.txt"};
 	return s;
 };
 
 inline const std::string& streets_csv_filename()
 {
-	static const std::string s{"montreal_boston_streets.txt"};
+	static const std::string s{"txt_e11/montreal_boston_streets.txt"};
 	return s;
 };
 

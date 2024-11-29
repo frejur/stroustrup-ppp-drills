@@ -18,13 +18,13 @@ inline const Graph_lib::Color& default_color()
 
 inline const std::string& csv_filename()
 {
-	static const std::string s{"nba_player_stats_2014_2015.csv"};
+	static const std::string s{"csv_e09/nba_player_stats_2014_2015.csv"};
 	return s;
 };
 
 inline const std::string& name_value_pairs_filename()
 {
-	static const std::string s{"nba_distr_h.txt"};
+	static const std::string s{"csv_e09/nba_distr_h.txt"};
 	return s;
 };
 
