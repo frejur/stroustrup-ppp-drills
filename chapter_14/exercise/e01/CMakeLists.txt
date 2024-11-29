@@ -32,7 +32,13 @@ add_executable(${T_THIS}
     em_templates.h em_templates.cpp
 )
 
-configure_file(img/dots.jpg dots.jpg COPYONLY)
+# Dynamically copy the img folder into the same
+# directory as the executable
+add_custom_command(TARGET ${T_THIS} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/img
+        $<TARGET_FILE_DIR:${T_THIS}>/img_e01
+)
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
 target_include_directories(${T_THIS} PUBLIC ${FLTK_INCLUDE_DIRS})
