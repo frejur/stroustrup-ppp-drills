@@ -24,11 +24,18 @@ add_executable(${T_THIS}
     ../../lib/Point.h
 )
 
-configure_file(txt/poe.txt poe.txt COPYONLY)
-configure_file(txt/frank.txt frank.txt COPYONLY)
-configure_file(txt/doc.txt doc.txt COPYONLY)
-configure_file(txt/mappings_backup.txt mappings_backup.txt COPYONLY)
-configure_file(img/ouija.png ouija.png COPYONLY)
+# Dynamically copy the img and txt folders into the same
+# directory as the executable
+add_custom_command(TARGET ${T_THIS} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/img
+        $<TARGET_FILE_DIR:${T_THIS}>/img_e05
+)
+add_custom_command(TARGET ${T_THIS} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/txt
+        $<TARGET_FILE_DIR:${T_THIS}>/txt_e05
+)
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_forms fltk_images)
 target_include_directories(${T_THIS} PUBLIC ${FLTK_INCLUDE_DIRS})

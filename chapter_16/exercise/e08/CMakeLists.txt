@@ -33,13 +33,19 @@ add_executable(${T_THIS}
     ../../lib/Point.h
 )
 
-# Text files
-configure_file(txt/currencies.txt currencies.txt COPYONLY)
-configure_file(txt/xrates.txt xrates.txt COPYONLY)
+# Dynamically copy the img and txt folder into the same
+# directory as the executable
+add_custom_command(TARGET ${T_THIS} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/img
+        $<TARGET_FILE_DIR:${T_THIS}>/img_e08
+)
+add_custom_command(TARGET ${T_THIS} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/txt
+        $<TARGET_FILE_DIR:${T_THIS}>/txt_e08
+)
 
-# Images
-configure_file(img/dropd_bg.png dropd_bg.png COPYONLY)
-configure_file(img/switch_bg.png switch_bg.png COPYONLY)
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_forms fltk_images)
 target_include_directories(${T_THIS} PUBLIC ${FLTK_INCLUDE_DIRS})

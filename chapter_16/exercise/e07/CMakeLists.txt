@@ -21,7 +21,13 @@ add_executable(${T_THIS}
     ../../lib/Point.h
 ) 
 
-configure_file(img/pkup_sprt.png pkup_sprt.png COPYONLY)
+# Dynamically copy the img folder into the same
+# directory as the executable
+add_custom_command(TARGET ${T_THIS} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/img
+        $<TARGET_FILE_DIR:${T_THIS}>/img_e07
+)
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_forms fltk_images)
 target_include_directories(${T_THIS} PUBLIC ${FLTK_INCLUDE_DIRS})
