@@ -70,22 +70,22 @@ void e16()
 	constexpr int tile_sz{24};
 
 	Maze m_01{maze_pt, tile_count, tile_count, tile_sz};
-	m_01.load_level(read_maze_from_file("lvl_01.txt"));
+	m_01.load_level(read_maze_from_file("txt_e16/lvl_01.txt"));
 	win.attach(m_01);
 	Maze_animator anim_m_01{win, m_01};
 
 	Maze m_02{maze_pt, tile_count, tile_count, tile_sz};
-	m_02.load_level(read_maze_from_file("lvl_02.txt"));
+	m_02.load_level(read_maze_from_file("txt_e16/lvl_02.txt"));
 	win.attach(m_02);
 	Maze_animator anim_m_02{win, m_02};
 
 	Maze m_03{maze_pt, tile_count, tile_count, tile_sz};
-	m_03.load_level(read_maze_from_file("lvl_03.txt"));
+	m_03.load_level(read_maze_from_file("txt_e16/lvl_03.txt"));
 	win.attach(m_03);
 	Maze_animator anim_m_03{win, m_03, 0.05, 20};
 
 	Maze m_04{maze_pt, tile_count, tile_count, tile_sz};
-	m_04.load_level(read_maze_from_file("lvl_04.txt"));
+	m_04.load_level(read_maze_from_file("txt_e16/lvl_04.txt"));
 	win.attach(m_04);
 	Maze_animator anim_m_04{win, m_04, 0.05, 20};
 

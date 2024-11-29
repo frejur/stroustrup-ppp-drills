@@ -35,7 +35,7 @@ int main() {
 
 		emot::Smiling_party_animal spa{{mid_x - e_sz * 2, mid_y + e_sz},
 		                               e_sz,
-		                               "dots.jpg"};
+		                               "img_e01/dots.jpg"};
 		win.attach(spa);
 
 		emot::Frowning_dunce frd{{mid_x + e_sz * 2, mid_y + e_sz}, e_sz};
