@@ -30,9 +30,13 @@ add_executable(${T_THIS}
     ../share/parse/csv_parser.h ../share/parse/csv_parser.cpp
 )
 
-configure_file(txt/boston_avg_temp.txt boston_avg_temp.txt COPYONLY)
-configure_file(txt/montreal_avg_temp.txt montreal_avg_temp.txt COPYONLY)
-configure_file(txt/montreal_boston_streets.txt montreal_boston_streets.txt COPYONLY)
+# Dynamically copy the txt folder into the same
+# directory as the executable
+add_custom_command(TARGET ${T_THIS} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/txt
+        $<TARGET_FILE_DIR:${T_THIS}>/txt_e11
+)
 
 target_link_libraries(${T_THIS} PUBLIC fltk fltk_images fltk_forms fltk_gl)
 target_include_directories(${T_THIS} PUBLIC ${FLTK_INCLUDE_DIRS})
